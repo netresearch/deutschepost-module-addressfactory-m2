@@ -48,30 +48,6 @@ package-validate:
         - package-build
 
 # Crucial tests (lowest Mage+PHP + highest Mage+PHP)
-phpunit-7.0-ce2.2:
-    variables:
-        PHP_VERSION: "7.0"
-        MAGENTO_TAG_VERSION: "2.2"
-        MAGENTO_EDITION: "ce"
-    extends: .phpunit
-    only:
-        - develop
-        - master
-        - /^(release|hotfix)-.*$/
-        - merge_requests
-
-phpunit-7.0-ee2.2:
-    variables:
-        PHP_VERSION: "7.0"
-        MAGENTO_TAG_VERSION: "2.2"
-        MAGENTO_EDITION: "ee"
-    extends: .phpunit
-    only:
-        - develop
-        - master
-        - /^(release|hotfix)-.*$/
-        - merge_requests
-
 phpunit-7.1-ce2.3:
     variables:
         PHP_VERSION: "7.1"
@@ -97,34 +73,34 @@ phpunit-7.1-ee2.3:
         - merge_requests
 
 # Additional tests (in between versions of Magento or PHP)
-phpunit-7.1-ce2.2:
+phpunit-7.2-ce2.3:
     variables:
-        PHP_VERSION: "7.1"
-        MAGENTO_TAG_VERSION: "2.2"
+        PHP_VERSION: "7.2"
+        MAGENTO_TAG_VERSION: "2.3"
         MAGENTO_EDITION: "ce"
     extends: .phpunit
     stage: test-additional
 
-phpunit-7.1-ee2.2:
+phpunit-7.2-ee2.3:
     variables:
-        PHP_VERSION: "7.1"
-        MAGENTO_TAG_VERSION: "2.2"
+        PHP_VERSION: "7.2"
+        MAGENTO_TAG_VERSION: "2.3"
         MAGENTO_EDITION: "ee"
     extends: .phpunit
     stage: test-additional
 
-phpunit-7.2-ce2.3.0:
+phpunit-7.3-ce2.3:
     variables:
-        PHP_VERSION: "7.2"
-        MAGENTO_TAG_VERSION: "2.3.0"
+        PHP_VERSION: "7.3"
+        MAGENTO_TAG_VERSION: "2.3"
         MAGENTO_EDITION: "ce"
     extends: .phpunit
     stage: test-additional
 
-phpunit-7.2-ee2.3.0:
+phpunit-7.3-ee2.3:
     variables:
-        PHP_VERSION: "7.2"
-        MAGENTO_TAG_VERSION: "2.3.0"
+        PHP_VERSION: "7.3"
+        MAGENTO_TAG_VERSION: "2.3"
         MAGENTO_EDITION: "ee"
     extends: .phpunit
     stage: test-additional
