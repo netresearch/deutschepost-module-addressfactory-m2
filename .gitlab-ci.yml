@@ -1,0 +1,184 @@
+image: registry.netresearch.de/magento-ci/ci-toolchain:latest
+
+services:
+    - docker:dind
+
+stages:
+    - analyze
+    - test
+    - test-additional
+    - mftf
+    - install
+    - build
+    - validate
+
+phpcs:
+    stage: analyze
+    only:
+        - develop
+        - master
+        - /^(release|hotfix)-.*$/
+        - merge_requests
+    script:
+        - ci-analyze
+
+package-build:
+    stage: build
+    only:
+        - master
+        - /^(release|hotfix)-.*$/
+    script:
+        - zip -r
+            -x "*build/*" "*Test/*" "*doc/src*" "*.gitignore" "*.gitlab-ci.yml" "*.git*"
+            -o $(ci-get-package-name).zip
+            .
+    artifacts:
+        when: on_success
+        paths:
+            - ./*.zip
+
+package-validate:
+    stage: validate
+    only:
+        - master
+        - /^(release|hotfix)-.*$/
+    script:
+        - ci-validate $(ci-get-package-name).zip
+    dependencies:
+        - package-build
+
+# Crucial tests (lowest Mage+PHP + highest Mage+PHP)
+phpunit-7.0-ce2.2:
+    variables:
+        PHP_VERSION: "7.0"
+        MAGENTO_TAG_VERSION: "2.2"
+        MAGENTO_EDITION: "ce"
+    extends: .phpunit
+    only:
+        - develop
+        - master
+        - /^(release|hotfix)-.*$/
+        - merge_requests
+
+phpunit-7.0-ee2.2:
+    variables:
+        PHP_VERSION: "7.0"
+        MAGENTO_TAG_VERSION: "2.2"
+        MAGENTO_EDITION: "ee"
+    extends: .phpunit
+    only:
+        - develop
+        - master
+        - /^(release|hotfix)-.*$/
+        - merge_requests
+
+phpunit-7.1-ce2.3:
+    variables:
+        PHP_VERSION: "7.1"
+        MAGENTO_TAG_VERSION: "2.3"
+        MAGENTO_EDITION: "ce"
+    extends: .phpunit
+    only:
+        - develop
+        - master
+        - /^(release|hotfix)-.*$/
+        - merge_requests
+
+phpunit-7.1-ee2.3:
+    variables:
+        PHP_VERSION: "7.1"
+        MAGENTO_TAG_VERSION: "2.3"
+        MAGENTO_EDITION: "ee"
+    extends: .phpunit
+    only:
+        - develop
+        - master
+        - /^(release|hotfix)-.*$/
+        - merge_requests
+
+# Additional tests (in between versions of Magento or PHP)
+phpunit-7.1-ce2.2:
+    variables:
+        PHP_VERSION: "7.1"
+        MAGENTO_TAG_VERSION: "2.2"
+        MAGENTO_EDITION: "ce"
+    extends: .phpunit
+    stage: test-additional
+
+phpunit-7.1-ee2.2:
+    variables:
+        PHP_VERSION: "7.1"
+        MAGENTO_TAG_VERSION: "2.2"
+        MAGENTO_EDITION: "ee"
+    extends: .phpunit
+    stage: test-additional
+
+phpunit-7.2-ce2.3.0:
+    variables:
+        PHP_VERSION: "7.2"
+        MAGENTO_TAG_VERSION: "2.3.0"
+        MAGENTO_EDITION: "ce"
+    extends: .phpunit
+    stage: test-additional
+
+phpunit-7.2-ee2.3.0:
+    variables:
+        PHP_VERSION: "7.2"
+        MAGENTO_TAG_VERSION: "2.3.0"
+        MAGENTO_EDITION: "ee"
+    extends: .phpunit
+    stage: test-additional
+
+# MFTF tests
+#mftf-2.3.0:
+#  variables:
+#    PHP_VERSION: "7.2"
+#    MAGENTO_TAG_VERSION: "2.3.0"
+#    MAGENTO_EDITION: "ee"
+#    MAGE_MODE: "production"
+#  extends: .mftf
+#
+#mftf-2.3.1:
+#  variables:
+#    PHP_VERSION: "7.1"
+#    MAGENTO_TAG_VERSION: "2.3"
+#    MAGENTO_EDITION: "ee"
+#    MAGE_MODE: "production"
+#  extends: .mftf
+
+# Templates for jobs running Installation, PHPUnit Integration and MFTF tests
+.installationcheck:
+    stage: install
+    variables:
+        MAGENTO_INSTALL_SAMPLES: "no"
+    only:
+        - develop
+        - master
+        - /^(release|hotfix)-.*$/
+    before_script:
+        - ci-install-before
+    script:
+        - ci-install
+    after_script:
+        - ci-install-after
+
+.phpunit:
+    extends: .installationcheck
+    stage: test
+    script:
+        - ci-install
+        - ci-phpunit-docker Test/Integration/phpunit.xml
+
+# Template for MFTF test jobs with output artifact
+.mftf:
+    extends: .phpunit
+    allow_failure: true
+    script:
+        - ci-install
+        - ci-docker-run "bin/magento config:set system/smtp/disable 1"
+        - ci-mftf PostDirektAddressfactory
+    artifacts:
+        when: on_failure
+        paths:
+            - build/shared/_output
+    stage: mftf
