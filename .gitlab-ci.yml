@@ -12,6 +12,10 @@ stages:
     - build
     - validate
 
+default:
+    before_script:
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
 phpcs:
     stage: analyze
     only:
