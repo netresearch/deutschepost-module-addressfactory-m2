@@ -3,4 +3,15 @@
 See LICENSE.md for license details.
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <postdirekt>
+            <addressfactory>
+                <version>1.0.0</version>
+            </addressfactory>
+            <settings>
+                <sandboxMode>1</sandboxMode>
+                <adjustmentStrength>1</adjustmentStrength>
+            </settings>
+        </postdirekt>
+    </default>
 </config>
