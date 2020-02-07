@@ -1,0 +1,16 @@
+{
+    "name": "postdirekt/module-addressfactory-m2-meta",
+    "description": "Metapackage for testing the postdirekt addressfactory module",
+    "version": "1.0.0",
+    "type": "metapackage",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://git.netresearch.de/postdirekt/magento/module-core.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://git.netresearch.de/postdirekt/sdk-api-addressfactory.git"
+        }
+    ]
+}

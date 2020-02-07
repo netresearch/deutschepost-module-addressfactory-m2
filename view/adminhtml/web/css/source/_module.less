@@ -1,0 +1,82 @@
+#config-edit-form {
+
+    /**
+     * Use this to style system config groups in a simpler way:
+     *
+     * <fieldset_css>simple</fieldset_css>
+     * <attribute type="expanded">1</attribute>
+     */
+    .section-config.simple {
+        &:not(.active) {
+            display: none;
+        }
+
+        a.open {
+            pointer-events: none;
+            padding: 0 0 0 33%;
+            font-size: 1.5rem;
+        }
+
+        a.open::before {
+            display: none;
+        }
+
+        border: 1px solid #e3e3e3;
+        background: #fbfbfb;
+        margin: 2em 0;
+        padding: 1em 0;
+    }
+
+    .section-config {
+        .value {
+            .w-25 {
+                width: 25% !important;
+            }
+
+            .w-50 {
+                width: 50% !important;
+            }
+
+            .w-75 {
+                width: 75% !important;
+            }
+
+            .w-100 {
+                width: 100% !important;
+            }
+
+            .w-auto {
+                width: auto !important;
+            }
+
+            .radioset {
+                float: left;
+
+                .admin__field-option {
+                    padding-top: 0;
+                }
+            }
+
+            .checkboxset {
+                .nested {
+                    padding-top: 0;
+                }
+            }
+
+            .note {
+                clear: both;
+                padding-top: 10px;
+            }
+        }
+
+        /* Additional Infobox styling */
+        .nr-custom-infobox.addressfactory {
+            border: 1px solid #ffcc01;
+            background: #fefcee;
+
+            header {
+                background: #ffcc01;
+            }
+        }
+    }
+}
