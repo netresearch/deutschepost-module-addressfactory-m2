@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * See LICENSE.md for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="postdirekt">
+            <group id="settings" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Addressfactory Direct Settings</label>
+                <field id="addressfactoryInfoBox" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Netresearch\ConfigFields\Block\InfoBox</frontend_model>
+                    <attribute type="body_template">PostDirekt_Addressfactory::system/config/infoBoxBody.phtml</attribute>
+                    <attribute type="header_template">PostDirekt_Addressfactory::system/config/infoBoxHeader.phtml</attribute>
+                    <attribute type="view_model">PostDirekt\Addressfactory\ViewModel\Adminhtml\System\InfoBox</attribute>
+                    <attribute type="logo">PostDirekt_Addressfactory::images/logo_addressfactory.png</attribute>
+                    <attribute type="css_class">addressfactory</attribute>
+                </field>
+                <field id="logging" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0"
+                       translate="label" type="Netresearch\ConfigFields\Model\Type\Checkbox">
+                    <label>Logging</label>
+                    <comment>You must also have Magento general logging enabled.</comment>
+                </field>
+                <field id="loglevel" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="20"
+                       translate="label comment" type="Netresearch\ConfigFields\Model\Type\Radioset">
+                    <label>Log Level</label>
+                    <depends>
+                        <field id="logging">1</field>
+                    </depends>
+                    <source_model>PostDirekt\Addressfactory\Model\Config\Source\LogLevel</source_model>
+                 </field>
+                <field id="sandboxMode" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0"
+                       translate="label" type="Netresearch\ConfigFields\Model\Type\Checkbox">
+                    <label>Sandbox Mode</label>
+                </field>
+                <field id="configurationName" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Configuration Name</label>
+                </field>
+                <field id="adjustmentStrength" translate="label" type="Netresearch\ConfigFields\Model\Type\Radioset" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Adjustment Strength</label>
+                    <source_model>PostDirekt\Addressfactory\Model\Config\Source\AdjustmentLevel</source_model>
+                </field>
+                <field id="mandateName" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" translate="label" type="text">
+                    <label>Mandate Name</label>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
