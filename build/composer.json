@@ -3,6 +3,9 @@
     "description": "Metapackage for testing the postdirekt addressfactory module",
     "version": "1.0.0",
     "type": "metapackage",
+    "require": {
+        "tddwizard/magento2-fixtures": "^0.8.0"
+    },
     "repositories": [
         {
             "type": "vcs",
