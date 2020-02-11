@@ -1,0 +1,18 @@
+{
+    "postdirekt_addressfactory_analysis": {
+        "column": {
+            "order_address_id": true,
+            "status_codes": true,
+            "first_name": true,
+            "last_name": true,
+            "city": true,
+            "postal_code": true,
+            "street": true,
+            "street_number": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_D37BCDFE5D47A6F9866FC415ABB59674": true
+        }
+    }
+}
