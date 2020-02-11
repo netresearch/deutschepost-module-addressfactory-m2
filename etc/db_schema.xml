@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+See LICENSE.md for license details.
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="postdirekt_addressfactory_analysis" resource="sales" engine="innodb" comment="Postdirekt Addressfactory analysis table">
+        <column xsi:type="int" name="order_address_id" padding="10" unsigned="true" nullable="false" identity="false"
+                comment="Order Address ID"/>
+        <column xsi:type="varchar" name="status_codes" length="255" nullable="false" comment="Status Codes"/>
+        <column xsi:type="varchar" name="first_name" nullable="false" length="255" comment="First Name"/>
+        <column xsi:type="varchar" name="last_name" nullable="false" length="255" comment="Last Name"/>
+        <column xsi:type="varchar" name="city"  nullable="false" length="255" comment="City"/>
+        <column xsi:type="varchar" name="postal_code" length="255" nullable="false" comment="Postal Code"/>
+        <column xsi:type="varchar" name="street" length="255" nullable="false" comment="Street"/>
+        <column xsi:type="varchar" name="street_number" length="255" nullable="false" comment="Street Number"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="order_address_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="PD_ADF_ORDER_ADRESS_ID_SALES_ORDER_ADDRESS_ID" table="postdirekt_addressfactory_analysis"
+                    column="order_address_id" referenceTable="sales_order_address" referenceColumn="entity_id" onDelete="CASCADE"/>
+    </table>
+</schema>
