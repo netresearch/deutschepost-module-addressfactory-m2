@@ -71,9 +71,9 @@ class AnalysisResultRepositoryTest extends TestCase
         /** @var AnalysisResultRepository $repository */
         $repository = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
         $repository->save($analysisResult);
-        $this->assertEquals($order->getAddresses()[0]->getEntityId(), $analysisResult->getOrderAddressId());
+        static::assertEquals($order->getAddresses()[0]->getEntityId(), $analysisResult->getOrderAddressId());
 
-        $result =  $repository->getByAddressId((string) $order->getAddresses()[0]->getEntityId());
-        $this->assertEquals($result->getStreet(), $analysisResult->getStreet());
+        $result =  $repository->getByAddressId((int) $order->getAddresses()[0]->getEntityId());
+        static::assertEquals($result->getStreet(), $analysisResult->getStreet());
     }
 }
