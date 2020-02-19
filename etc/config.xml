@@ -7,11 +7,10 @@ See LICENSE.md for license details.
         <postdirekt>
             <addressfactory>
                 <version>1.0.0</version>
+                <sandbox_mode>1</sandbox_mode>
+                <adjustment_strength>1</adjustment_strength>
+                <log_level>400</log_level>
             </addressfactory>
-            <settings>
-                <sandboxMode>1</sandboxMode>
-                <adjustmentStrength>1</adjustmentStrength>
-            </settings>
         </postdirekt>
     </default>
 </config>
