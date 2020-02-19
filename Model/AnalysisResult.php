@@ -43,6 +43,14 @@ class AnalysisResult extends AbstractModel
     }
 
     /**
+     * @param int $orderAddressId
+     */
+    public function setOrderAddressId(int $orderAddressId): void
+    {
+        $this->setData(self::ORDER_ADDRESS_ID, $orderAddressId);
+    }
+
+    /**
      * @return int
      */
     public function getOrderAddressId(): int
@@ -51,11 +59,32 @@ class AnalysisResult extends AbstractModel
     }
 
     /**
-     * @return string
+     * @param string[] $statusCodes
      */
-    public function getStatusCodes(): string
+    public function setStatusCodes(array $statusCodes): void
     {
-        return $this->getData(self::STATUS_CODE);
+        $this->setData(self::STATUS_CODE, implode(',', $statusCodes));
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getStatusCodes(): array
+    {
+        $result = [];
+        if ($this->getData(self::STATUS_CODE)) {
+            $result = explode(',', $this->getData(self::STATUS_CODE));
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $firstName
+     */
+    public function setFirstName(string $firstName): void
+    {
+        $this->setData(self::FIRST_NAME, $firstName);
     }
 
     /**
@@ -67,11 +96,27 @@ class AnalysisResult extends AbstractModel
     }
 
     /**
+     * @param string $lastName
+     */
+    public function setLastName(string $lastName): void
+    {
+        $this->setData(self::LAST_NAME, $lastName);
+    }
+
+    /**
      * @return string
      */
     public function getLastName(): string
     {
         return $this->getData(self::LAST_NAME);
+    }
+
+    /**
+     * @param string $city
+     */
+    public function setCity(string $city): void
+    {
+        $this->setData(self::CITY, $city);
     }
 
     /**
@@ -83,6 +128,14 @@ class AnalysisResult extends AbstractModel
     }
 
     /**
+     * @param string $postalCode
+     */
+    public function setPostalCode(string $postalCode): void
+    {
+        $this->setData(self::POSTAL_CODE, $postalCode);
+    }
+
+    /**
      * @return string
      */
     public function getPostalCode(): string
@@ -91,11 +144,27 @@ class AnalysisResult extends AbstractModel
     }
 
     /**
+     * @param string $street
+     */
+    public function setStreet(string $street): void
+    {
+        $this->setData(self::STREET, $street);
+    }
+
+    /**
      * @return string
      */
     public function getStreet(): string
     {
         return $this->getData(self::STREET);
+    }
+
+    /**
+     * @param string $streetNumber
+     */
+    public function setStreetNumber(string $streetNumber): void
+    {
+        $this->setData(self::STREET_NUMBER, $streetNumber);
     }
 
     /**
