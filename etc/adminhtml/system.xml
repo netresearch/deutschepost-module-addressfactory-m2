@@ -7,9 +7,9 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <section id="postdirekt">
-            <group id="settings" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="addressfactory" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Addressfactory Direct Settings</label>
-                <field id="addressfactoryInfoBox" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="addressfactory_info_box" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Netresearch\ConfigFields\Block\InfoBox</frontend_model>
                     <attribute type="body_template">PostDirekt_Addressfactory::system/config/infoBoxBody.phtml</attribute>
                     <attribute type="header_template">PostDirekt_Addressfactory::system/config/infoBoxHeader.phtml</attribute>
@@ -18,31 +18,45 @@
                     <attribute type="css_class">addressfactory</attribute>
                 </field>
                 <field id="logging" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0"
-                       translate="label" type="Netresearch\ConfigFields\Model\Type\Checkbox">
+                       translate="label comment button_label" type="Netresearch\ConfigFields\Model\Type\Checkbox">
                     <label>Logging</label>
+                    <button_label>Enabled</button_label>
                     <comment>You must also have Magento general logging enabled.</comment>
                 </field>
-                <field id="loglevel" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="20"
-                       translate="label comment" type="Netresearch\ConfigFields\Model\Type\Radioset">
+                <field id="log_level" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="20"
+                       translate="label" type="Netresearch\ConfigFields\Model\Type\Radioset">
                     <label>Log Level</label>
                     <depends>
                         <field id="logging">1</field>
                     </depends>
                     <source_model>PostDirekt\Addressfactory\Model\Config\Source\LogLevel</source_model>
                  </field>
-                <field id="sandboxMode" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0"
-                       translate="label" type="Netresearch\ConfigFields\Model\Type\Checkbox">
+                <field id="sandbox_mode" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0"
+                       translate="label button_label" type="Netresearch\ConfigFields\Model\Type\Checkbox">
+                    <button_label>Enabled</button_label>
                     <label>Sandbox Mode</label>
                 </field>
-                <field id="configurationName" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="configuration_name" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Configuration Name</label>
                 </field>
-                <field id="adjustmentStrength" translate="label" type="Netresearch\ConfigFields\Model\Type\Radioset" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="adjustment_strength" translate="label" type="Netresearch\ConfigFields\Model\Type\Radioset" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Adjustment Strength</label>
                     <source_model>PostDirekt\Addressfactory\Model\Config\Source\AdjustmentLevel</source_model>
                 </field>
-                <field id="mandateName" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" translate="label" type="text">
+                <field id="mandate_name" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" translate="label" type="text">
                     <label>Mandate Name</label>
+                </field>
+                <field id="hold_non_deliverable_orders" translate="label button_label" type="Netresearch\ConfigFields\Model\Type\Checkbox" sortOrder="70" showInDefault="1" showInWebsite="1"   showInStore="0">
+                    <label>Non-deliverable Orders</label>
+                    <button_label>Automatically Put on Hold</button_label>
+                </field>
+                <field id="auto_cancel_orders" translate="label button_label" type="Netresearch\ConfigFields\Model\Type\Checkbox" sortOrder="70" showInDefault="1" showInWebsite="1"   showInStore="0">
+                    <label>Undeliverable Orders</label>
+                    <button_label>Automatically Cancel</button_label>
+                </field>
+                <field id="auto_update_shipping_address" translate="label button_label" type="Netresearch\ConfigFields\Model\Type\Checkbox" sortOrder="80" showInDefault="1" showInWebsite="1"   showInStore="0">
+                    <label>Improveable Orders</label>
+                    <button_label>Automatically Update Shipping Address</button_label>
                 </field>
             </group>
         </section>
