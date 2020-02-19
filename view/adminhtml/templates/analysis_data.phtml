@@ -1,0 +1,22 @@
+<?php
+/**
+ * See LICENSE.md for license details.
+ */
+
+/** @var \PostDirekt\Addressfactory\ViewModel\Adminhtml\AnalysisData $viewModel */
+$viewModel = $block->getData('viewModel');
+$addressId = (int) $block->getData('shipping_address_id');
+?>
+<?php if ($addressId): ?>
+    <div class="admin__page-section-item order-shipping-address pd_infox_box">
+        <div class="admin__page-section-item-title">
+            <img class="pd_logo" src='<?= $viewModel->getLogoUrl()?>' alt="logo" width="150px">
+            <h2 class="title"><?= $block->escapeHtml(__('Deliverability Analysis')) ?></h2>
+        </div>
+        <?php $data = $viewModel->getAnalysisResult($addressId); ?>
+        <?php if ($data): ?>
+        <?php else: ?>
+            <a class="button action-primary"><?= $block->escapeHtml(__('Perform Deliverability Analysis')) ?></a>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
