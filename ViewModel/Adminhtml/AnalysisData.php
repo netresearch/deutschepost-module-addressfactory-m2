@@ -41,7 +41,7 @@ class AnalysisData implements ArgumentInterface
     public function getAnalysisResult(int $addressId): ?AnalysisResult
     {
         try {
-            return $this->analysisResultRepository->getByAddressId((string) $addressId);
+            return $this->analysisResultRepository->getByAddressId($addressId);
         } catch (NoSuchEntityException $exception) {
             return null;
         }
