@@ -28,7 +28,7 @@ class DeliverabilityScore
     private const BUILDING_UNDELIVERABLE = 'PDC030106';
 
     /**
-     * @param mixed $codes
+     * @param string[] $codes
      * @return string
      */
     public function compute(array $codes): string
