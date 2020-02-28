@@ -143,7 +143,7 @@ class AddressAnalysis
         } catch (AuthenticationException $exception) {
             throw new LocalizedException(__('Authentication error.', $exception->getMessage()), $exception);
         } catch (ServiceException $exception) {
-            throw new LocalizedException(__('Service exception. %1', $exception->getMessage()), $exception);
+            throw new LocalizedException(__('Service exception: %1', $exception->getMessage()), $exception);
         } catch (CouldNotSaveException $exception) {
             throw new LocalizedException(__('Could not save analysis result.'), $exception);
         }

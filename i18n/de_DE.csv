@@ -1,0 +1,48 @@
+"Addressfactory & Magento","Addressfactory & Magento"
+"Addressfactory Direct Settings","Addressfactory Direct Einstellungen"
+"Adjustment Strength",Abgleichhärte
+"Analysis result with order address id %1 does not exist.","Analyse für Bestelladresse mit id %1 existiert nicht"
+"Authentication error.",Authentifizierungsfehler.
+"Automatically Cancel","Automatisch stornieren"
+"Automatically Put on Hold","Automatisch zurückstellen"
+"Automatically Update Shipping Address","Lieferaddresse automatisch aktualisieren"
+"Building deliverable","Gebäude zustellbar"
+"Building undeliverable","Gebäude unzustellbar"
+"Configuration Name",Konfigurationsname
+"Could not save analysis result.","Analyse-Ergebnis konnte nicht gespeichert werden."
+"Deliverability Analysis",Zustellbarkeits-Analyse
+Deliverable,Zustellbar
+"Detected Issues","Entdeckte Probleme"
+Enabled,Aktiviert
+Errors,Fehler
+"Household deliverable","Haushalt zustellbar"
+"Household not matched","Haushalt nicht angetroffen"
+"Household undeliverable","Haushalt unzustellbar"
+"Improveable Orders","Korrigierbare Bestellungen"
+"Log Level",Logging-Stufe
+Logging,Logging
+"Mandate Name",Mandanten-Name
+Medium,Mittel
+"Module version:",Modulversion
+"Non-deliverable Orders","Nicht zustellbare Bestellungen"
+"Order state changed to ""%1""","Bestellstatus auf ""%1"" geändert"
+"Perform Deliverability Analysis","Zustellbarkeits-Analyse durchführen"
+"Person deliverable","Person zustellbar"
+"Person not deliverable","Person unzustellbar"
+"Person not matched","Person nicht angetroffen"
+"Possibly Deliverable","Möglicherweise zustellbar"
+"Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper."
+"Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+"Sandbox Mode",Sandbox-Modus
+"Service exception: %1","Schnittstellen-Fehler: %1"
+Strong,Stark
+"Suggested Shipping Address","Vorgeschlagene Lieferadresse"
+"The order address couldn't be saved.","Die Bestelladresse konnte nicht gespeichert werden."
+"Unable to save analysis result.","Analyse konnte nicht gespeichert werden."
+"Unable to save analysis results","Analyse-Ergebnisse konnten nicht gespeichert werden"
+Undeliverable,Unzustellbar
+"Undeliverable Orders","Unzustellbare Bestellungen"
+"Updated shipping address for order #%1","Lieferadresse für Bestellung #%1 aktualisiert"
+Warnings,Warnungen
+Weak,Schwach
+"You must also have Magento general logging enabled.","Das allgemeine Magento-Logging muss ebenfalls aktiviert sein."
