@@ -8,11 +8,13 @@ namespace PostDirekt\Addressfactory\Model;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Api\OrderAddressRepositoryInterface;
 use PostDirekt\Core\Model\Config as CoreConfig;
 use PostDirekt\Sdk\AddressfactoryDirect\Api\Data\RecordInterface;
 use PostDirekt\Sdk\AddressfactoryDirect\Api\ServiceFactoryInterface;
+use PostDirekt\Sdk\AddressfactoryDirect\Exception\AuthenticationException;
 use PostDirekt\Sdk\AddressfactoryDirect\Exception\ServiceException;
 use PostDirekt\Sdk\AddressfactoryDirect\Model\RequestType\InRecordWSType;
 use PostDirekt\Sdk\AddressfactoryDirect\RequestBuilder\RequestBuilder;
@@ -21,7 +23,6 @@ use Psr\Log\LoggerInterface;
 /**
  * AddressAnalysis
  *
- * @author  Gurjit Singh <gurjit.singh@netresearch.de>
  * @author  Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @link    https://www.netresearch.de/
  */
@@ -97,6 +98,7 @@ class AddressAnalysis
     /**
      * @param OrderAddressInterface[] $addresses
      * @return AnalysisResult[]
+     * @throws LocalizedException
      */
     public function analyze(array $addresses): array
     {
@@ -132,19 +134,22 @@ class AddressAnalysis
             $service = $this->serviceFactory->createAddressVerificationService(
                 $this->coreConfig->getApiUser(),
                 $this->coreConfig->getApiPassword(),
-                $this->logger
+                $this->logger,
+                $this->moduleConfig->isSandboxMode()
             );
-
             $records = $service->getRecords($recordRequests, null, $this->moduleConfig->getConfigurationName());
             $newAnalysisResults = $this->mapRecordsResponse($records);
             $this->analysisResultRepository->saveList($newAnalysisResults);
-            // add new records to previously analysis results from db, do a union on purpose to keep keys
-            $analysisResults = $newAnalysisResults + $analysisResults;
+        } catch (AuthenticationException $exception) {
+            throw new LocalizedException(__('Authentication error.', $exception->getMessage()), $exception);
         } catch (ServiceException $exception) {
-            $this->logger->debug($exception->getMessage());
-        } catch (\Exception $exception) {
-            $this->logger->debug($exception->getMessage());
+            throw new LocalizedException(__('Service exception. %1', $exception->getMessage()), $exception);
+        } catch (CouldNotSaveException $exception) {
+            throw new LocalizedException(__('Could not save analysis result.'), $exception);
         }
+
+        // add new records to previously analysis results from db, do a union on purpose to keep keys
+        $analysisResults = $newAnalysisResults + $analysisResults;
 
         return $analysisResults;
     }
@@ -152,6 +157,7 @@ class AddressAnalysis
     /**
      * @param OrderAddressInterface[] $addresses
      * @return AnalysisResult[]
+     * @throws LocalizedException
      * @throws CouldNotSaveException    The repository interface is missing this annotation,
      *                                  but its default implementation can throw it.
      */
