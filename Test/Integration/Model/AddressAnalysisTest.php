@@ -279,7 +279,7 @@ class AddressAnalysisTest extends TestCase
         );
 
         $this->expectException(LocalizedException::class);
-        $this->expectExceptionMessage('Service exception.');
+        $this->expectExceptionMessage(__('Service exception: %1', 'no records')->render());
         $result = $addressAnalysis->analyze($addresses);
     }
 
@@ -357,7 +357,7 @@ class AddressAnalysisTest extends TestCase
         $orderAddressRepositoryMock
             ->expects(static::once())
             ->method('save')
-            ->willThrowException(new CouldNotSaveException(__('error')));
+            ->willThrowException(new CouldNotSaveException(__("The order address couldn't be saved.")));
 
         /** @var AddressAnalysis $addressAnalysis */
         $addressAnalysis = Bootstrap::getObjectManager()->create(
@@ -369,7 +369,7 @@ class AddressAnalysisTest extends TestCase
         );
 
         $this->expectException(CouldNotSaveException::class);
-        $this->expectExceptionMessage('error');
+        $this->expectExceptionMessage("The order address couldn't be saved.");
 
         $addressAnalysis->update($addresses);
     }
