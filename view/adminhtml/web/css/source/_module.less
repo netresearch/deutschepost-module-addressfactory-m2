@@ -1,3 +1,5 @@
+@base_space: 10px;
+
 #config-edit-form {
 
     /**
@@ -89,5 +91,47 @@
     background-color: #FFF6DC;
     padding: 10px;
 }
+
+.pd_address_sugestion {
+    background-color: white;
+    padding:10px
+}
+
+.circle(@color) {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    font-size: 90%;
+    &:before {
+        height: 15px;
+        width: 15px;
+        border-radius: 50%;
+        display: inline-block;
+        margin: 0 10px 0 0;
+        content:'';
+        background: @color;
+        border: 1px solid gray;
+    }
+}
+
+.undeliverable {
+    .circle(red);
+}
+
+.deliverable {
+    .circle(lawngreen)
+}
+
+.possibly_deliverable {
+    .circle(yellow)
+}
+
+.detected_issues_info {
+    padding: 20px 0;
+    ul {
+        margin-left: 40px;
+    }
+}
+
 
 

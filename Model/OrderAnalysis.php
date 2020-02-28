@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace PostDirekt\Addressfactory\Model;
 
 use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Model\Order;
 
@@ -24,7 +25,7 @@ class OrderAnalysis
     private $addressAnalysisService;
 
     /**
-     * @var DeliverabilityScore
+     * @var DeliverabilityCodes
      */
     private $deliverabilityScoreService;
 
@@ -35,7 +36,7 @@ class OrderAnalysis
 
     public function __construct(
         AddressAnalysis $addressAnalysisService,
-        DeliverabilityScore $deliverabilityScoreService,
+        DeliverabilityCodes $deliverabilityScoreService,
         OrderManagementInterface $orderService
     ) {
         $this->addressAnalysisService = $addressAnalysisService;
@@ -45,17 +46,21 @@ class OrderAnalysis
 
     /**
      * @param Order[] $orders
+     * @throws LocalizedException
      */
     public function holdNonDeliverable(array $orders): void
     {
-        $analysisResults = $this->getAnalysisResults($orders);
+        $analysisResults = $this->analyse($orders);
         foreach ($orders as $order) {
+            if (!$order->canHold()) {
+                continue;
+            }
             $analysisResult = $analysisResults[(int) $order->getId()] ?? null;
             if (!$analysisResult) {
                 continue;
             }
-            $score = $this->deliverabilityScoreService->compute($analysisResult->getStatusCodes());
-            if ($score !== DeliverabilityScore::DELIVERABLE) {
+            $score = $this->deliverabilityScoreService->computeScore($analysisResult->getStatusCodes());
+            if ($score !== DeliverabilityCodes::DELIVERABLE) {
                 $this->orderService->hold($order->getId());
             }
         }
@@ -63,17 +68,21 @@ class OrderAnalysis
 
     /**
      * @param Order[] $orders
+     * @throws LocalizedException
      */
     public function cancelUndeliverable(array $orders): void
     {
-        $analysisResults = $this->getAnalysisResults($orders);
+        $analysisResults = $this->analyse($orders);
         foreach ($orders as $order) {
+            if (!$order->canCancel()) {
+                continue;
+            }
             $analysisResult = $analysisResults[(int) $order->getId()] ?? null;
             if (!$analysisResult) {
                 continue;
             }
-            $score = $this->deliverabilityScoreService->compute($analysisResult->getStatusCodes());
-            if ($score === DeliverabilityScore::UNDELIVERABLE) {
+            $score = $this->deliverabilityScoreService->computeScore($analysisResult->getStatusCodes());
+            if ($score === DeliverabilityCodes::UNDELIVERABLE) {
                 $this->orderService->cancel($order->getId());
             }
         }
@@ -81,6 +90,7 @@ class OrderAnalysis
 
     /**
      * @param Order[] $orders
+     * @throws LocalizedException
      * @throws CouldNotSaveException
      */
     public function updateShippingAddress(array $orders): void
@@ -99,8 +109,9 @@ class OrderAnalysis
      *
      * @param Order[] $orders
      * @return AnalysisResult[]
+     * @throws LocalizedException
      */
-    public function getAnalysisResults(array $orders): array
+    public function analyse(array $orders): array
     {
         $addresses = [];
         foreach ($orders as $order) {

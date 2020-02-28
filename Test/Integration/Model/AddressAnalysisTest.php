@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace PostDirekt\Addressfactory\Test\Integration\Model;
 
 use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\OrderAddressRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -118,6 +119,7 @@ class AddressAnalysisTest extends TestCase
      *
      * @test
      * @magentoDataFixture createAnalysisResults
+     * @throws LocalizedException
      */
     public function allAddressesAreAnalyzed(): void
     {
@@ -161,6 +163,7 @@ class AddressAnalysisTest extends TestCase
      *
      * @test
      * @magentoDataFixture createPartialAnalysisResult
+     * @throws LocalizedException
      */
     public function someAddressesAreAnalyzed(): void
     {
@@ -246,6 +249,7 @@ class AddressAnalysisTest extends TestCase
      *
      * @test
      * @magentoDataFixture createPartialAnalysisResult
+     * @throws LocalizedException
      */
     public function analyzeRequestFails(): void
     {
@@ -274,9 +278,9 @@ class AddressAnalysisTest extends TestCase
             ]
         );
 
+        $this->expectException(LocalizedException::class);
+        $this->expectExceptionMessage('Service exception.');
         $result = $addressAnalysis->analyze($addresses);
-        self::assertCount(1, $result);
-        self::assertEquals($addresses[0]->getEntityId(), $result[$addresses[0]->getEntityId()]->getOrderAddressId());
     }
 
     /**
@@ -286,6 +290,7 @@ class AddressAnalysisTest extends TestCase
      *
      * @test
      * @magentoDataFixture createAnalysisResults
+     * @throws LocalizedException
      */
     public function updateSuccess(): void
     {
