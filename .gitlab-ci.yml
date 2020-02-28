@@ -26,6 +26,22 @@ phpcs:
     script:
         - ci-analyze
 
+installed-analysis:
+    extends: .installationcheck
+    stage: analyze
+    variables:
+        PHP_VERSION: "7.3"
+        MAGENTO_TAG_VERSION: "2.3"
+    only:
+        - develop
+        - master
+        - /^(release|hotfix)-.*$/
+        - merge_requests
+    script:
+        - ci-install
+        - ci-validate-schema
+        - ci-validate-i18n
+
 package-build:
     stage: build
     only:
