@@ -2,21 +2,47 @@
 /**
  * See LICENSE.md for license details.
  */
+use Magento\Backend\Block\Template;
+use PostDirekt\Addressfactory\ViewModel\Adminhtml\AnalysisData;
 
-/** @var \PostDirekt\Addressfactory\ViewModel\Adminhtml\AnalysisData $viewModel */
+/** @var Template $block */
+/** @var AnalysisData $viewModel */
 $viewModel = $block->getData('viewModel');
-$addressId = (int) $block->getData('shipping_address_id');
+$addressId = (int)$block->getData('shipping_address_id');
 ?>
 <?php if ($addressId): ?>
     <div class="admin__page-section-item order-shipping-address pd_infox_box">
         <div class="admin__page-section-item-title">
-            <img class="pd_logo" src='<?= $viewModel->getLogoUrl()?>' alt="logo" width="150px">
+            <img class="pd_logo" src='<?= $viewModel->getLogoUrl() ?>' alt="logo" width="150px">
             <h2 class="title"><?= $block->escapeHtml(__('Deliverability Analysis')) ?></h2>
         </div>
-        <?php $data = $viewModel->getAnalysisResult($addressId); ?>
-        <?php if ($data): ?>
+        <?php $analysisResult = $viewModel->getAnalysisResult($addressId); ?>
+        <?php if ($analysisResult): ?>
+            <?php $codes = $analysisResult->getStatusCodes(); ?>
+            <span class="<?= $block->escapeHtmlAttr($viewModel->getScore($codes)) ?>">
+                <b><?= $block->escapeHtml($viewModel->getHumanReadableScore($codes)) ?></b>
+            </span>
+            <?php $detectedIssues = $viewModel->getDetectedIssues($codes)?>
+            <div class="detected_issues_info">
+                <h4><?= $block->escapeHtml(__('Detected Issues'))?></h4>
+                <ul>
+                <?php foreach ($detectedIssues as $issue): ?>
+                    <li><span><?= $block->escapeHtml($issue) ?></span></li>
+                <?php endforeach;?>
+                </ul>
+            </div>
+            <div class="pd_address_sugestion">
+                <h3><?= $block->escapeHtml(__('Suggested Shipping Address')) ?></h3>
+                <dl>
+                    <?= /** @noEscape */ $viewModel->getFormattedAddress($analysisResult) ?>
+                </dl>
+            </div>
         <?php else: ?>
-            <a class="button action-primary"><?= $block->escapeHtml(__('Perform Deliverability Analysis')) ?></a>
+            <a
+                class="button action-primary"
+                href="<?= $block->escapeUrl($viewModel->getPerformAnalysisUrl()) ?>">
+                <?= $block->escapeHtml(__('Perform Deliverability Analysis')) ?>
+            </a>
         <?php endif; ?>
     </div>
 <?php endif; ?>
