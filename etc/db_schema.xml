@@ -30,4 +30,8 @@ See LICENSE.md for license details.
         <constraint xsi:type="foreign" referenceId="PD_ADF_ORDER_ID_SALES_ORDER__ID" table="postdirekt_addressfactory_analysis_status"
                     column="order_id" referenceTable="sales_order" referenceColumn="entity_id" onDelete="CASCADE"/>
     </table>
+
+    <table name="sales_order_grid" engine="innodb" resource="sales">
+        <column xsi:type="varchar" name="postdirekt_addressfactory_analysis_status" length="20" comment="Postdirekt Addressfactory Analysis Status"/>
+    </table>
  </schema>
