@@ -24,5 +24,10 @@
             "PRIMARY": true,
             "POSTDIREKT_ADDRFACTORY_ANALYSIS_STS_ORDER_ID_SALES_ORDER_ENTT_ID": true
         }
+    },
+    "sales_order_grid": {
+        "column": {
+            "postdirekt_addressfactory_analysis_status": true
+        }
     }
 }

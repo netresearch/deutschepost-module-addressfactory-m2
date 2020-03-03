@@ -2,4 +2,26 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="PostDirekt\Sdk\AddressfactoryDirect\Api\ServiceFactoryInterface" type="PostDirekt\Sdk\AddressfactoryDirect\Service\ServiceFactory"/>
     <preference for="PostDirekt\Addressfactory\Api\Data\AnalysisResult\SearchResultInterface" type="PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult\SearchResult"/>
+
+    <virtualType name="Magento\Sales\Model\ResourceModel\Order\Grid">
+        <arguments>
+            <argument name="joins" xsi:type="array">
+                <item name="postdirekt_addressfactory_analysis_status" xsi:type="array">
+                    <item name="table" xsi:type="string">postdirekt_addressfactory_analysis_status</item>
+                    <item name="origin_column" xsi:type="string">entity_id</item>
+                    <item name="target_column" xsi:type="string">order_id</item>
+                </item>
+            </argument>
+            <argument name="columns" xsi:type="array">
+                <item name="postdirekt_addressfactory_analysis_status" xsi:type="string">postdirekt_addressfactory_analysis_status.status</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\Sales\Model\ResourceModel\Provider\NotSyncedOrderDataProvider">
+        <arguments>
+            <argument name="providers" xsi:type="array">
+                <item name="postdirekt_addressfactory_analysis_status_provider" xsi:type="string">PostDirekt\Addressfactory\Model\ResourceModel\Provider\UpdatedStatusIdListProvider</item>
+            </argument>
+        </arguments>
+    </virtualType>
 </config>
