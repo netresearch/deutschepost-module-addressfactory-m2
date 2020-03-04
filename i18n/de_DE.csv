@@ -2,6 +2,7 @@
 "Addressfactory Direct Settings","Addressfactory Direct Einstellungen"
 "Adjustment Strength",Abgleichhärte
 "Analysis result with order address id %1 does not exist.","Analyse für Bestelladresse mit id %1 existiert nicht"
+"Analysis status with order id %1 does not exist.","Analyse-Status für die Bestellung mit id %1 existiert nicht."
 "Authentication error.",Authentifizierungsfehler.
 "Automatically Cancel","Automatisch stornieren"
 "Automatically Put on Hold","Automatisch zurückstellen"
@@ -40,6 +41,7 @@ Strong,Stark
 "The order address couldn't be saved.","Die Bestelladresse konnte nicht gespeichert werden."
 "Unable to save analysis result.","Analyse konnte nicht gespeichert werden."
 "Unable to save analysis results","Analyse-Ergebnisse konnten nicht gespeichert werden"
+"Unable to save analysis status.","Analyse-Status konnte nicht gespeichert werden."
 Undeliverable,Unzustellbar
 "Undeliverable Orders","Unzustellbare Bestellungen"
 "Updated shipping address for order #%1","Lieferadresse für Bestellung #%1 aktualisiert"

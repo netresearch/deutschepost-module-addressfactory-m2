@@ -20,4 +20,14 @@ See LICENSE.md for license details.
         <constraint xsi:type="foreign" referenceId="PD_ADF_ORDER_ADRESS_ID_SALES_ORDER_ADDRESS_ID" table="postdirekt_addressfactory_analysis"
                     column="order_address_id" referenceTable="sales_order_address" referenceColumn="entity_id" onDelete="CASCADE"/>
     </table>
-</schema>
+
+    <table name="postdirekt_addressfactory_analysis_status" resource="sales" engine="innodb" comment="Postdirekt Addressfactory analysis status table">
+        <column xsi:type="int" name="order_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Order ID"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="255" comment="Status"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="order_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="PD_ADF_ORDER_ID_SALES_ORDER__ID" table="postdirekt_addressfactory_analysis_status"
+                    column="order_id" referenceTable="sales_order" referenceColumn="entity_id" onDelete="CASCADE"/>
+    </table>
+ </schema>
