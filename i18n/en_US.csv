@@ -2,6 +2,7 @@
 "Addressfactory Direct Settings","Addressfactory Direct Settings"
 "Adjustment Strength","Adjustment Strength"
 "Analysis result with order address id %1 does not exist.","Analysis result with order address id %1 does not exist."
+"Analysis status with order id %1 does not exist.","Analysis status with order id %1 does not exist."
 "Authentication error.","Authentication error."
 "Automatically Cancel","Automatically Cancel"
 "Automatically Put on Hold","Automatically Put on Hold"
@@ -40,6 +41,7 @@ Strong,Strong
 "The order address couldn't be saved.","The order address couldn't be saved."
 "Unable to save analysis result.","Unable to save analysis result."
 "Unable to save analysis results","Unable to save analysis results"
+"Unable to save analysis status.","Unable to save analysis status."
 Undeliverable,Undeliverable
 "Undeliverable Orders","Undeliverable Orders"
 "Updated shipping address for order #%1","Updated shipping address for order #%1"

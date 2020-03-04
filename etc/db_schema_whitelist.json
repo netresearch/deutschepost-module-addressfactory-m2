@@ -14,5 +14,15 @@
             "PRIMARY": true,
             "FK_D37BCDFE5D47A6F9866FC415ABB59674": true
         }
+    },
+    "postdirekt_addressfactory_analysis_status": {
+        "column": {
+            "order_id": true,
+            "status": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "POSTDIREKT_ADDRFACTORY_ANALYSIS_STS_ORDER_ID_SALES_ORDER_ENTT_ID": true
+        }
     }
 }
