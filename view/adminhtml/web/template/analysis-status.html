@@ -1,0 +1,26 @@
+<!--
+See LICENSE.md for license details.
+-->
+<div class="data-grid-cell-content deliverability-status">
+    <span ifnot="!!$row()[$col.index]"
+          data-bind="i18n: 'Not analysed'"
+          class="pending"></span>
+    <span if="$row()[$col.index] === 'pending'"
+          data-bind="i18n: 'Pending'"
+          class="pending"></span>
+    <span if="$row()[$col.index] === 'undeliverable'"
+          data-bind="i18n: 'Undeliverable'"
+          class="undeliverable"></span>
+    <span if="$row()[$col.index] === 'possibly_deliverable'"
+          data-bind="i18n: 'Possibly deliverable'"
+          class="possibly_deliverable"></span>
+    <span if="$row()[$col.index] === 'deliverable'"
+          data-bind="i18n: 'Deliverable'"
+          class="deliverable"></span>
+    <span if="$row()[$col.index] === 'address_corrected'"
+          data-bind="i18n: 'Address corrected'"
+          class="deliverable"></span>
+    <span if="$row()[$col.index] === 'analysis_failed'"
+          data-bind="i18n: 'Analysis failed'"
+          class="undeliverable"></span>
+</div>
