@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+See LICENSE.md for license details.
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <listingToolbar name="listing_top">
+        <filters name="listing_filters">
+            <filterSelect name="postdirekt_addressfactory_analysis_status" provider="${ $.parentName }"
+                          component="Magento_Ui/js/form/element/ui-select"
+                          template="ui/grid/filters/elements/ui-select">
+                <settings>
+                    <label translate="true">Addressfactory Direct Deliverability Status</label>
+                    <dataScope>postdirekt_addressfactory_analysis_status</dataScope>
+                    <options class="PostDirekt\Addressfactory\Component\Listing\Column\DeliverabilityStatusOptions"/>
+                </settings>
+            </filterSelect>
+        </filters>
+    </listingToolbar>
+    <columns name="sales_order_columns">
+        <column name="postdirekt_addressfactory_analysis_status">
+            <settings>
+                <label translate="true">Deliverability Status</label>
+                <visible>false</visible>
+                <bodyTmpl>PostDirekt_Addressfactory/analysis-status</bodyTmpl>
+                <filter>postdirekt_addressfactory_analysis_status</filter>
+            </settings>
+        </column>
+    </columns>
+</listing>

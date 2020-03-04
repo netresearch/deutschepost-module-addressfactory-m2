@@ -1,6 +1,9 @@
+"Address corrected","Address corrected"
 "Addressfactory & Magento","Addressfactory & Magento"
+"Addressfactory Direct Deliverability Status","Addressfactory Direct Deliverability Status"
 "Addressfactory Direct Settings","Addressfactory Direct Settings"
 "Adjustment Strength","Adjustment Strength"
+"Analysis failed","Analysis failed"
 "Analysis result with order address id %1 does not exist.","Analysis result with order address id %1 does not exist."
 "Analysis status with order id %1 does not exist.","Analysis status with order id %1 does not exist."
 "Authentication error.","Authentication error."
@@ -12,6 +15,7 @@
 "Configuration Name","Configuration Name"
 "Could not save analysis result.","Could not save analysis result."
 "Deliverability Analysis","Deliverability Analysis"
+"Deliverability Status","Deliverability Status"
 Deliverable,Deliverable
 "Detected Issues","Detected Issues"
 Enabled,Enabled
@@ -26,12 +30,15 @@ Logging,Logging
 Medium,Medium
 "Module version:","Module version:"
 "Non-deliverable Orders","Non-deliverable Orders"
+"Not analysed","Not analysed"
 "Order state changed to ""%1""","Order state changed to ""%1"""
+Pending,Pending
 "Perform Deliverability Analysis","Perform Deliverability Analysis"
 "Person deliverable","Person deliverable"
 "Person not deliverable","Person not deliverable"
 "Person not matched","Person not matched"
 "Possibly Deliverable","Possibly Deliverable"
+"Possibly deliverable","Possibly deliverable"
 "Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper."
 "Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
 "Sandbox Mode","Sandbox Mode"
