@@ -100,14 +100,14 @@
 .circle(@color) {
     display: flex;
     align-items: center;
-    padding: 10px;
     font-size: 90%;
     &:before {
-        height: 15px;
-        width: 15px;
+        height: 20px;
+        width: 20px;
+        flex-shrink: 0;
         border-radius: 50%;
         display: inline-block;
-        margin: 0 10px 0 0;
+        margin: 0 10px 0 5px;
         content:'';
         background: @color;
         border: 1px solid gray;
@@ -119,11 +119,15 @@
 }
 
 .deliverable {
-    .circle(lawngreen)
+    .circle(lawngreen);
 }
 
 .possibly_deliverable {
-    .circle(yellow)
+    .circle(yellow);
+}
+
+.pending {
+    .circle(#e4e4e4);
 }
 
 .detected_issues_info {
@@ -132,6 +136,3 @@
         margin-left: 40px;
     }
 }
-
-
-

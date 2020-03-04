@@ -21,13 +21,13 @@ use Psr\Log\LoggerInterface;
  */
 class DeliverabilityStatus
 {
-    private const NOT_ANALYSED = 'not_analysed';
-    private const PENDING = 'pending';
-    private const UNDELIVERABLE = 'undeliverable';
-    private const POSSIBLY_DELIVERABLE = 'possibly_deliverable';
-    private const DELIVERABLE = 'deliverable';
-    private const ADDRESS_CORRECTED = 'address_corrected';
-    private const ANALYSIS_FAILED = 'analysis_failed';
+    public const NOT_ANALYSED = 'not_analysed';
+    public const PENDING = 'pending';
+    public const UNDELIVERABLE = 'undeliverable';
+    public const POSSIBLY_DELIVERABLE = 'possibly_deliverable';
+    public const DELIVERABLE = 'deliverable';
+    public const ADDRESS_CORRECTED = 'address_corrected';
+    public const ANALYSIS_FAILED = 'analysis_failed';
 
     /**
      * @var AnalysisStatusRepository
