@@ -57,13 +57,13 @@ class DeliverabilityStatus
     public function __construct(
         AnalysisStatusRepository $repository,
         AnalysisStatusFactory $analysisStatusFactory,
-        GridInterface $oderGrid,
+        GridInterface $orderGrid,
         LoggerInterface $logger,
         ScopeConfigInterface $scopeConfig
     ) {
         $this->repository = $repository;
         $this->statusFactory = $analysisStatusFactory;
-        $this->orderGrid = $oderGrid;
+        $this->orderGrid = $orderGrid;
         $this->logger = $logger;
         $this->scopeConfig = $scopeConfig;
     }
@@ -159,7 +159,7 @@ class DeliverabilityStatus
     public function getStatus(OrderInterface $order): string
     {
         try {
-            return $this->repository->getByOrderId($order->getEntityId())->getStatus();
+            return $this->repository->getByOrderId((int) $order->getEntityId())->getStatus();
         } catch (NoSuchEntityException $exception) {
             return self::NOT_ANALYSED;
         }

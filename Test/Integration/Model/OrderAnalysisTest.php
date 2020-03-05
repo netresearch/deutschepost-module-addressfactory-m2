@@ -13,6 +13,8 @@ use PHPUnit\Framework\TestCase;
 use PostDirekt\Addressfactory\Model\AddressAnalysis;
 use PostDirekt\Addressfactory\Model\AnalysisResult;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
+use PostDirekt\Addressfactory\Model\AnalysisStatusRepository;
+use PostDirekt\Addressfactory\Model\DeliverabilityStatus;
 use PostDirekt\Addressfactory\Model\OrderAnalysis;
 use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\AddressDe;
 use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\AddressUs;
@@ -262,9 +264,11 @@ class OrderAnalysisTest extends TestCase
         );
 
         $orderAnalysis->cancelUndeliverable(self::$orders);
-
+        $statusRepository = Bootstrap::getObjectManager()->create(AnalysisStatusRepository::class);
         foreach (self::$orders as $order) {
+            $status = $statusRepository->getByOrderId((int)$order->getEntityId())->getStatus();
             self::assertFalse($order->isCanceled());
+            self::assertEquals(DeliverabilityStatus::DELIVERABLE, $status);
         }
     }
 
@@ -304,12 +308,16 @@ class OrderAnalysisTest extends TestCase
 
         $orderAnalysis->updateShippingAddress(self::$orders);
 
+        $statusRepository = Bootstrap::getObjectManager()->create(AnalysisStatusRepository::class);
+
         foreach (self::$orders as $order) {
             $shippingAddress = $order->getShippingAddress();
             if (isset(self::$analysisResults[$shippingAddress->getId()])) {
                 $analysisResult = self::$analysisResults[$shippingAddress->getId()];
                 self::assertEquals($analysisResult->getFirstName(), $shippingAddress->getFirstname());
                 self::assertEquals($analysisResult->getLastName(), $shippingAddress->getLastname());
+                $status = $statusRepository->getByOrderId((int)$order->getEntityId())->getStatus();
+                self::assertEquals(DeliverabilityStatus::ADDRESS_CORRECTED, $status);
             }
         }
     }

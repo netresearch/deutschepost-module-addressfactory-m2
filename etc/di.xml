@@ -3,6 +3,7 @@
     <preference for="PostDirekt\Sdk\AddressfactoryDirect\Api\ServiceFactoryInterface" type="PostDirekt\Sdk\AddressfactoryDirect\Service\ServiceFactory"/>
     <preference for="PostDirekt\Addressfactory\Api\Data\AnalysisResult\SearchResultInterface" type="PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult\SearchResult"/>
 
+    <!-- # virtual types -->
     <virtualType name="Magento\Sales\Model\ResourceModel\Order\Grid">
         <arguments>
             <argument name="joins" xsi:type="array">
@@ -24,4 +25,11 @@
             </argument>
         </arguments>
     </virtualType>
+
+    <!-- # argument di overrides -->
+    <type name="PostDirekt\Addressfactory\Model\DeliverabilityStatus">
+        <arguments>
+            <argument name="orderGrid" xsi:type="object">Magento\Sales\Model\ResourceModel\Order\Grid</argument>
+        </arguments>
+    </type>
 </config>

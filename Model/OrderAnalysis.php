@@ -30,6 +30,11 @@ class OrderAnalysis
     private $deliverabilityScoreService;
 
     /**
+     * @var DeliverabilityStatus
+     */
+    private $deliverabilityStatus;
+
+    /**
      * @var OrderManagementInterface
      */
     private $orderService;
@@ -37,10 +42,12 @@ class OrderAnalysis
     public function __construct(
         AddressAnalysis $addressAnalysisService,
         DeliverabilityCodes $deliverabilityScoreService,
+        DeliverabilityStatus $deliverabilityStatus,
         OrderManagementInterface $orderService
     ) {
         $this->addressAnalysisService = $addressAnalysisService;
         $this->deliverabilityScoreService = $deliverabilityScoreService;
+        $this->deliverabilityStatus = $deliverabilityStatus;
         $this->orderService = $orderService;
     }
 
@@ -99,8 +106,17 @@ class OrderAnalysis
         foreach ($orders as $order) {
             $addresses[] = $order->getShippingAddress();
         }
-
-        $this->addressAnalysisService->update($addresses);
+        try {
+            $this->addressAnalysisService->update($addresses);
+            foreach ($orders as $order) {
+                $this->deliverabilityStatus->setStatusAddressCorrected($order);
+            }
+        } catch (LocalizedException|CouldNotSaveException $exception) {
+            foreach ($orders as $order) {
+                $this->deliverabilityStatus->setStatusAnalysisFailed($order);
+            }
+            throw $exception;
+        }
     }
 
     /**
@@ -118,16 +134,41 @@ class OrderAnalysis
             $addresses[] = $order->getShippingAddress();
         }
 
-        $analysisResults = $this->addressAnalysisService->analyze($addresses);
+        try {
+            $analysisResults = $this->addressAnalysisService->analyze($addresses);
 
-        $result = [];
-        foreach ($orders as $order) {
-            $analysisResult = $analysisResults[(int) $order->getShippingAddressId()] ?? null;
-            if ($analysisResult) {
+            $result = [];
+            foreach ($orders as $order) {
+                $analysisResult = $analysisResults[(int) $order->getShippingAddressId()] ?? null;
+                $this->setStatus($order, $analysisResult);
                 $result[$order->getEntityId()] = $analysisResult;
             }
+
+            return $result;
+        } catch (LocalizedException $exception) {
+            foreach ($orders as $order) {
+                $this->deliverabilityStatus->setStatusAnalysisFailed($order);
+            }
+            throw $exception;
+        }
+    }
+
+    private function setStatus(Order $order, ?AnalysisResult $analysisResult): void
+    {
+        if (!$analysisResult) {
+            $this->deliverabilityStatus->setStatusAnalysisFailed($order);
         }
 
-        return $result;
+        $statusCode = $this->deliverabilityScoreService->computeScore($analysisResult->getStatusCodes());
+        switch ($statusCode) {
+            case DeliverabilityCodes::DELIVERABLE:
+                $this->deliverabilityStatus->setStatusDeliverable($order);
+                break;
+            case DeliverabilityCodes::POSSIBLY_DELIVERABLE:
+                $this->deliverabilityStatus->setStatusPossiblyDeliverable($order);
+                break;
+            case DeliverabilityCodes::UNDELIVERABLE:
+                $this->deliverabilityStatus->setStatusUndeliverable($order);
+        }
     }
 }
