@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * See LICENSE.md for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_order_save_after">
+        <observer name="addressfactory_set_new_order_deliverability_status" instance="PostDirekt\Addressfactory\Observer\SetNewOrderDeliverabilityStatus"/>
+    </event>
+</config>
