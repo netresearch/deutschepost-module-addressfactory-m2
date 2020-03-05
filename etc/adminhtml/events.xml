@@ -8,4 +8,7 @@
     <event name="view_block_abstract_to_html_after">
         <observer name="move_analysis_box" instance="PostDirekt\Addressfactory\Observer\MoveAnalysisBox"/>
     </event>
+    <event name="admin_sales_order_address_update">
+        <observer name="addressfactory_update_order_deliverability_status" instance="PostDirekt\Addressfactory\Observer\UpdateOrderDeliverabilityStatus"/>
+    </event>
 </config>

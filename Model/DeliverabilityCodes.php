@@ -33,41 +33,41 @@ class DeliverabilityCodes
      */
     public function computeScore(array $codes): string
     {
-        if (in_array(self::PERSON_DELIVERABLE, $codes, true)) {
+        if (\in_array(self::PERSON_DELIVERABLE, $codes, true)) {
             return self::DELIVERABLE;
         }
 
-        if (in_array(self::PERSON_NOT_DELIVERABLE, $codes, true) &&
-            in_array(self::HOUSEHOLD_DELIVERABLE, $codes, true)) {
+        if (\in_array(self::PERSON_NOT_DELIVERABLE, $codes, true) &&
+            \in_array(self::HOUSEHOLD_DELIVERABLE, $codes, true)) {
             return self::DELIVERABLE;
         }
 
-        if (in_array(self::PERSON_NOT_DELIVERABLE, $codes, true) &&
-            in_array(self::HOUSEHOLD_UNDELIVERABLE, $codes, true) &&
-            !in_array(self::BUILDING_DELIVERABLE, $codes, true)) {
+        if (\in_array(self::PERSON_NOT_DELIVERABLE, $codes, true) &&
+            \in_array(self::HOUSEHOLD_UNDELIVERABLE, $codes, true) &&
+            !\in_array(self::BUILDING_DELIVERABLE, $codes, true)) {
             return self::UNDELIVERABLE;
         }
 
-        if (in_array(self::PERSON_NOT_MATCHED, $codes, true) &&
-            in_array(self::HOUSEHOLD_DELIVERABLE, $codes, true)) {
+        if (\in_array(self::PERSON_NOT_MATCHED, $codes, true) &&
+            \in_array(self::HOUSEHOLD_DELIVERABLE, $codes, true)) {
             return self::DELIVERABLE;
         }
 
-        if (in_array(self::PERSON_NOT_MATCHED, $codes, true) &&
-            in_array(self::HOUSEHOLD_UNDELIVERABLE, $codes, true) &&
-            in_array(self::BUILDING_DELIVERABLE, $codes, true)) {
+        if (\in_array(self::PERSON_NOT_MATCHED, $codes, true) &&
+            \in_array(self::HOUSEHOLD_UNDELIVERABLE, $codes, true) &&
+            \in_array(self::BUILDING_DELIVERABLE, $codes, true)) {
             return self::UNDELIVERABLE;
         }
 
-        if (in_array(self::PERSON_NOT_MATCHED, $codes, true) &&
-            in_array(self::HOUSEHOLD_NOT_MATCHED, $codes, true) &&
-            in_array(self::BUILDING_DELIVERABLE, $codes, true)) {
+        if (\in_array(self::PERSON_NOT_MATCHED, $codes, true) &&
+            \in_array(self::HOUSEHOLD_NOT_MATCHED, $codes, true) &&
+            \in_array(self::BUILDING_DELIVERABLE, $codes, true)) {
             return self::POSSIBLY_DELIVERABLE;
         }
 
-        if (in_array(self::PERSON_NOT_MATCHED, $codes, true) &&
-            in_array(self::HOUSEHOLD_NOT_MATCHED, $codes, true) &&
-            in_array(self::BUILDING_UNDELIVERABLE, $codes, true)) {
+        if (\in_array(self::PERSON_NOT_MATCHED, $codes, true) &&
+            \in_array(self::HOUSEHOLD_NOT_MATCHED, $codes, true) &&
+            \in_array(self::BUILDING_UNDELIVERABLE, $codes, true)) {
             return self::UNDELIVERABLE;
         }
 
