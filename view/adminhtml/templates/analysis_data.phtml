@@ -37,7 +37,9 @@ $addressId = (int)$block->getData('shipping_address_id');
                         <?= /** @noEscape */ $viewModel->getFormattedAddress($analysisResult) ?>
                     </dl>
                     <?php if ($viewModel->showAutoCorrectAddressButton()) : ?>
-                        <a class="button action-primary"><?= $block->escapeHtml(__('Auto-Correct Address'))?></a>
+                        <a class="button action-primary"
+                            href="<?= $block->escapeUrl($viewModel->getPerformAddressAutocorrectUrl())?>"
+                        ><?= $block->escapeHtml(__('Auto-Correct Address'))?></a>
                     <?php endif; ?>
                 </div>
                 <h3>Other Actions</h3>

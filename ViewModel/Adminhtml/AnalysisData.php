@@ -224,4 +224,10 @@ class AnalysisData implements ArgumentInterface
 
         return $order;
     }
+
+    public function getPerformAddressAutocorrectUrl(): string
+    {
+        $orderId = (int) $this->request->getParam('order_id');
+        return $this->urlBuilder->getUrl('postdirekt/order_address/autocorrect', ['order_id' => $orderId]);
+    }
 }
