@@ -8,7 +8,6 @@ namespace PostDirekt\Addressfactory\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Sales\Api\OrderRepositoryInterface;
 use PostDirekt\Addressfactory\Model\DeliverabilityStatus;
 
 /**
@@ -40,24 +39,17 @@ class UpdateOrderDeliverabilityStatus implements ObserverInterface
      */
     private $deliverableStatus;
 
-    /**
-     * @var OrderRepositoryInterface
-     */
-    private $orderRepository;
-
-    public function __construct(DeliverabilityStatus $deliverableStatus, OrderRepositoryInterface $orderRepository)
+    public function __construct(DeliverabilityStatus $deliverableStatus)
     {
         $this->deliverableStatus = $deliverableStatus;
-        $this->orderRepository = $orderRepository;
     }
 
     public function execute(Observer $observer): void
     {
-        $orderId = $observer->getData('order_id');
-        $order = $this->orderRepository->get((int)$orderId);
-        $previousStatus = $this->deliverableStatus->getStatus($order);
+        $orderId = (int) $observer->getData('order_id');
+        $previousStatus = $this->deliverableStatus->getStatus($orderId);
         if (\in_array($previousStatus, self::ADDRESS_CORRECTIBLE_STATUSES, true)) {
-            $this->deliverableStatus->setStatusAddressCorrected($order);
+            $this->deliverableStatus->setStatusAddressCorrected($orderId);
         }
     }
 }

@@ -35,8 +35,9 @@ class SetNewOrderDeliverabilityStatus implements ObserverInterface
     {
         /** @var OrderInterface $order */
         $order = $observer->getData('order');
-        if ($this->deliverableStatus->getStatus($order) ===  $this->deliverableStatus::NOT_ANALYSED) {
-            $this->deliverableStatus->setStatusPending($order);
+        $status = $this->deliverableStatus->getStatus((int) $order->getEntityId());
+        if ($status === DeliverabilityStatus::NOT_ANALYSED) {
+            $this->deliverableStatus->setStatusPending((int) $order->getEntityId());
         }
     }
 }

@@ -68,7 +68,7 @@ class OrderAnalysis
             }
             $score = $this->deliverabilityScoreService->computeScore($analysisResult->getStatusCodes());
             if ($score !== DeliverabilityCodes::DELIVERABLE) {
-                $this->orderService->hold($order->getId());
+                $this->orderService->hold((int) $order->getId());
             }
         }
     }
@@ -90,7 +90,7 @@ class OrderAnalysis
             }
             $score = $this->deliverabilityScoreService->computeScore($analysisResult->getStatusCodes());
             if ($score === DeliverabilityCodes::UNDELIVERABLE) {
-                $this->orderService->cancel($order->getId());
+                $this->orderService->cancel((int) $order->getId());
             }
         }
     }
@@ -109,11 +109,11 @@ class OrderAnalysis
         try {
             $this->addressAnalysisService->update($addresses);
             foreach ($orders as $order) {
-                $this->deliverabilityStatus->setStatusAddressCorrected($order);
+                $this->deliverabilityStatus->setStatusAddressCorrected((int) $order->getId());
             }
         } catch (LocalizedException|CouldNotSaveException $exception) {
             foreach ($orders as $order) {
-                $this->deliverabilityStatus->setStatusAnalysisFailed($order);
+                $this->deliverabilityStatus->setStatusAnalysisFailed((int) $order->getId());
             }
             throw $exception;
         }
@@ -140,35 +140,35 @@ class OrderAnalysis
             $result = [];
             foreach ($orders as $order) {
                 $analysisResult = $analysisResults[(int) $order->getShippingAddressId()] ?? null;
-                $this->setStatus($order, $analysisResult);
+                $this->setStatus((int) $order->getId(), $analysisResult);
                 $result[$order->getEntityId()] = $analysisResult;
             }
 
             return $result;
         } catch (LocalizedException $exception) {
             foreach ($orders as $order) {
-                $this->deliverabilityStatus->setStatusAnalysisFailed($order);
+                $this->deliverabilityStatus->setStatusAnalysisFailed((int) $order->getId());
             }
             throw $exception;
         }
     }
 
-    private function setStatus(Order $order, ?AnalysisResult $analysisResult): void
+    private function setStatus(int $orderId, ?AnalysisResult $analysisResult): void
     {
         if (!$analysisResult) {
-            $this->deliverabilityStatus->setStatusAnalysisFailed($order);
+            $this->deliverabilityStatus->setStatusAnalysisFailed($orderId);
         }
 
         $statusCode = $this->deliverabilityScoreService->computeScore($analysisResult->getStatusCodes());
         switch ($statusCode) {
             case DeliverabilityCodes::DELIVERABLE:
-                $this->deliverabilityStatus->setStatusDeliverable($order);
+                $this->deliverabilityStatus->setStatusDeliverable($orderId);
                 break;
             case DeliverabilityCodes::POSSIBLY_DELIVERABLE:
-                $this->deliverabilityStatus->setStatusPossiblyDeliverable($order);
+                $this->deliverabilityStatus->setStatusPossiblyDeliverable($orderId);
                 break;
             case DeliverabilityCodes::UNDELIVERABLE:
-                $this->deliverabilityStatus->setStatusUndeliverable($order);
+                $this->deliverabilityStatus->setStatusUndeliverable($orderId);
         }
     }
 }

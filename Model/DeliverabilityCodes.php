@@ -74,6 +74,10 @@ class DeliverabilityCodes
         return self::POSSIBLY_DELIVERABLE;
     }
 
+    /**
+     * @param string[] $codes
+     * @return string[]
+     */
     public function getLabels(array $codes): array
     {
         $result = [];

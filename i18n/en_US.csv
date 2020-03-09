@@ -6,12 +6,15 @@
 "Analysis failed","Analysis failed"
 "Analysis result with order address id %1 does not exist.","Analysis result with order address id %1 does not exist."
 "Analysis status with order id %1 does not exist.","Analysis status with order id %1 does not exist."
+"Are you sure you want to cancel this order?","Are you sure you want to cancel this order?"
 "Authentication error.","Authentication error."
+"Auto-Correct Address","Auto-Correct Address"
 "Automatically Cancel","Automatically Cancel"
 "Automatically Put on Hold","Automatically Put on Hold"
 "Automatically Update Shipping Address","Automatically Update Shipping Address"
 "Building deliverable","Building deliverable"
 "Building undeliverable","Building undeliverable"
+"Cancel Order","Cancel Order"
 "Configuration Name","Configuration Name"
 "Could not save analysis result.","Could not save analysis result."
 "Deliverability Analysis","Deliverability Analysis"
@@ -27,6 +30,7 @@ Errors,Errors
 "Log Level","Log Level"
 Logging,Logging
 "Mandate Name","Mandate Name"
+"Manually Edit Address","Manually Edit Address"
 Medium,Medium
 "Module version:","Module version:"
 "Non-deliverable Orders","Non-deliverable Orders"
@@ -51,6 +55,7 @@ Strong,Strong
 "Unable to save analysis status.","Unable to save analysis status."
 Undeliverable,Undeliverable
 "Undeliverable Orders","Undeliverable Orders"
+"Unhold Order","Unhold Order"
 "Updated shipping address for order #%1","Updated shipping address for order #%1"
 Warnings,Warnings
 Weak,Weak
