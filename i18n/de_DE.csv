@@ -8,7 +8,7 @@
 "Analysis status with order id %1 does not exist.","Analyse-Status für die Bestellung mit id %1 existiert nicht."
 "Are you sure you want to cancel this order?","Möchten Sie die Bestellung wirklich löschen?"
 "Authentication error.",Authentifizierungsfehler.
-"Auto-Correct Address","Automatisch korrigiren"
+"Auto-Correct Address","Automatisch korrigieren"
 "Automatically Cancel","Automatisch stornieren"
 "Automatically Put on Hold","Automatisch zurückstellen"
 "Automatically Update Shipping Address","Lieferaddresse automatisch aktualisieren"
@@ -47,6 +47,7 @@ Pending,Ausstehend
 "Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
 "Sandbox Mode",Sandbox-Modus
 "Service exception: %1","Schnittstellen-Fehler: %1"
+"Shipping address for order #%1 corrected","Lieferadresse für Bestellung #%1 korrigiert"
 Strong,Stark
 "Suggested Shipping Address","Vorgeschlagene Lieferadresse"
 "The order address couldn't be saved.","Die Bestelladresse konnte nicht gespeichert werden."
