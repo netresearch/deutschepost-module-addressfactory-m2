@@ -9,7 +9,6 @@ namespace PostDirekt\Addressfactory\Model;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\ResourceModel\GridInterface;
 use Psr\Log\LoggerInterface;
 
@@ -90,78 +89,80 @@ class DeliverabilityStatus
         return true;
     }
 
-    public function setStatusPending(OrderInterface $order): bool
+    public function setStatusPending(int $orderId): bool
     {
         $analysisStatus = $this->statusFactory->create();
         $analysisStatus->setData([
-            AnalysisStatus::ORDER_ID => $order->getEntityId(),
+            AnalysisStatus::ORDER_ID => $orderId,
             AnalysisStatus::STATUS => self::PENDING
         ]);
 
         return $this->updateStatus($analysisStatus);
     }
 
-    public function setStatusUndeliverable(OrderInterface $order): bool
+    public function setStatusUndeliverable(int $orderId): bool
     {
         $analysisStatus = $this->statusFactory->create();
         $analysisStatus->setData([
-            AnalysisStatus::ORDER_ID => $order->getEntityId(),
+            AnalysisStatus::ORDER_ID => $orderId,
             AnalysisStatus::STATUS => self::UNDELIVERABLE
         ]);
 
         return $this->updateStatus($analysisStatus);
     }
 
-    public function setStatusPossiblyDeliverable(OrderInterface $order): bool
+    public function setStatusPossiblyDeliverable(int $orderId): bool
     {
         $analysisStatus = $this->statusFactory->create();
         $analysisStatus->setData([
-            AnalysisStatus::ORDER_ID => $order->getEntityId(),
+            AnalysisStatus::ORDER_ID => $orderId,
             AnalysisStatus::STATUS => self::POSSIBLY_DELIVERABLE
         ]);
 
         return $this->updateStatus($analysisStatus);
     }
 
-    public function setStatusDeliverable(OrderInterface $order): bool
+    public function setStatusDeliverable(int $orderId): bool
     {
         $analysisStatus = $this->statusFactory->create();
         $analysisStatus->setData([
-            AnalysisStatus::ORDER_ID => $order->getEntityId(),
+            AnalysisStatus::ORDER_ID => $orderId,
             AnalysisStatus::STATUS => self::DELIVERABLE
         ]);
 
         return $this->updateStatus($analysisStatus);
     }
 
-    public function setStatusAddressCorrected(OrderInterface $order): bool
+    public function setStatusAddressCorrected(int $orderId): bool
     {
         $analysisStatus = $this->statusFactory->create();
         $analysisStatus->setData([
-            AnalysisStatus::ORDER_ID => $order->getEntityId(),
+            AnalysisStatus::ORDER_ID => $orderId,
             AnalysisStatus::STATUS => self::ADDRESS_CORRECTED
         ]);
 
         return $this->updateStatus($analysisStatus);
     }
 
-    public function setStatusAnalysisFailed(OrderInterface $order): bool
+    public function setStatusAnalysisFailed(int $orderId): bool
     {
         $analysisStatus = $this->statusFactory->create();
         $analysisStatus->setData([
-            AnalysisStatus::ORDER_ID => $order->getEntityId(),
+            AnalysisStatus::ORDER_ID => $orderId,
             AnalysisStatus::STATUS => self::ANALYSIS_FAILED
         ]);
 
         return $this->updateStatus($analysisStatus);
     }
 
-    public function getStatus(OrderInterface $order): string
+    public function getStatus(int $orderId): string
     {
         try {
-            return $this->repository->getByOrderId((int) $order->getEntityId())->getStatus();
+            $deliverabilityStatus = $this->repository->getByOrderId($orderId);
         } catch (NoSuchEntityException $exception) {
             return self::NOT_ANALYSED;
         }
+
+        return $deliverabilityStatus->getStatus();
     }
 }

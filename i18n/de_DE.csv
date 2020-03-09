@@ -6,16 +6,19 @@
 "Analysis failed","Analyse fehlgeschlagen"
 "Analysis result with order address id %1 does not exist.","Analyse für Bestelladresse mit id %1 existiert nicht"
 "Analysis status with order id %1 does not exist.","Analyse-Status für die Bestellung mit id %1 existiert nicht."
+"Are you sure you want to cancel this order?","Möchten Sie die Bestellung wirklich löschen?"
 "Authentication error.",Authentifizierungsfehler.
+"Auto-Correct Address","Automatisch korrigiren"
 "Automatically Cancel","Automatisch stornieren"
 "Automatically Put on Hold","Automatisch zurückstellen"
 "Automatically Update Shipping Address","Lieferaddresse automatisch aktualisieren"
 "Building deliverable","Gebäude zustellbar"
 "Building undeliverable","Gebäude unzustellbar"
+"Cancel Order","Bestellung stornieren"
 "Configuration Name",Konfigurationsname
 "Could not save analysis result.","Analyse-Ergebnis konnte nicht gespeichert werden."
 "Deliverability Analysis",Zustellbarkeits-Analyse
-"Deliverability Status","Zustellbarkeits-Status"
+"Deliverability Status",Zustellbarkeits-Status
 Deliverable,Zustellbar
 "Detected Issues","Entdeckte Probleme"
 Enabled,Aktiviert
@@ -27,12 +30,13 @@ Errors,Fehler
 "Log Level",Logging-Stufe
 Logging,Logging
 "Mandate Name",Mandanten-Name
+"Manually Edit Address","Adresse manuel ändern"
 Medium,Mittel
 "Module version:",Modulversion
 "Non-deliverable Orders","Nicht zustellbare Bestellungen"
 "Not analysed","Nicht analysiert"
 "Order state changed to ""%1""","Bestellstatus auf ""%1"" geändert"
-"Pending","Ausstehend"
+Pending,Ausstehend
 "Perform Deliverability Analysis","Zustellbarkeits-Analyse durchführen"
 "Person deliverable","Person zustellbar"
 "Person not deliverable","Person unzustellbar"
@@ -51,6 +55,7 @@ Strong,Stark
 "Unable to save analysis status.","Analyse-Status konnte nicht gespeichert werden."
 Undeliverable,Unzustellbar
 "Undeliverable Orders","Unzustellbare Bestellungen"
+"Unhold Order","Bestellung freigeben"
 "Updated shipping address for order #%1","Lieferadresse für Bestellung #%1 aktualisiert"
 Warnings,Warnungen
 Weak,Schwach
