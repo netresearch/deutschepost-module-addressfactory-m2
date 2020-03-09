@@ -18,25 +18,59 @@ $addressId = (int)$block->getData('shipping_address_id');
         </div>
         <?php $analysisResult = $viewModel->getAnalysisResult($addressId); ?>
         <?php if ($analysisResult): ?>
-            <?php $codes = $analysisResult->getStatusCodes(); ?>
-            <span class="<?= $block->escapeHtmlAttr($viewModel->getScore($codes)) ?>">
-                <b><?= $block->escapeHtml($viewModel->getHumanReadableScore($codes)) ?></b>
-            </span>
-            <?php $detectedIssues = $viewModel->getDetectedIssues($codes)?>
-            <div class="detected_issues_info">
-                <h4><?= $block->escapeHtml(__('Detected Issues'))?></h4>
-                <ul>
-                <?php foreach ($detectedIssues as $issue): ?>
-                    <li><span><?= $block->escapeHtml($issue) ?></span></li>
-                <?php endforeach;?>
-                </ul>
-            </div>
-            <div class="pd_address_sugestion">
-                <h3><?= $block->escapeHtml(__('Suggested Shipping Address')) ?></h3>
-                <dl>
-                    <?= /** @noEscape */ $viewModel->getFormattedAddress($analysisResult) ?>
-                </dl>
-            </div>
+                <?php $codes = $analysisResult->getStatusCodes(); ?>
+                <span class="<?= $block->escapeHtmlAttr($viewModel->getScore($codes)) ?>">
+                    <b><?= $block->escapeHtml($viewModel->getHumanReadableScore($codes)) ?></b>
+                </span>
+                <?php $detectedIssues = $viewModel->getDetectedIssues($codes)?>
+                <div class="detected_issues_info">
+                    <h4><?= $block->escapeHtml(__('Detected Issues'))?></h4>
+                    <ul>
+                    <?php foreach ($detectedIssues as $issue): ?>
+                        <li><span><?= $block->escapeHtml($issue) ?></span></li>
+                    <?php endforeach;?>
+                    </ul>
+                </div>
+                <div class="pd_address_sugestion">
+                    <h3><?= $block->escapeHtml(__('Suggested Shipping Address')) ?></h3>
+                    <dl>
+                        <?= /** @noEscape */ $viewModel->getFormattedAddress($analysisResult) ?>
+                    </dl>
+                    <?php if ($viewModel->showAutoCorrectAddressButton()) : ?>
+                        <a class="button action-primary"><?= $block->escapeHtml(__('Auto-Correct Address'))?></a>
+                    <?php endif; ?>
+                </div>
+                <h3>Other Actions</h3>
+                <div class="pd_infox_box">
+                    <p>
+                        <a class="button action-default"
+                           href="<?= $block->escapeUrl($viewModel->getManualEditUrl($addressId)) ?>"
+                        ><?= $block->escapeHtml(__('Manually Edit Address')) ?></a>
+                    </p>
+                    <?php if ($viewModel->showUnholdButton()): ?>
+                        <p>
+                            <button id="order-view-addressfactory-unhold-button"
+                               class="button action-default"
+                               data-url="<?= $viewModel->getUnholdOrderUrl() ?>"
+                            ><?= $block->escapeHtml(__('Unhold Order'))?></button>
+                        </p>
+                    <?php endif; ?>
+                    <?php if ($viewModel->showCancelButton()): ?>
+                        <p>
+                            <button id="order-view-addressfactory-cancel-button"
+                                    class="button action-secondary"
+                                    data-url="<?= $viewModel->getCancelOrderUrl()?>"
+                            ><?= $block->escapeHtml(__('Cancel Order'))?></button>
+                        </p>
+                    <?php endif; ?>
+                </div>
+                <script type="text/x-magento-init">
+                    {
+                        "*": {
+                            "PostDirekt_Addressfactory/js/postdirekt-post-wrapper": {}
+                        }
+                    }
+                </script>
         <?php else: ?>
             <a
                 class="button action-primary"

@@ -14,11 +14,19 @@ use Magento\Framework\Phrase;
 use Magento\Framework\View\Asset\Repository as AssetRepository;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Sales\Api\Data\OrderAddressInterface;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\OrderRepository;
 use PostDirekt\Addressfactory\Model\AnalysisResult;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
 use PostDirekt\Addressfactory\Model\DeliverabilityCodes;
+use PostDirekt\Addressfactory\Model\DeliverabilityStatus;
 
+/**
+ * Class AnalysisData
+ *
+ * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
+ * @link     https://www.netresearch.de/
+ */
 class AnalysisData implements ArgumentInterface
 {
     /**
@@ -47,6 +55,11 @@ class AnalysisData implements ArgumentInterface
     private $deliverablility;
 
     /**
+     * @var DeliverabilityStatus
+     */
+    private $deliveryStatus;
+
+    /**
      * @var Url
      */
     private $urlBuilder;
@@ -57,6 +70,7 @@ class AnalysisData implements ArgumentInterface
         Request $request,
         OrderRepository $orderRepository,
         DeliverabilityCodes $deliverablility,
+        DeliverabilityStatus $deliveryStatus,
         Url $urlBuilder
     ) {
         $this->analysisResultRepository = $analysisResultRepository;
@@ -64,6 +78,7 @@ class AnalysisData implements ArgumentInterface
         $this->request = $request;
         $this->orderRepository = $orderRepository;
         $this->deliverablility = $deliverablility;
+        $this->deliveryStatus = $deliveryStatus;
         $this->urlBuilder = $urlBuilder;
     }
 
@@ -87,6 +102,10 @@ class AnalysisData implements ArgumentInterface
         return $this->urlBuilder->getUrl('postdirekt/analysis/analyse', ['order_id' => $orderId]);
     }
 
+    /**
+     * @param string[] $codes
+     * @return Phrase
+     */
     public function getHumanReadableScore(array $codes): Phrase
     {
         $scores = [
@@ -98,6 +117,10 @@ class AnalysisData implements ArgumentInterface
         return $scores[$this->getScore($codes)] ?? _();
     }
 
+    /**
+     * @param string[] $codes
+     * @return string
+     */
     public function getScore(array $codes): string
     {
         return $this->deliverablility->computeScore($codes);
@@ -130,20 +153,75 @@ class AnalysisData implements ArgumentInterface
                 <dd><span>{$city} {$postalCode}</span></dd>";
     }
 
+    /**
+     * @param string[] $codes
+     * @return string[]
+     */
     public function getDetectedIssues(array $codes): array
     {
         return $this->deliverablility->getLabels($codes);
     }
 
-    private function getOrderAddress(): ?OrderAddressInterface
+    public function showCancelButton(): bool
+    {
+        $orderId = (int) $this->request->getParam('order_id');
+        $order = $this->getOrder($orderId);
+        if (!$order) {
+            return false;
+        }
+        $isNotDeliverable = $this->deliveryStatus->getStatus($orderId) !== DeliverabilityStatus::DELIVERABLE;
+
+        return $isNotDeliverable && $order->canCancel();
+    }
+
+    public function showUnholdButton(): bool
+    {
+        $orderId = (int) $this->request->getParam('order_id');
+        $order = $this->getOrder($orderId);
+
+        return $order ? $order->canUnhold() : false;
+    }
+
+    public function showAutoCorrectAddressButton(): bool
+    {
+        $orderId = (int) $this->request->getParam('order_id');
+
+        return $this->deliveryStatus->getStatus($orderId) !== DeliverabilityStatus::ADDRESS_CORRECTED;
+    }
+
+    public function getManualEditUrl(int $addressId): string
+    {
+        return $this->urlBuilder->getUrl('sales/order/address', ['address_id' => $addressId]);
+    }
+
+    public function getCancelOrderUrl(): string
     {
         $orderId = (int)$this->request->getParam('order_id');
+        return $this->urlBuilder->getUrl('sales/*/cancel', ['order_id' => $orderId]);
+    }
+
+    public function getUnholdOrderUrl(): string
+    {
+        $orderId = (int)$this->request->getParam('order_id');
+        return $this->urlBuilder->getUrl('sales/*/unhold', ['order_id' => $orderId]);
+    }
+
+    private function getOrderAddress(): ?OrderAddressInterface
+    {
+        $orderId = (int) $this->request->getParam('order_id');
+        $order = $this->getOrder($orderId);
+
+        return $order ? $order->getShippingAddress() : null;
+    }
+
+    private function getOrder(int $orderId): ?OrderInterface
+    {
         try {
             $order = $this->orderRepository->get($orderId);
         } catch (InputException | NoSuchEntityException $e) {
             return null;
         }
 
-        return $order->getShippingAddress();
+        return $order;
     }
 }

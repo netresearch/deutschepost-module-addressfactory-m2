@@ -28,8 +28,10 @@ class AnalysisStatusRepository
      */
     private $analysisStatusFactory;
 
-    public function __construct(AnalysisStatusResource $resource, AnalysisStatusFactory $analysisStatusFactory)
-    {
+    public function __construct(
+        AnalysisStatusResource $resource,
+        AnalysisStatusFactory $analysisStatusFactory
+    ) {
         $this->resource = $resource;
         $this->analysisStatusFactory = $analysisStatusFactory;
     }
