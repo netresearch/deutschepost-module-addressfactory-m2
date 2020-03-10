@@ -9,7 +9,6 @@ define([
     'mage/translate'
 ], function ($, confirm) {
     'use strict';
-    console.log('upsala');
     /**
      * @param {String} url
      * @returns {Object}
