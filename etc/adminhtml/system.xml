@@ -58,6 +58,10 @@
                     <label>Improveable Orders</label>
                     <button_label>Automatically Update Shipping Address</button_label>
                 </field>
+                <field id="automatic_address_analysis" translate="label" type="Netresearch\ConfigFields\Model\Type\Radioset" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="90">
+                    <label>Automatic Address Analysis</label>
+                    <source_model>PostDirekt\Addressfactory\Model\Config\Source\AutomaticOptions</source_model>
+                </field>
             </group>
         </section>
     </system>

@@ -22,6 +22,7 @@ class ConfigTest extends TestCase
      * @magentoConfigFixture default_store postdirekt/addressfactory/hold_non_deliverable_orders 1
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_cancel_orders 1
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_update_shipping_address 1
+     * @magentoConfigFixture default_store postdirekt/addressfactory/automatic_address_analysis 2
      */
     public function testGetters()
     {
@@ -39,6 +40,9 @@ class ConfigTest extends TestCase
         self::assertTrue($subject->isHoldNonDeliverableOrders($store->getCode()));
         self::assertTrue($subject->isAutoCancelNonDeliverableOrders($store->getCode()));
         self::assertTrue($subject->isAutoUpdateShippingAddress($store->getCode()));
+        self::assertFalse($subject->isManualAnalysisOnly($store->getCode()));
+        self::assertTrue($subject->isAnalysisViaCron($store->getCode()));
+        self::assertFalse($subject->isAnalysisOnOrderPlace($store->getCode()));
     }
 
     public function testDefaults()
@@ -57,7 +61,6 @@ class ConfigTest extends TestCase
         self::assertFalse($subject->isHoldNonDeliverableOrders($store->getCode()));
         self::assertFalse($subject->isAutoCancelNonDeliverableOrders($store->getCode()));
         self::assertFalse($subject->isAutoUpdateShippingAddress($store->getCode()));
+        self::assertTrue($subject->isManualAnalysisOnly($store->getCode()));
     }
-
-
 }
