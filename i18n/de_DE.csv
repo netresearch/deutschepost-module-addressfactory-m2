@@ -5,11 +5,14 @@
 "Addressfactory Direct Settings","Addressfactory Direct Einstellungen"
 "Adjustment Strength",Abgleichhärte
 "Analysis failed","Analyse fehlgeschlagen"
+"Analysis on Order placement","Analyse bei Bestellungsabschluß"
 "Analysis result with order address id %1 does not exist.","Analyse für Bestelladresse mit id %1 existiert nicht"
 "Analysis status with order id %1 does not exist.","Analyse-Status für die Bestellung mit id %1 existiert nicht."
+"Analysis via Cron","Analyse via Cron"
 "Are you sure you want to cancel this order?","Möchten Sie die Bestellung wirklich stornieren?"
 "Authentication error.",Authentifizierungsfehler.
 "Auto-Correct Address","Automatisch korrigieren"
+"Automatic Address Analysis","Automatische Address-Analyse"
 "Automatically Cancel","Automatisch stornieren"
 "Automatically Put on Hold","Automatisch zurückstellen"
 "Automatically Update Shipping Address","Lieferaddresse automatisch aktualisieren"
@@ -39,6 +42,7 @@ Logging,Logging
 "Manually Edit Address","Adresse manuell ändern"
 Medium,Mittel
 "Module version:",Modulversion
+"No Automatic Analysis","Keine automatische Analyse"
 "Non-deliverable Orders","Nicht zustellbare Bestellungen"
 "Not analysed","Nicht analysiert"
 "Order state changed to ""%1""","Bestellstatus auf ""%1"" geändert"
