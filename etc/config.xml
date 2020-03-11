@@ -10,6 +10,7 @@ See LICENSE.md for license details.
                 <sandbox_mode>1</sandbox_mode>
                 <adjustment_strength>1</adjustment_strength>
                 <log_level>400</log_level>
+                <automatic_address_analysis>1</automatic_address_analysis>
             </addressfactory>
         </postdirekt>
     </default>
