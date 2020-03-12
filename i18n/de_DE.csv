@@ -15,6 +15,8 @@
 "Building deliverable","Gebäude zustellbar"
 "Building undeliverable","Gebäude unzustellbar"
 "Cancel Order","Bestellung stornieren"
+"Check Deliverability","Zustellbarkeit überprüfen"
+"Check and Improve Deliverability","Zustellbarkeit überprüfen und verbessern"
 "Configuration Name",Konfigurationsname
 "Could not save analysis result.","Analyse-Ergebnis konnte nicht gespeichert werden."
 "Deliverability Analysis",Zustellbarkeits-Analyse
@@ -36,6 +38,8 @@ Medium,Mittel
 "Non-deliverable Orders","Nicht zustellbare Bestellungen"
 "Not analysed","Nicht analysiert"
 "Order state changed to ""%1""","Bestellstatus auf ""%1"" geändert"
+"Order(s) %1 where successfully analysed.","Bestellung(en) %1 wurden erfolgreich analysiert"
+"Order(s) %1 where successfully updated.","Bestellung(en) %1 wurden erfolgreich aktualisiert"
 Pending,Ausstehend
 "Perform Deliverability Analysis","Zustellbarkeits-Analyse durchführen"
 "Person deliverable","Person zustellbar"
@@ -43,6 +47,7 @@ Pending,Ausstehend
 "Person not matched","Person nicht angetroffen"
 "Possibly Deliverable","Möglicherweise zustellbar"
 "Possibly deliverable","Möglicherweise zustellbar"
+"Post Direkt Addressfactory","Post Direkt Addressfactory"
 "Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper."
 "Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
 "Sandbox Mode",Sandbox-Modus
