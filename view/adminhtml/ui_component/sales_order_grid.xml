@@ -15,6 +15,26 @@ See LICENSE.md for license details.
                 </settings>
             </filterSelect>
         </filters>
+        <massaction name="listing_massaction">
+            <action name="postdirekt_addressfactory_analyse">
+                <settings>
+                    <type>autocreate</type>
+                    <label translate="true">Post Direkt Addressfactory</label>
+                    <actions>
+                        <action name="0">
+                            <type>postdirekt_check</type>
+                            <label translate="true">Check Deliverability</label>
+                            <url path="postdirekt/bulk/check"/>
+                        </action>
+                        <action name="1">
+                            <type>postdirekt_improve</type>
+                            <label translate="true">Check and Improve Deliverability</label>
+                            <url path="postdirekt/bulk/improve"/>
+                        </action>
+                    </actions>
+                </settings>
+            </action>
+        </massaction>
     </listingToolbar>
     <columns name="sales_order_columns">
         <column name="postdirekt_addressfactory_analysis_status">

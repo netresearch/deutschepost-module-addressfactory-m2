@@ -62,7 +62,7 @@ class Analyse extends Action
      *
      * @return ResultInterface
      */
-    public function execute()
+    public function execute(): ResultInterface
     {
         $orderId = $this->getRequest()->getParam('order_id');
         $order = $this->orderRepository->get($orderId);
