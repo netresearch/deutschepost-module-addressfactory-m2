@@ -5,7 +5,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="sales_order_save_after">
+    <event name="sales_order_address_save_after">
         <observer name="addressfactory_set_new_order_deliverability_status" instance="PostDirekt\Addressfactory\Observer\SetNewOrderDeliverabilityStatus"/>
     </event>
 </config>

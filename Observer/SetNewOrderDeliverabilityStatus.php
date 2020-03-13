@@ -8,8 +8,13 @@ namespace PostDirekt\Addressfactory\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderInterface;
+use PostDirekt\Addressfactory\Model\Config;
 use PostDirekt\Addressfactory\Model\DeliverabilityStatus;
+use PostDirekt\Addressfactory\Model\OrderAnalysis;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class SetNewOrderDeliverabilityStatus
@@ -22,22 +27,66 @@ use PostDirekt\Addressfactory\Model\DeliverabilityStatus;
 class SetNewOrderDeliverabilityStatus implements ObserverInterface
 {
     /**
+     * @var Config
+     */
+    private $config;
+
+    /**
+     * @var OrderAnalysis
+     */
+    private $analyseService;
+
+    /**
      * @var DeliverabilityStatus
      */
     private $deliverableStatus;
 
-    public function __construct(DeliverabilityStatus $deliverableStatus)
-    {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(
+        Config $config,
+        OrderAnalysis $analyseService,
+        DeliverabilityStatus $deliverableStatus,
+        LoggerInterface $logger
+    ) {
+        $this->config = $config;
+        $this->analyseService = $analyseService;
         $this->deliverableStatus = $deliverableStatus;
+        $this->logger = $logger;
     }
 
     public function execute(Observer $observer): void
     {
         /** @var OrderInterface $order */
-        $order = $observer->getData('order');
-        $status = $this->deliverableStatus->getStatus((int) $order->getEntityId());
-        if ($status === DeliverabilityStatus::NOT_ANALYSED) {
+        $order = $observer->getData('address')->getOrder();
+        $storeId = (string) $order->getStoreId();
+        if ($this->config->isManualAnalysisOnly($storeId)) {
+            return;
+        }
+
+        if ($this->config->isAnalysisViaCron($storeId)) {
             $this->deliverableStatus->setStatusPending((int) $order->getEntityId());
+        }
+
+        if ($this->config->isAnalysisOnOrderPlace($storeId)) {
+            try {
+                $this->analyseService->analyse([$order]);
+                if ($this->config->isHoldNonDeliverableOrders($storeId)) {
+                    $this->analyseService->holdNonDeliverable([$order]);
+                }
+                if ($this->config->isAutoCancelNonDeliverableOrders($storeId)) {
+                    $this->analyseService->cancelUndeliverable([$order]);
+                }
+                if ($this->config->isAutoUpdateShippingAddress($storeId)) {
+                    $this->analyseService->updateShippingAddress([$order]);
+                }
+            } catch (LocalizedException|CouldNotSaveException $exception) {
+                $this->logger->error($exception->getMessage());
+                $this->deliverableStatus->setStatusAnalysisFailed((int) $order->getEntityId());
+            }
         }
     }
 }

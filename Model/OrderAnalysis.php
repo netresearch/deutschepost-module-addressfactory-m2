@@ -156,7 +156,7 @@ class OrderAnalysis
         }
         $result = [];
         foreach ($orders as $order) {
-            $analysisResult = $analysisResults[(int) $order->getShippingAddressId()] ?? null;
+            $analysisResult = $analysisResults[(int) $order->getShippingAddress()->getEntityId()] ?? null;
             $this->updateDeliverabilityStatus((int) $order->getId(), $analysisResult);
             $result[$order->getEntityId()] = $analysisResult;
         }
