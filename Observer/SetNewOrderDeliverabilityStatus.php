@@ -63,7 +63,8 @@ class SetNewOrderDeliverabilityStatus implements ObserverInterface
         /** @var OrderInterface $order */
         $order = $observer->getData('address')->getOrder();
         $storeId = (string) $order->getStoreId();
-        if ($this->config->isManualAnalysisOnly($storeId)) {
+        $status = $this->deliverableStatus->getStatus((int)$order->getEntityId());
+        if ($this->config->isManualAnalysisOnly($storeId) || $status !== DeliverabilityStatus::NOT_ANALYSED) {
             return;
         }
 
