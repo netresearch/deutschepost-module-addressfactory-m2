@@ -1,4 +1,5 @@
 "Address corrected","Adresse korrigiert"
+"Address not correctable","Addresse nicht korrigierbar"
 "Addressfactory & Magento","Addressfactory & Magento"
 "Addressfactory Direct Deliverability Status","Addressfactory Direct Zustellbarkeits-Status"
 "Addressfactory Direct Settings","Addressfactory Direct Einstellungen"
@@ -12,27 +13,30 @@
 "Automatically Cancel","Automatisch stornieren"
 "Automatically Put on Hold","Automatisch zurückstellen"
 "Automatically Update Shipping Address","Lieferaddresse automatisch aktualisieren"
-"Building deliverable","Gebäude zustellbar"
-"Building undeliverable","Gebäude unzustellbar"
+Building,Gebäude
+"Bulk receiver name",Großempfängername
+"Bulk recipient address",Großempfänder-Adresse
 "Cancel Order","Bestellung stornieren"
 "Check Deliverability","Zustellbarkeit überprüfen"
 "Check and Improve Deliverability","Zustellbarkeit überprüfen und verbessern"
+City,Ort
+"City addition",Ortszusatz
 "Configuration Name",Konfigurationsname
 "Could not save analysis result.","Analyse-Ergebnis konnte nicht gespeichert werden."
+Country,Land
 "Deliverability Analysis",Zustellbarkeits-Analyse
 "Deliverability Status",Zustellbarkeits-Status
 Deliverable,Zustellbar
 "Detected Issues","Entdeckte Probleme"
 Enabled,Aktiviert
 Errors,Fehler
-"Household deliverable","Haushalt zustellbar"
-"Household not matched","Haushalt nicht angetroffen"
-"Household undeliverable","Haushalt unzustellbar"
+"House address",Hausanschrift
+Household,Haushalt
 "Improveable Orders","Korrigierbare Bestellungen"
 "Log Level",Logging-Stufe
 Logging,Logging
 "Mandate Name",Mandanten-Name
-"Manually Edit Address","Adresse manuel ändern"
+"Manually Edit Address","Adresse manuell ändern"
 Medium,Mittel
 "Module version:",Modulversion
 "Non-deliverable Orders","Nicht zustellbare Bestellungen"
@@ -40,19 +44,20 @@ Medium,Mittel
 "Order state changed to ""%1""","Bestellstatus auf ""%1"" geändert"
 "Order(s) %1 where successfully analysed.","Bestellung(en) %1 wurden erfolgreich analysiert"
 "Order(s) %1 where successfully updated.","Bestellung(en) %1 wurden erfolgreich aktualisiert"
+"Other Actions","Weitere Aktionen"
 Pending,Ausstehend
 "Perform Deliverability Analysis","Zustellbarkeits-Analyse durchführen"
-"Person deliverable","Person zustellbar"
-"Person not deliverable","Person unzustellbar"
-"Person not matched","Person nicht angetroffen"
+Person,Person
 "Possibly Deliverable","Möglicherweise zustellbar"
 "Possibly deliverable","Möglicherweise zustellbar"
 "Post Direkt Addressfactory","Post Direkt Addressfactory"
+"Postal code",PLZ
 "Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper."
 "Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
 "Sandbox Mode",Sandbox-Modus
 "Service exception: %1","Schnittstellen-Fehler: %1"
 "Shipping address for order #%1 corrected","Lieferadresse für Bestellung #%1 korrigiert"
+Street,Straße
 Strong,Stark
 "Suggested Shipping Address","Vorgeschlagene Lieferadresse"
 "The order address couldn't be saved.","Die Bestelladresse konnte nicht gespeichert werden."
@@ -66,3 +71,20 @@ Undeliverable,Unzustellbar
 Warnings,Warnungen
 Weak,Schwach
 "You must also have Magento general logging enabled.","Das allgemeine Magento-Logging muss ebenfalls aktiviert sein."
+"address type changed","Anschriftentyp geändert"
+ambigouus,mehrdeutig
+different,abweichend
+incorporated,eingemeindet
+"incorporated or renamed","eingemeindet oder umbenannt"
+"is company address","ist Firmenadresse"
+"is foreign address","ist Auslandsadresse"
+"marginally corrected","geringfügig korrigiert"
+"matched in Robinson list","getroffen in Robinsonliste"
+"matched in fake-name list","getroffen in Fake-Namensliste"
+moved,umgezogen
+"not filled","nicht befüllt"
+"not matched","nicht getroffen"
+"receiver deceased","Empfänger verstorben"
+"reportedly deceased","Empfänger soll verstorben sein"
+"significantly corrected","signifikant korrigiert"
+undeliverable,unzustellbar
