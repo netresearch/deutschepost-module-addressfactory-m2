@@ -1,4 +1,5 @@
 "Address corrected","Address corrected"
+"Address not correctable","Address not correctable"
 "Addressfactory & Magento","Addressfactory & Magento"
 "Addressfactory Direct Deliverability Status","Addressfactory Direct Deliverability Status"
 "Addressfactory Direct Settings","Addressfactory Direct Settings"
@@ -12,22 +13,25 @@
 "Automatically Cancel","Automatically Cancel"
 "Automatically Put on Hold","Automatically Put on Hold"
 "Automatically Update Shipping Address","Automatically Update Shipping Address"
-"Building deliverable","Building deliverable"
-"Building undeliverable","Building undeliverable"
+Building,Building
+"Bulk receiver name","Bulk receiver name"
+"Bulk recipient address","Bulk recipient address"
 "Cancel Order","Cancel Order"
 "Check Deliverability","Check Deliverability"
 "Check and Improve Deliverability","Check and Improve Deliverability"
+City,City
+"City addition","City addition"
 "Configuration Name","Configuration Name"
 "Could not save analysis result.","Could not save analysis result."
+Country,Country
 "Deliverability Analysis","Deliverability Analysis"
 "Deliverability Status","Deliverability Status"
 Deliverable,Deliverable
 "Detected Issues","Detected Issues"
 Enabled,Enabled
 Errors,Errors
-"Household deliverable","Household deliverable"
-"Household not matched","Household not matched"
-"Household undeliverable","Household undeliverable"
+"House address","House address"
+Household,Household
 "Improveable Orders","Improveable Orders"
 "Log Level","Log Level"
 Logging,Logging
@@ -40,19 +44,20 @@ Medium,Medium
 "Order state changed to ""%1""","Order state changed to ""%1"""
 "Order(s) %1 where successfully analysed.","Order(s) %1 where successfully analysed."
 "Order(s) %1 where successfully updated.","Order(s) %1 where successfully updated."
+"Other Actions","Other Actions"
 Pending,Pending
 "Perform Deliverability Analysis","Perform Deliverability Analysis"
-"Person deliverable","Person deliverable"
-"Person not deliverable","Person not deliverable"
-"Person not matched","Person not matched"
+Person,Person
 "Possibly Deliverable","Possibly Deliverable"
 "Possibly deliverable","Possibly deliverable"
 "Post Direkt Addressfactory","Post Direkt Addressfactory"
+"Postal code","Postal code"
 "Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper."
 "Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
 "Sandbox Mode","Sandbox Mode"
 "Service exception: %1","Service exception: %1"
 "Shipping address for order #%1 corrected","Shipping address for order #%1 corrected"
+Street,Street
 Strong,Strong
 "Suggested Shipping Address","Suggested Shipping Address"
 "The order address couldn't be saved.","The order address couldn't be saved."
@@ -66,3 +71,20 @@ Undeliverable,Undeliverable
 Warnings,Warnings
 Weak,Weak
 "You must also have Magento general logging enabled.","You must also have Magento general logging enabled."
+"address type changed","address type changed"
+ambigouus,ambigouus
+different,different
+incorporated,incorporated
+"incorporated or renamed","incorporated or renamed"
+"is company address","is company address"
+"is foreign address","is foreign address"
+"marginally corrected","marginally corrected"
+"matched in Robinson list","matched in Robinson list"
+"matched in fake-name list","matched in fake-name list"
+moved,moved
+"not filled","not filled"
+"not matched","not matched"
+"receiver deceased","receiver deceased"
+"reportedly deceased","reportedly deceased"
+"significantly corrected","significantly corrected"
+undeliverable,undeliverable

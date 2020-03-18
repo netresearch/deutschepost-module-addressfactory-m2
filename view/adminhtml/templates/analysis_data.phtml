@@ -42,7 +42,7 @@ $addressId = (int)$block->getData('shipping_address_id');
                         ><?= $block->escapeHtml(__('Auto-Correct Address'))?></a>
                     <?php endif; ?>
                 </div>
-                <h3>Other Actions</h3>
+                <h3><?= $block->escapeHtml(__('Other Actions')) ?></h3>
                 <div class="pd_infox_box">
                     <p>
                         <a class="button action-default"
