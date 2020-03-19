@@ -4,7 +4,7 @@
  */
 declare(strict_types=1);
 
-namespace PostDirekt\Addressfactory\Test\Integration\Model;
+namespace PostDirekt\Addressfactory\Test\Integration\TestCase\Model;
 
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
@@ -20,7 +20,7 @@ use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\AddressDe;
 use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\AddressUs;
 use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\SimpleProduct;
 use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderFixture;
-use PostDirekt\Addressfactory\Test\Integration\Stub\AddressVerificationServiceStub;
+use PostDirekt\Addressfactory\Test\Integration\TestDouble\AddressVerificationServiceStub;
 use PostDirekt\Sdk\AddressfactoryDirect\Service\AddressVerificationService\Address;
 use PostDirekt\Sdk\AddressfactoryDirect\Service\AddressVerificationService\Person;
 use PostDirekt\Sdk\AddressfactoryDirect\Service\AddressVerificationService\Record;
@@ -225,7 +225,8 @@ class AddressAnalysisTest extends TestCase
 
         $results = $addressAnalysis->analyze($addresses);
 
-        self::assertTrue($addressVerificationServiceStub->isGetRecordsCalled());
+        // assert one out of two records were retrieved from web service
+        self::assertSame(1, $addressVerificationServiceStub->getRequestedRecordsCount());
 
         self::assertArrayHasKey($testRecord->getRecordId(), $results, 'AnalysisResult from the API is missing from results');
         self::assertArrayHasKey($addresses[0]->getEntityId(), $results, 'AnalysisResult from the DB is missing from results');

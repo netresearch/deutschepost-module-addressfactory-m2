@@ -78,7 +78,6 @@ class AnalysisResultRepository
      */
     public function getList(SearchCriteria $searchCriteria): SearchResult
     {
-
         $searchResult = $this->searchResultFactory->create();
         $this->collectionProcessor->process($searchCriteria, $searchResult);
         $searchResult->setSearchCriteria($searchCriteria);

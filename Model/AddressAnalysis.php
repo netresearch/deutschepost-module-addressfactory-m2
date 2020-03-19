@@ -102,12 +102,11 @@ class AddressAnalysis
      */
     public function analyze(array $addresses): array
     {
-        $addressIds = array_map(
-            static function (OrderAddressInterface $address) {
-                return $address->getEntityId();
-            },
-            $addresses
-        );
+        $addressIds = [];
+        foreach ($addresses as $address) {
+            $addressIds[] = $address->getEntityId();
+        }
+
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter(AnalysisResult::ORDER_ADDRESS_ID, $addressIds, 'in')
             ->create();
@@ -160,6 +159,8 @@ class AddressAnalysis
      * @throws LocalizedException
      * @throws CouldNotSaveException    The repository interface is missing this annotation,
      *                                  but its default implementation can throw it.
+     *
+     * @deprecated  Use PostDirekt\Addressfactory\Model\AddressUpdater::update instead
      */
     public function update(array $addresses): array
     {

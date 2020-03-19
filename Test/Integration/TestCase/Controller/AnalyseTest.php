@@ -4,7 +4,7 @@
  */
 declare(strict_types=1);
 
-namespace PostDirekt\Addressfactory\Test\Integration\Controller;
+namespace PostDirekt\Addressfactory\Test\Integration\TestCase\Controller;
 
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Api\Data\OrderInterface;
