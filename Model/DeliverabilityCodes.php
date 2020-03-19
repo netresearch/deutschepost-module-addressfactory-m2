@@ -26,7 +26,6 @@ class DeliverabilityCodes
     private const PERSON_NOT_MATCHED = 'PDC050500';
     private const HOUSEHOLD_NOT_MATCHED = 'PDC040500';
     private const BUILDING_UNDELIVERABLE = 'PDC030106';
-
     private const NOT_CORRECTABLE = 'BAC000111';
 
     /**
@@ -35,6 +34,10 @@ class DeliverabilityCodes
      */
     public function computeScore(array $codes): string
     {
+        if (\in_array(self::NOT_CORRECTABLE, $codes, true)) {
+            return self::UNDELIVERABLE;
+        }
+
         if (\in_array(self::PERSON_DELIVERABLE, $codes, true)) {
             return self::DELIVERABLE;
         }
