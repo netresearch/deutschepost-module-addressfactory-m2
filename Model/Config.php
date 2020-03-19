@@ -40,7 +40,11 @@ class Config
         return $this->scopeConfig->getValue(self::CONFIG_PATH_VERSION);
     }
 
-    public function isLoggingEnabled(?string $store = null): bool
+    /**
+     * @param string|int|null $store
+     * @return bool
+     */
+    public function isLoggingEnabled($store = null): bool
     {
         return (bool) $this->scopeConfig->getValue(
             self::CONFIG_PATH_LOGGING,
@@ -49,7 +53,11 @@ class Config
         );
     }
 
-    public function getLogLevel(?string $store = null): string
+    /**
+     * @param string|int|null $store
+     * @return string
+     */
+    public function getLogLevel($store = null): string
     {
         return (string) $this->scopeConfig->getValue(
             self::CONFIG_PATH_LOGLEVEL,
@@ -58,7 +66,11 @@ class Config
         );
     }
 
-    public function isSandboxMode(?string $store = null): bool
+    /**
+     * @param string|int|null $store
+     * @return bool
+     */
+    public function isSandboxMode($store = null): bool
     {
         return (bool) $this->scopeConfig->getValue(
             self::CONFIG_PATH_SANDBOXMODE,
@@ -67,7 +79,11 @@ class Config
         );
     }
 
-    public function getConfigurationName(?string $store = null): string
+    /**
+     * @param string|int|null $store
+     * @return string
+     */
+    public function getConfigurationName($store = null): string
     {
         return (string) $this->scopeConfig->getValue(
             self::CONFIG_PATH_CONFIGURATIONNAME,
@@ -76,7 +92,11 @@ class Config
         );
     }
 
-    public function getAdjustmentStrength(?string $store = null): string
+    /**
+     * @param string|int|null $store
+     * @return string
+     */
+    public function getAdjustmentStrength($store = null): string
     {
         return (string) $this->scopeConfig->getValue(
             self::CONFIG_PATH_ADJUSTMENTSTRENGTH,
@@ -85,7 +105,11 @@ class Config
         );
     }
 
-    public function getMandateName(?string $store = null): string
+    /**
+     * @param string|int|null $store
+     * @return string
+     */
+    public function getMandateName($store = null): string
     {
         return (string) $this->scopeConfig->getValue(
             self::CONFIG_PATH_MANDATENAME,
@@ -94,7 +118,11 @@ class Config
         );
     }
 
-    public function isHoldNonDeliverableOrders(?string $store = null): bool
+    /**
+     * @param string|int|null $store
+     * @return bool
+     */
+    public function isHoldNonDeliverableOrders($store = null): bool
     {
         return (bool) $this->scopeConfig->getValue(
             self::CONFIG_PATH_HOLD_NON_DELIVERABLE_ORDERS,
@@ -103,7 +131,11 @@ class Config
         );
     }
 
-    public function isAutoCancelNonDeliverableOrders(?string $store = null): bool
+    /**
+     * @param string|int|null $store
+     * @return bool
+     */
+    public function isAutoCancelNonDeliverableOrders($store = null): bool
     {
         return (bool) $this->scopeConfig->getValue(
             self::CONFIG_PATH_HOLD_AUTO_CANCEL_ORDERS,
@@ -112,7 +144,11 @@ class Config
         );
     }
 
-    public function isAutoUpdateShippingAddress(?string $store = null): bool
+    /**
+     * @param string|int|null $store
+     * @return bool
+     */
+    public function isAutoUpdateShippingAddress($store = null): bool
     {
         return (bool) $this->scopeConfig->getValue(
             self::CONFIG_PATH_HOLD_AUTO_UPDATE_SHIPPING_ADDRESS,
@@ -121,7 +157,11 @@ class Config
         );
     }
 
-    private function getAutoAddressAnalysis(?string $store = null): string
+    /**
+     * @param string|int|null $store
+     * @return string
+     */
+    private function getAutoAddressAnalysis($store = null): string
     {
         return (string) $this->scopeConfig->getValue(
             self::CONFIG_PATH_AUTOMATIC_ADDRESS_ANALYSE,
@@ -130,17 +170,29 @@ class Config
         );
     }
 
-    public function isManualAnalysisOnly(?string $store = null): bool
+    /**
+     * @param string|int|null $store
+     * @return bool
+     */
+    public function isManualAnalysisOnly($store = null): bool
     {
         return AutomaticOptions::NO_AUTOMATIC_ANALYSIS === $this->getAutoAddressAnalysis($store);
     }
 
-    public function isAnalysisViaCron(?string $store = null): bool
+    /**
+     * @param string|int|null $store
+     * @return bool
+     */
+    public function isAnalysisViaCron($store = null): bool
     {
         return AutomaticOptions::ANALYSIS_VIA_CRON === $this->getAutoAddressAnalysis($store);
     }
 
-    public function isAnalysisOnOrderPlace(?string $store = null): bool
+    /**
+     * @param string|int|null $store
+     * @return bool
+     */
+    public function isAnalysisOnOrderPlace($store = null): bool
     {
         return AutomaticOptions::ON_ORDER_PLACE === $this->getAutoAddressAnalysis($store);
     }

@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace PostDirekt\Addressfactory\Test\Integration\Stub;
+namespace PostDirekt\Addressfactory\Test\Integration\TestDouble;
 
 use PostDirekt\Sdk\AddressfactoryDirect\Api\AddressVerificationServiceInterface;
 use PostDirekt\Sdk\AddressfactoryDirect\Api\Data\RecordInterface;
@@ -20,10 +20,9 @@ class AddressVerificationServiceStub implements AddressVerificationServiceInterf
      */
     public $records = [];
 
-    private $getRecordsCalled = false;
+    private $requestCount = 0;
 
-    private $getRecordByAddressCalled = true;
-
+    private $requestedRecordsCount = 0;
 
     public function openSession(string $configName, string $clientId = null): string
     {
@@ -46,11 +45,12 @@ class AddressVerificationServiceStub implements AddressVerificationServiceInterf
         string $configName = null,
         string $clientId = null
     ): RecordInterface {
+        $this->requestCount++;
+
         if (empty($this->records)) {
             throw new ServiceException('no records');
         }
 
-        $this->getRecordByAddressCalled = true;
         return $this->records[0];
     }
 
@@ -60,21 +60,32 @@ class AddressVerificationServiceStub implements AddressVerificationServiceInterf
         string $configName = null,
         string $clientId = null
     ): array {
+        $this->requestedRecordsCount += count($records);
+
         if (empty($this->records)) {
             throw new ServiceException('no records');
         }
 
-        $this->getRecordsCalled = true;
         return $this->records;
     }
 
-    public function isGetRecordsCalled(): bool
+    /**
+     * Check how many records were sent to the web service via {@see getRecordByAddress}.
+     *
+     * @return int
+     */
+    public function getRecordByAddressRequestCount(): int
     {
-        return $this->getRecordsCalled;
+        return $this->requestCount;
     }
 
-    public function isGetRecordByAddressCalled(): bool
+    /**
+     * Check how many records were sent to the web service via {@see getRecords}.
+     *
+     * @return int
+     */
+    public function getRequestedRecordsCount(): int
     {
-        return $this->getRecordByAddressCalled;
+        return $this->requestedRecordsCount;
     }
 }

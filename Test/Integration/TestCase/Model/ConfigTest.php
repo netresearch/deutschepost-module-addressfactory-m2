@@ -3,7 +3,7 @@
  * See LICENSE.md for license details.
  */
 
-namespace PostDirekt\Addressfactory\Test\Integration\Model;
+namespace PostDirekt\Addressfactory\Test\Integration\TestCase\Model;
 
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\TestFramework\Helper\Bootstrap;

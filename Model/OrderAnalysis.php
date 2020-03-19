@@ -53,10 +53,13 @@ class OrderAnalysis
 
     /**
      * @param Order[] $orders
+     * @return Order[]  List of Orders that were put on hold
      * @throws LocalizedException
      */
-    public function holdNonDeliverable(array $orders): void
+    public function holdNonDeliverable(array $orders): array
     {
+        $heldOrders = [];
+
         $analysisResults = $this->analyse($orders);
         foreach ($orders as $order) {
             if (!$order->canHold()) {
@@ -69,16 +72,22 @@ class OrderAnalysis
             $score = $this->deliverabilityScoreService->computeScore($analysisResult->getStatusCodes());
             if ($score !== DeliverabilityCodes::DELIVERABLE) {
                 $this->orderService->hold((int) $order->getId());
+                $heldOrders[] = $order;
             }
         }
+
+        return $heldOrders;
     }
 
     /**
      * @param Order[] $orders
+     * @return Order[]  List of Orders that were cancelled
      * @throws LocalizedException
      */
-    public function cancelUndeliverable(array $orders): void
+    public function cancelUndeliverable(array $orders): array
     {
+        $cancelledOrders = [];
+
         $analysisResults = $this->analyse($orders);
         foreach ($orders as $order) {
             if (!$order->canCancel()) {
@@ -91,8 +100,11 @@ class OrderAnalysis
             $score = $this->deliverabilityScoreService->computeScore($analysisResult->getStatusCodes());
             if ($score === DeliverabilityCodes::UNDELIVERABLE) {
                 $this->orderService->cancel((int) $order->getId());
+                $cancelledOrders[] = $order;
             }
         }
+
+        return $cancelledOrders;
     }
 
     /**
@@ -120,11 +132,11 @@ class OrderAnalysis
     }
 
     /**
-     * Get Addressfactory Analysis results for the shipping address of every given Order
-     * and return as an Array with order entity ids for keys.
+     * Get ADDRESSFACTORY DIRECT Deliverability analysis objects
+     * for the Shipping Address of every given Order.
      *
      * @param Order[] $orders
-     * @return AnalysisResult[]
+     * @return AnalysisResult[] Dictionary: [(int) $order->getEntityId() => AnalysisResult]
      * @throws LocalizedException
      */
     public function analyse(array $orders): array
@@ -136,27 +148,27 @@ class OrderAnalysis
 
         try {
             $analysisResults = $this->addressAnalysisService->analyze($addresses);
-
-            $result = [];
-            foreach ($orders as $order) {
-                $analysisResult = $analysisResults[(int) $order->getShippingAddressId()] ?? null;
-                $this->setStatus((int) $order->getId(), $analysisResult);
-                $result[$order->getEntityId()] = $analysisResult;
-            }
-
-            return $result;
         } catch (LocalizedException $exception) {
             foreach ($orders as $order) {
-                $this->deliverabilityStatus->setStatusAnalysisFailed((int) $order->getId());
+                $this->deliverabilityStatus->setStatusAnalysisFailed((int)$order->getId());
             }
             throw $exception;
         }
+        $result = [];
+        foreach ($orders as $order) {
+            $analysisResult = $analysisResults[(int) $order->getShippingAddressId()] ?? null;
+            $this->updateDeliverabilityStatus((int) $order->getId(), $analysisResult);
+            $result[$order->getEntityId()] = $analysisResult;
+        }
+
+        return $result;
     }
 
-    private function setStatus(int $orderId, ?AnalysisResult $analysisResult): void
+    private function updateDeliverabilityStatus(int $orderId, ?AnalysisResult $analysisResult): void
     {
         if (!$analysisResult) {
             $this->deliverabilityStatus->setStatusAnalysisFailed($orderId);
+            return;
         }
 
         $statusCode = $this->deliverabilityScoreService->computeScore($analysisResult->getStatusCodes());
