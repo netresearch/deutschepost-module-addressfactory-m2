@@ -4,7 +4,7 @@
  */
 declare(strict_types=1);
 
-namespace PostDirekt\Addressfactory\Test\Integration\Model;
+namespace PostDirekt\Addressfactory\Test\Integration\TestCase\Model;
 
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;

@@ -25,11 +25,28 @@
             </argument>
         </arguments>
     </virtualType>
+    <virtualType name="PostDirekt\Addressfactory\Cron\CollectionProcessor\Virtual" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="postdirekt_joins" xsi:type="object">PostDirekt\Addressfactory\Model\AnalysisStatusJoinProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+   <virtualType name="PostDirekt\Addressfactory\Cron\OrderRepository\Virtual" type="Magento\Sales\Model\OrderRepository">
+       <arguments>
+           <argument name="collectionProcessor" xsi:type="object">PostDirekt\Addressfactory\Cron\CollectionProcessor\Virtual</argument>
+       </arguments>
+   </virtualType>
 
     <!-- # argument di overrides -->
     <type name="PostDirekt\Addressfactory\Model\DeliverabilityStatus">
         <arguments>
             <argument name="orderGrid" xsi:type="object">Magento\Sales\Model\ResourceModel\Order\Grid</argument>
+        </arguments>
+    </type>
+    <type name="PostDirekt\Addressfactory\Cron\AutoProcess">
+        <arguments>
+            <argument name="orderRepository" xsi:type="object">PostDirekt\Addressfactory\Cron\OrderRepository\Virtual</argument>
         </arguments>
     </type>
 </config>
