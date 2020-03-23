@@ -43,11 +43,13 @@ Logging,Logging
 Medium,Medium
 "Module version:","Module version:"
 "No Automatic Analysis","No Automatic Analysis"
+"No Orders were analysed.","No Orders were analysed."
+"No Orders were updated.","No Orders were updated."
 "Non-deliverable Orders","Non-deliverable Orders"
 "Not analysed","Not analysed"
 "Order state changed to ""%1""","Order state changed to ""%1"""
-"Order(s) %1 where successfully analysed.","Order(s) %1 where successfully analysed."
-"Order(s) %1 where successfully updated.","Order(s) %1 where successfully updated."
+"Order(s) %1 were successfully analysed.","Order(s) %1 were successfully analysed."
+"Order(s) %1 were successfully updated.","Order(s) %1 were successfully updated."
 "Other Actions","Other Actions"
 Pending,Pending
 "Perform Deliverability Analysis","Perform Deliverability Analysis"

@@ -63,7 +63,15 @@ class Improve extends Action
         $resultRedirect->setUrl($this->_redirect->getRefererUrl());
 
         try {
-            $orderCollection = $this->filter->getCollection($this->collectionFactory->create());
+            $collection = $this->collectionFactory->create();
+            $collection->join(
+                'sales_order_address',
+                'main_table.entity_id=sales_order_address.parent_id',
+                ['address_type', 'country_id']
+            );
+            $collection->addAttributeToFilter('sales_order_address.address_type', 'shipping');
+            $collection->addAttributeToFilter('sales_order_address.country_id', 'DE');
+            $orderCollection = $this->filter->getCollection($collection);
             $this->orderAnalysisService->updateShippingAddress($orderCollection->getItems());
         } catch (LocalizedException $exception) {
             $this->messageManager->addErrorMessage($exception->getMessage());
@@ -75,7 +83,11 @@ class Improve extends Action
         foreach ($orderCollection->getItems() as $order) {
             $incrementIds[] = $order->getIncrementId();
         }
-        $msg = __('Order(s) %1 where successfully updated.', implode(', ', $incrementIds));
+        if (empty($incrementIds)) {
+            $msg = __('No Orders were updated.');
+        } else {
+            $msg = __('Order(s) %1 were successfully updated.', implode(', ', $incrementIds));
+        }
         $this->messageManager->addSuccessMessage($msg);
 
         return $resultRedirect;
