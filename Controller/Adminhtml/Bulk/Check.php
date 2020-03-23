@@ -71,7 +71,15 @@ class Check extends Action
         $resultRedirect->setUrl($this->_redirect->getRefererUrl());
 
         try {
-            $orderCollection = $this->filter->getCollection($this->collectionFactory->create());
+            $collection = $this->collectionFactory->create();
+            $collection->join(
+                'sales_order_address',
+                'main_table.entity_id=sales_order_address.parent_id',
+                ['address_type', 'country_id']
+            );
+            $collection->addAttributeToFilter('sales_order_address.address_type', 'shipping');
+            $collection->addAttributeToFilter('sales_order_address.country_id', 'DE');
+            $orderCollection = $this->filter->getCollection($collection);
             if ($this->moduleConfig->isHoldNonDeliverableOrders()) {
                 $this->orderAnalysisService->holdNonDeliverable($orderCollection->getItems());
             }
@@ -88,7 +96,11 @@ class Check extends Action
         foreach ($orderCollection->getItems() as $order) {
             $incrementIds[] = $order->getIncrementId();
         }
-        $msg = __('Order(s) %1 where successfully analysed.', implode(', ', $incrementIds));
+        if (empty($incrementIds)) {
+            $msg = __('No Orders were analysed.');
+        } else {
+            $msg = __('Order(s) %1 were successfully analysed.', implode(', ', $incrementIds));
+        }
         $this->messageManager->addSuccessMessage($msg);
 
         return $resultRedirect;
