@@ -10,7 +10,7 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\Order;
 use PostDirekt\Addressfactory\Model\Config;
 use PostDirekt\Addressfactory\Model\DeliverabilityStatus;
 use PostDirekt\Addressfactory\Model\OrderAnalysis;
@@ -39,7 +39,7 @@ class SetNewOrderDeliverabilityStatus implements ObserverInterface
     /**
      * @var DeliverabilityStatus
      */
-    private $deliverableStatus;
+    private $deliverabilityStatus;
 
     /**
      * @var LoggerInterface
@@ -49,27 +49,46 @@ class SetNewOrderDeliverabilityStatus implements ObserverInterface
     public function __construct(
         Config $config,
         OrderAnalysis $analyseService,
-        DeliverabilityStatus $deliverableStatus,
+        DeliverabilityStatus $deliverabilityStatus,
         LoggerInterface $logger
     ) {
         $this->config = $config;
         $this->analyseService = $analyseService;
-        $this->deliverableStatus = $deliverableStatus;
+        $this->deliverabilityStatus = $deliverabilityStatus;
         $this->logger = $logger;
     }
 
     public function execute(Observer $observer): void
     {
-        /** @var OrderInterface $order */
-        $order = $observer->getData('address')->getOrder();
+        /** @var Order $order */
+        $order = $observer->getData('order') ?? $observer->getData('address')->getOrder();
+
+        if ($order->getShippingAddress() === null) {
+            // Order is virtual or broken
+            return;
+        }
+
+        if ($order->getShippingAddress()->getCountryId() !== 'DE') {
+            // Only process german shipping addresses
+            return;
+        }
+
         $storeId = (string) $order->getStoreId();
-        $status = $this->deliverableStatus->getStatus((int)$order->getEntityId());
-        if ($this->config->isManualAnalysisOnly($storeId) || $status !== DeliverabilityStatus::NOT_ANALYSED) {
+        if ($this->config->isManualAnalysisOnly($storeId)) {
+            // Manual analysis is not handled
+            return;
+        }
+
+        $orderId = (int)$order->getEntityId();
+        $status = $this->deliverabilityStatus->getStatus($orderId);
+        if ($status !== DeliverabilityStatus::NOT_ANALYSED) {
+            // The order already has been analysed
             return;
         }
 
         if ($this->config->isAnalysisViaCron($storeId)) {
-            $this->deliverableStatus->setStatusPending((int) $order->getEntityId());
+            // Pending status means the cron will pick up the order
+            $this->deliverabilityStatus->setStatusPending($orderId);
         }
 
         if ($this->config->isAnalysisOnOrderPlace($storeId)) {
@@ -86,7 +105,6 @@ class SetNewOrderDeliverabilityStatus implements ObserverInterface
                 }
             } catch (LocalizedException|CouldNotSaveException $exception) {
                 $this->logger->error($exception->getMessage());
-                $this->deliverableStatus->setStatusAnalysisFailed((int) $order->getEntityId());
             }
         }
     }

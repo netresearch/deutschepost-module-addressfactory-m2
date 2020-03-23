@@ -43,11 +43,13 @@ Logging,Logging
 Medium,Mittel
 "Module version:",Modulversion
 "No Automatic Analysis","Keine automatische Analyse"
+"No Orders were analysed.","Keine Bestellungen wurden analysiert"
+"No Orders were updated.","Keine Bestellungen wurden aktualisiert"
 "Non-deliverable Orders","Nicht zustellbare Bestellungen"
 "Not analysed","Nicht analysiert"
 "Order state changed to ""%1""","Bestellstatus auf ""%1"" geändert"
-"Order(s) %1 where successfully analysed.","Bestellung(en) %1 wurden erfolgreich analysiert"
-"Order(s) %1 where successfully updated.","Bestellung(en) %1 wurden erfolgreich aktualisiert"
+"Order(s) %1 were successfully analysed.","Bestellung(en) %1 wurden erfolgreich analysiert"
+"Order(s) %1 were successfully updated.","Bestellung(en) %1 wurden erfolgreich aktualisiert"
 "Other Actions","Weitere Aktionen"
 Pending,Ausstehend
 "Perform Deliverability Analysis","Zustellbarkeits-Analyse durchführen"
