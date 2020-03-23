@@ -16,7 +16,7 @@ default:
     before_script:
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-phpcs:
+static-analysis:
     stage: analyze
     only:
         - develop
@@ -25,6 +25,7 @@ phpcs:
         - merge_requests
     script:
         - ci-analyze
+        - ci-validate-dependencies
 
 installed-analysis:
     extends: .installationcheck
