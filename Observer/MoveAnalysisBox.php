@@ -59,13 +59,13 @@ class MoveAnalysisBox implements ObserverInterface
 
         $order = $block->getOrder();
         $shippingAddress = $order->getShippingAddress();
-        if (!$order instanceof OrderInterface || $shippingAddress->getCountryId() !== 'DE' || !$shippingAddress) {
+        if (!$shippingAddress || !$order instanceof OrderInterface || $shippingAddress->getCountryId() !== 'DE') {
             // wrong type, virtual or corrupt order
             return;
         }
 
         $analysisResultBlock = $block->getChildBlock('addressfactory_analysis_data');
-        $analysisResultBlock->setData('shipping_address_id', (int) $shippingAddress->getEntityId());
+        $analysisResultBlock->setData('template_should_display', true);
 
         $transport = $observer->getData('transport');
         $html = $transport->getData('html');

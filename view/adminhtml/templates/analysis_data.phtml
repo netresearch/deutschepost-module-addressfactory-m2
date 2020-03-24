@@ -6,79 +6,87 @@ use Magento\Backend\Block\Template;
 use PostDirekt\Addressfactory\ViewModel\Adminhtml\AnalysisData;
 
 /** @var Template $block */
+if (!$block->getData('template_should_display')) {
+    // This value is set by PostDirekt\Addressfactory\Observer\MoveAnalysisBox
+    return;
+}
+
 /** @var AnalysisData $viewModel */
 $viewModel = $block->getData('viewModel');
-$addressId = (int)$block->getData('shipping_address_id');
 ?>
-<?php if ($addressId): ?>
-    <div class="admin__page-section-item order-shipping-address pd_infox_box">
-        <div class="admin__page-section-item-title">
-            <img class="pd_logo" src='<?= $viewModel->getLogoUrl() ?>' alt="logo" width="150px">
-            <h2 class="title"><?= $block->escapeHtml(__('Deliverability Analysis')) ?></h2>
-        </div>
-        <?php $analysisResult = $viewModel->getAnalysisResult($addressId); ?>
-        <?php if ($analysisResult): ?>
-                <?php $codes = $analysisResult->getStatusCodes(); ?>
-                <span class="<?= $block->escapeHtmlAttr($viewModel->getScore($codes)) ?>">
-                    <b><?= $block->escapeHtml($viewModel->getHumanReadableScore($codes)) ?></b>
-                </span>
-                <?php $detectedIssues = $viewModel->getDetectedIssues($codes)?>
-                <div class="detected_issues_info">
-                    <h4><?= $block->escapeHtml(__('Detected Issues'))?></h4>
-                    <ul>
-                    <?php foreach ($detectedIssues as $issue): ?>
-                        <li><span><?= $block->escapeHtml($issue) ?></span></li>
-                    <?php endforeach;?>
-                    </ul>
-                </div>
-                <div class="pd_address_sugestion">
-                    <h3><?= $block->escapeHtml(__('Suggested Shipping Address')) ?></h3>
-                    <dl>
-                        <?= /** @noEscape */ $viewModel->getFormattedAddress($analysisResult) ?>
-                    </dl>
-                    <?php if ($viewModel->showAutoCorrectAddressButton()) : ?>
-                        <a class="button action-primary"
-                            href="<?= $block->escapeUrl($viewModel->getPerformAddressAutocorrectUrl())?>"
-                        ><?= $block->escapeHtml(__('Auto-Correct Address'))?></a>
-                    <?php endif; ?>
-                </div>
-                <h3><?= $block->escapeHtml(__('Other Actions')) ?></h3>
-                <div class="pd_infox_box">
-                    <p>
-                        <a class="button action-default"
-                           href="<?= $block->escapeUrl($viewModel->getManualEditUrl($addressId)) ?>"
-                        ><?= $block->escapeHtml(__('Manually Edit Address')) ?></a>
-                    </p>
-                    <?php if ($viewModel->showUnholdButton()): ?>
-                        <p>
-                            <button id="order-view-addressfactory-unhold-button"
-                               class="button action-default"
-                               data-url="<?= $viewModel->getUnholdOrderUrl() ?>"
-                            ><?= $block->escapeHtml(__('Unhold Order'))?></button>
-                        </p>
-                    <?php endif; ?>
-                    <?php if ($viewModel->showCancelButton()): ?>
-                        <p>
-                            <button id="order-view-addressfactory-cancel-button"
-                                    class="button action-secondary"
-                                    data-url="<?= $viewModel->getCancelOrderUrl()?>"
-                            ><?= $block->escapeHtml(__('Cancel Order'))?></button>
-                        </p>
-                    <?php endif; ?>
-                </div>
-                <script type="text/x-magento-init">
-                    {
-                        "*": {
-                            "PostDirekt_Addressfactory/js/postdirekt-post-wrapper": {}
-                        }
-                    }
-                </script>
-        <?php else: ?>
-            <a
-                class="button action-primary"
-                href="<?= $block->escapeUrl($viewModel->getPerformAnalysisUrl()) ?>">
-                <?= $block->escapeHtml(__('Perform Deliverability Analysis')) ?>
-            </a>
-        <?php endif; ?>
+<div class="admin__page-section-item order-shipping-address pd_infox_box">
+    <div class="admin__page-section-item-title">
+        <img class="pd_logo" src='<?= $viewModel->getLogoUrl() ?>' alt="logo" width="150px">
+        <h2 class="title"><?= $block->escapeHtml(__('Deliverability Analysis')) ?></h2>
     </div>
-<?php endif; ?>
+
+    <?php if ($viewModel->showAnalysisResults()): ?>
+        <span class="<?= $block->escapeHtmlAttr($viewModel->getScore()) ?>">
+            <b><?= $block->escapeHtml($viewModel->getHumanReadableScore()) ?></b>
+        </span>
+        <div class="detected_issues_info">
+            <h4><?= $block->escapeHtml(__('Detected Issues'))?></h4>
+            <ul>
+            <?php foreach ($viewModel->getDetectedIssues() as $issue): ?>
+                <li><span><?= $block->escapeHtml($issue) ?></span></li>
+            <?php endforeach;?>
+            </ul>
+        </div>
+
+        <?php if ($viewModel->showSuggestedAddress()) : ?>
+            <div class="pd_address_sugestion">
+                <h3><?= $block->escapeHtml(__('Suggested Shipping Address')) ?></h3>
+                <dl>
+                    <?= /** @noEscape */ $viewModel->getFormattedAddress() ?>
+                </dl>
+
+                <?php if ($viewModel->allowAddressCorrect()) : ?>
+                    <a class="button action-primary"
+                        href="<?= $block->escapeUrl($viewModel->getPerformAddressAutocorrectUrl())?>"
+                    ><?= $block->escapeHtml(__('Auto-Correct Address'))?></a>
+                <?php endif; ?>
+
+            </div>
+        <?php endif; ?>
+
+        <h3><?= $block->escapeHtml(__('Other Actions')) ?></h3>
+        <div class="pd_infox_box">
+            <p>
+                <a class="button action-default"
+                   href="<?= $block->escapeUrl($viewModel->getManualEditUrl()) ?>"
+                ><?= $block->escapeHtml(__('Manually Edit Address')) ?></a>
+            </p>
+            <?php if ($viewModel->showUnholdButton()): ?>
+                <p>
+                    <button id="order-view-addressfactory-unhold-button"
+                       class="button action-default"
+                       data-url="<?= $viewModel->getUnholdOrderUrl() ?>"
+                    ><?= $block->escapeHtml(__('Unhold Order'))?></button>
+                </p>
+            <?php endif; ?>
+
+            <?php if ($viewModel->showCancelButton()): ?>
+                <p>
+                    <button id="order-view-addressfactory-cancel-button"
+                            class="button action-secondary"
+                            data-url="<?= $viewModel->getCancelOrderUrl()?>"
+                    ><?= $block->escapeHtml(__('Cancel Order'))?></button>
+                </p>
+            <?php endif; ?>
+        </div>
+        <script type="text/x-magento-init">
+            {
+                "*": {
+                    "PostDirekt_Addressfactory/js/postdirekt-post-wrapper": {}
+                }
+            }
+        </script>
+
+    <?php else: ?>
+        <a
+            class="button action-primary"
+            href="<?= $block->escapeUrl($viewModel->getPerformAnalysisUrl()) ?>">
+            <?= $block->escapeHtml(__('Perform Deliverability Analysis')) ?>
+        </a>
+    <?php endif; ?>
+</div>
