@@ -65,9 +65,9 @@ class AnalysisData implements ArgumentInterface
     private $urlBuilder;
 
     /**
-     * @var bool
+     * @var AnalysisResult|null
      */
-    private $identicalAddresses = false;
+    private $analysisResult;
 
     public function __construct(
         AnalysisResultRepository $analysisResultRepository,
@@ -87,15 +87,6 @@ class AnalysisData implements ArgumentInterface
         $this->urlBuilder = $urlBuilder;
     }
 
-    public function getAnalysisResult(int $addressId): ?AnalysisResult
-    {
-        try {
-            return $this->analysisResultRepository->getByAddressId($addressId);
-        } catch (NoSuchEntityException $exception) {
-            return null;
-        }
-    }
-
     public function getLogoUrl(): string
     {
         return $this->assetRepository->getUrl('PostDirekt_Addressfactory::images/logo_addressfactory.png');
@@ -108,48 +99,52 @@ class AnalysisData implements ArgumentInterface
     }
 
     /**
-     * @param string[] $codes
      * @return Phrase
      */
-    public function getHumanReadableScore(array $codes): Phrase
+    public function getHumanReadableScore(): string
     {
+        /** @var Phrase[] $scores */
         $scores = [
             DeliverabilityCodes::POSSIBLY_DELIVERABLE => __('Possibly Deliverable'),
             DeliverabilityCodes::DELIVERABLE => __('Deliverable'),
             DeliverabilityCodes::UNDELIVERABLE => __('Undeliverable')
         ];
 
-        return $scores[$this->getScore($codes)] ?? _();
+        return $scores[$this->getScore()]->render() ?? '';
     }
 
     /**
-     * @param string[] $codes
      * @return string
      */
-    public function getScore(array $codes): string
+    public function getScore(): string
     {
-        return $this->deliverablility->computeScore($codes);
+        $analysisResult = $this->getAnalysisResult();
+        if (!$analysisResult) {
+            return DeliverabilityCodes::POSSIBLY_DELIVERABLE;
+        }
+
+        return $this->deliverablility->computeScore($analysisResult->getStatusCodes());
     }
 
-    public function getFormattedAddress(AnalysisResult $analysisResult): string
+    public function getFormattedAddress(): ?string
     {
         $orderAddress = $this->getOrderAddress();
-        if (!$orderAddress) {
-            return '';
+        $analysisResult = $this->getAnalysisResult();
+
+        if (!$orderAddress || !$analysisResult) {
+            return null;
         }
 
-        $this->compareAddress($orderAddress, $analysisResult);
-        if ($this->identicalAddresses) {
-            return '';
-        }
         $firstName = ($orderAddress->getFirstname() !== $analysisResult->getFirstName())
             ? "<b>{$analysisResult->getFirstName()}</b>" : $analysisResult->getFirstName();
 
         $lastName = ($orderAddress->getLastname() !== $analysisResult->getLastName())
             ? "<b>{$analysisResult->getLastName()}</b>" : $analysisResult->getLastName();
 
-        $street = $analysisResult->getStreet() . ' ' . $analysisResult->getStreetNumber();
-        $street = ($street !== implode('', $orderAddress->getStreet())) ? "<b>{$street}</b>" : $street;
+        $street = trim(implode(' ', [$analysisResult->getStreet(), $analysisResult->getStreetNumber()]));
+        $orderStreet = trim(implode('', $orderAddress->getStreet()));
+
+        $street = ($street !== $orderStreet) ? "<b>{$street}</b>" : $street;
 
         $city = ($analysisResult->getCity() !== $orderAddress->getCity())
             ? "<b>{$analysisResult->getCity()}</b>" : $analysisResult->getCity();
@@ -163,48 +158,60 @@ class AnalysisData implements ArgumentInterface
     }
 
     /**
-     * @param string[] $codes
      * @return string[]
      */
-    public function getDetectedIssues(array $codes): array
+    public function getDetectedIssues(): array
     {
-        return $this->deliverablility->getLabels($codes);
+        $analysisResult = $this->getAnalysisResult();
+        if (!$analysisResult) {
+            return [];
+        }
+        return $this->deliverablility->getLabels($analysisResult->getStatusCodes());
+    }
+
+    public function showAnalysisResults(): bool
+    {
+        return $this->getAnalysisResult() !== null;
     }
 
     public function showCancelButton(): bool
     {
-        $orderId = (int) $this->request->getParam('order_id');
-        $order = $this->getOrder($orderId);
-        if (!$order || $this->identicalAddresses) {
-            return false;
-        }
-        $isNotDeliverable = $this->deliveryStatus->getStatus($orderId) !== DeliverabilityStatus::DELIVERABLE;
+        $order = $this->getOrder();
+        $status = $this->deliveryStatus->getStatus((int) $order->getEntityId());
 
-        return $isNotDeliverable && $order->canCancel();
+        return $status !== DeliverabilityStatus::DELIVERABLE && $order->canCancel();
     }
 
     public function showUnholdButton(): bool
     {
-        $orderId = (int) $this->request->getParam('order_id');
-        $order = $this->getOrder($orderId);
-
-        return $order ? $order->canUnhold() : false;
+        return $this->getOrder()->canUnhold();
     }
 
-    public function showAutoCorrectAddressButton(): bool
+    public function showSuggestedAddress(): bool
     {
-        if ($this->identicalAddresses) {
+        $analysisResult = $this->getAnalysisResult();
+        $orderAddress = $this->getOrderAddress();
+        if (!$analysisResult || !$orderAddress) {
             return false;
         }
 
-        $orderId = (int) $this->request->getParam('order_id');
+        return $this->areDifferent($this->getOrderAddress(), $analysisResult);
+    }
 
+    public function allowAddressCorrect(): bool
+    {
+        $orderId = (int) $this->request->getParam('order_id');
         return $this->deliveryStatus->getStatus($orderId) !== DeliverabilityStatus::ADDRESS_CORRECTED;
     }
 
-    public function getManualEditUrl(int $addressId): string
+    public function getManualEditUrl(): string
     {
-        return $this->urlBuilder->getUrl('sales/order/address', ['address_id' => $addressId]);
+        $address = $this->getOrderAddress();
+        if (!$address) {
+            return '';
+        }
+
+        return $this->urlBuilder->getUrl('sales/order/address', ['address_id' => $address->getEntityId()]);
     }
 
     public function getCancelOrderUrl(): string
@@ -219,46 +226,60 @@ class AnalysisData implements ArgumentInterface
         return $this->urlBuilder->getUrl('sales/*/unhold', ['order_id' => $orderId]);
     }
 
-    private function getOrderAddress(): ?OrderAddressInterface
-    {
-        $orderId = (int) $this->request->getParam('order_id');
-        $order = $this->getOrder($orderId);
-
-        return $order ? $order->getShippingAddress() : null;
-    }
-
-    private function getOrder(int $orderId): ?OrderInterface
-    {
-        try {
-            $order = $this->orderRepository->get($orderId);
-        } catch (InputException | NoSuchEntityException $e) {
-            return null;
-        }
-
-        return $order;
-    }
-
     public function getPerformAddressAutocorrectUrl(): string
     {
         $orderId = (int) $this->request->getParam('order_id');
         return $this->urlBuilder->getUrl('postdirekt/order_address/autocorrect', ['order_id' => $orderId]);
     }
 
-    private function compareAddress(OrderAddressInterface $orderAddress, AnalysisResult $analysisResult): void
+    private function getOrderAddress(): ?OrderAddressInterface
     {
-        $orderId = $orderAddress->getOrder()->getEntityId();
-        if ($this->deliveryStatus->getStatus((int) $orderId) === DeliverabilityStatus::PENDING) {
-            $this->identicalAddresses = false;
-            return;
-        }
-        $street = $analysisResult->getStreetNumber() === ' ' ?
-            $analysisResult->getStreet() :
-            $analysisResult->getStreet() . ' ' . $analysisResult->getStreetNumber();
+        $order = $this->getOrder();
 
-        $this->identicalAddresses = ($orderAddress->getFirstname() === $analysisResult->getFirstName() &&
-            $orderAddress->getLastname() === $analysisResult->getLastName() &&
-            $orderAddress->getCity() === $analysisResult->getCity() &&
-            $orderAddress->getPostcode() === $analysisResult->getPostalCode() &&
-            $street === implode('', $orderAddress->getStreet()));
+        return $order->getShippingAddress();
+    }
+
+    private function getOrder(): OrderInterface
+    {
+        $orderId = (int) $this->request->getParam('order_id');
+        try {
+            $order = $this->orderRepository->get($orderId);
+        } catch (InputException | NoSuchEntityException $e) {
+            throw new \RuntimeException('Could not load order. Was the order id added correctly?');
+        }
+
+        return $order;
+    }
+
+    private function getAnalysisResult(): ?AnalysisResult
+    {
+        if ($this->analysisResult) {
+            return $this->analysisResult;
+        }
+
+        $orderAddress = $this->getOrderAddress();
+        if (!$orderAddress) {
+            return null;
+        }
+
+        try {
+            $this->analysisResult = $this->analysisResultRepository->getByAddressId((int) $orderAddress->getEntityId());
+        } catch (NoSuchEntityException $exception) {
+            return null;
+        }
+
+        return $this->analysisResult;
+    }
+
+    private function areDifferent(OrderAddressInterface $orderAddress, AnalysisResult $analysisResult): bool
+    {
+        $street = trim(implode(' ', [$analysisResult->getStreet(), $analysisResult->getStreetNumber()]));
+        $orderStreet = trim(implode('', $orderAddress->getStreet()));
+
+        return ($orderAddress->getFirstname() !== $analysisResult->getFirstName() ||
+            $orderAddress->getLastname() !== $analysisResult->getLastName() ||
+            $orderAddress->getCity() !== $analysisResult->getCity() ||
+            $orderAddress->getPostcode() !== $analysisResult->getPostalCode() ||
+            $street !== $orderStreet);
     }
 }
