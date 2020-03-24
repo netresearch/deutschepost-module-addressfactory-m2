@@ -64,6 +64,11 @@ class AnalysisData implements ArgumentInterface
      */
     private $urlBuilder;
 
+    /**
+     * @var bool
+     */
+    private $identicalAddresses = false;
+
     public function __construct(
         AnalysisResultRepository $analysisResultRepository,
         AssetRepository $assetRepository,
@@ -133,6 +138,10 @@ class AnalysisData implements ArgumentInterface
             return '';
         }
 
+        $this->compareAddress($orderAddress, $analysisResult);
+        if ($this->identicalAddresses) {
+            return '';
+        }
         $firstName = ($orderAddress->getFirstname() !== $analysisResult->getFirstName())
             ? "<b>{$analysisResult->getFirstName()}</b>" : $analysisResult->getFirstName();
 
@@ -166,7 +175,7 @@ class AnalysisData implements ArgumentInterface
     {
         $orderId = (int) $this->request->getParam('order_id');
         $order = $this->getOrder($orderId);
-        if (!$order) {
+        if (!$order || $this->identicalAddresses) {
             return false;
         }
         $isNotDeliverable = $this->deliveryStatus->getStatus($orderId) !== DeliverabilityStatus::DELIVERABLE;
@@ -184,6 +193,10 @@ class AnalysisData implements ArgumentInterface
 
     public function showAutoCorrectAddressButton(): bool
     {
+        if ($this->identicalAddresses) {
+            return false;
+        }
+
         $orderId = (int) $this->request->getParam('order_id');
 
         return $this->deliveryStatus->getStatus($orderId) !== DeliverabilityStatus::ADDRESS_CORRECTED;
@@ -229,5 +242,23 @@ class AnalysisData implements ArgumentInterface
     {
         $orderId = (int) $this->request->getParam('order_id');
         return $this->urlBuilder->getUrl('postdirekt/order_address/autocorrect', ['order_id' => $orderId]);
+    }
+
+    private function compareAddress(OrderAddressInterface $orderAddress, AnalysisResult $analysisResult): void
+    {
+        $orderId = $orderAddress->getOrder()->getEntityId();
+        if ($this->deliveryStatus->getStatus((int) $orderId) === DeliverabilityStatus::PENDING) {
+            $this->identicalAddresses = false;
+            return;
+        }
+        $street = $analysisResult->getStreetNumber() === ' ' ?
+            $analysisResult->getStreet() :
+            $analysisResult->getStreet() . ' ' . $analysisResult->getStreetNumber();
+
+        $this->identicalAddresses = ($orderAddress->getFirstname() === $analysisResult->getFirstName() &&
+            $orderAddress->getLastname() === $analysisResult->getLastName() &&
+            $orderAddress->getCity() === $analysisResult->getCity() &&
+            $orderAddress->getPostcode() === $analysisResult->getPostalCode() &&
+            $street === implode('', $orderAddress->getStreet()));
     }
 }
