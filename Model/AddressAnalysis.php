@@ -196,10 +196,10 @@ class AddressAnalysis
                 $newAnalysisResult->setPostalCode($record->getAddress()->getPostalCode());
                 $newAnalysisResult->setCity($record->getAddress()->getCity());
                 $newAnalysisResult->setStreet($record->getAddress()->getStreetName());
-                $newAnalysisResult->setStreetNumber(implode(' ', [
+                $newAnalysisResult->setStreetNumber(trim(implode(' ', [
                     $record->getAddress()->getStreetNumber(),
                     $record->getAddress()->getStreetNumberAddition()
-                ]));
+                ])));
             }
             $newAnalysisResult->setFirstName($record->getPerson() ? $record->getPerson()->getFirstName() : '');
             $newAnalysisResult->setLastName($record->getPerson() ? $record->getPerson()->getLastName() : '');
@@ -222,8 +222,8 @@ class AddressAnalysis
             ''
         );
         $this->requestBuilder->setPerson(
-            $address->getLastname(),
-            $address->getFirstname()
+            $address->getFirstname(),
+            $address->getLastname()
         );
 
         return $this->requestBuilder->create();
