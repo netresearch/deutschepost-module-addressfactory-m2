@@ -39,7 +39,7 @@
    </virtualType>
 
     <!-- # argument di overrides -->
-    <type name="PostDirekt\Addressfactory\Model\DeliverabilityStatus">
+    <type name="PostDirekt\Addressfactory\Model\AnalysisStatusUpdater">
         <arguments>
             <argument name="orderGrid" xsi:type="object">Magento\Sales\Model\ResourceModel\Order\Grid</argument>
         </arguments>

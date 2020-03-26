@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 use PostDirekt\Addressfactory\Cron\AutoProcess;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
 use PostDirekt\Addressfactory\Model\AnalysisStatusRepository;
-use PostDirekt\Addressfactory\Model\DeliverabilityStatus;
+use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 use PostDirekt\Addressfactory\Test\Integration\Fixture\AnalysisFixture;
 use PostDirekt\Addressfactory\Test\Integration\TestDouble\AddressVerificationServiceFactory;
 use PostDirekt\Addressfactory\Test\Integration\TestDouble\AddressVerificationServiceStub;
@@ -205,12 +205,12 @@ class AutoProcessTest extends TestCase
         foreach ($orders as $order) {
             $orderStatus = $statusRepository->getByOrderId((int) $order->getEntityId());
             self::assertNotEquals(
-                DeliverabilityStatus::PENDING,
+                AnalysisStatusUpdater::PENDING,
                 $orderStatus->getStatus(),
                 'Analysis status was not updated from pending'
             );
 
-            if ($orderStatus->getStatus() !== DeliverabilityStatus::ANALYSIS_FAILED) {
+            if ($orderStatus->getStatus() !== AnalysisStatusUpdater::ANALYSIS_FAILED) {
                 $analysis = $analysisRepository->getByAddressId((int) $order->getData('shipping_address_id'));
                 self::assertNotEmpty($analysis->getStatusCodes(), 'Analysis results were not persisted locally');
 
@@ -276,12 +276,12 @@ class AutoProcessTest extends TestCase
         foreach ($orders as $order) {
             $orderStatus = $statusRepository->getByOrderId((int)$order->getEntityId());
             self::assertNotEquals(
-                DeliverabilityStatus::PENDING,
+                AnalysisStatusUpdater::PENDING,
                 $orderStatus->getStatus(),
                 'Analysis status was not updated from pending'
             );
 
-            if ($orderStatus->getStatus() !== DeliverabilityStatus::ANALYSIS_FAILED) {
+            if ($orderStatus->getStatus() !== AnalysisStatusUpdater::ANALYSIS_FAILED) {
                 $analysis = $analysisRepository->getByAddressId((int)$order->getData('shipping_address_id'));
                 self::assertNotEmpty($analysis->getStatusCodes(), 'Analysis results were not persisted locally');
                 $shippingAddress = $addressRepository->get($order->getData('shipping_address_id'));

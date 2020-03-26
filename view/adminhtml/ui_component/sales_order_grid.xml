@@ -11,7 +11,7 @@ See LICENSE.md for license details.
                 <settings>
                     <label translate="true">Addressfactory Direct Deliverability Status</label>
                     <dataScope>postdirekt_addressfactory_analysis_status</dataScope>
-                    <options class="PostDirekt\Addressfactory\Component\Listing\Column\DeliverabilityStatusOptions"/>
+                    <options class="PostDirekt\Addressfactory\Component\Listing\Column\AnalysisStatusOptions"/>
                 </settings>
             </filterSelect>
         </filters>

@@ -7,15 +7,15 @@ declare(strict_types=1);
 namespace PostDirekt\Addressfactory\Component\Listing\Column;
 
 use Magento\Framework\Data\OptionSourceInterface;
-use PostDirekt\Addressfactory\Model\DeliverabilityStatus;
+use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 
 /**
- * Class DeliverabilityStatusOptions
+ * Class AnalysisStatusOptions
  *
  * @author   Andreas Müller <andreas.mueller@netresearch.de>
  * @link     https://www.netresearch.de/
  */
-class DeliverabilityStatusOptions implements OptionSourceInterface
+class AnalysisStatusOptions implements OptionSourceInterface
 {
     /**
      * Return array of options as value-label pairs
@@ -26,31 +26,31 @@ class DeliverabilityStatusOptions implements OptionSourceInterface
     {
         $options = [
             [
-                'value' => DeliverabilityStatus::NOT_ANALYSED,
+                'value' => AnalysisStatusUpdater::NOT_ANALYSED,
                 'label' => __('Not analysed')
             ],
             [
-                'value' => DeliverabilityStatus::PENDING,
+                'value' => AnalysisStatusUpdater::PENDING,
                 'label' => __('Pending')
             ],
             [
-                'value' => DeliverabilityStatus::UNDELIVERABLE,
+                'value' => AnalysisStatusUpdater::UNDELIVERABLE,
                 'label' => __('Undeliverable')
             ],
             [
-                'value' => DeliverabilityStatus::POSSIBLY_DELIVERABLE,
+                'value' => AnalysisStatusUpdater::POSSIBLY_DELIVERABLE,
                 'label' => __('Possibly deliverable')
             ],
             [
-                'value' => DeliverabilityStatus::DELIVERABLE,
+                'value' => AnalysisStatusUpdater::DELIVERABLE,
                 'label' => __('Deliverable')
             ],
             [
-                'value' => DeliverabilityStatus::ADDRESS_CORRECTED,
+                'value' => AnalysisStatusUpdater::ADDRESS_CORRECTED,
                 'label' => __('Address corrected')
             ],
             [
-                'value' => DeliverabilityStatus::ANALYSIS_FAILED,
+                'value' => AnalysisStatusUpdater::ANALYSIS_FAILED,
                 'label' => __('Analysis failed')
             ]
         ];

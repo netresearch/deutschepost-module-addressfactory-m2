@@ -10,9 +10,9 @@ use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
-use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Model\Order;
 use PostDirekt\Addressfactory\Model\OrderAnalysis;
 
 /**
@@ -33,7 +33,7 @@ class Autocorrect extends Action
     /**
      * @var OrderAnalysis
      */
-    private $orderAnalyse;
+    private $orderAnalysis;
 
     /**
      * @var OrderRepositoryInterface
@@ -41,24 +41,34 @@ class Autocorrect extends Action
     private $orderRepository;
 
     public function __construct(
-        OrderAnalysis $orderAnalyse,
+        OrderAnalysis $orderAnalysis,
         OrderRepositoryInterface $orderRepository,
         Context $context
     ) {
         parent::__construct($context);
-        $this->orderAnalyse = $orderAnalyse;
+        $this->orderAnalysis = $orderAnalysis;
         $this->orderRepository = $orderRepository;
     }
 
     public function execute(): ResultInterface
     {
         $orderId  = $this->getRequest()->getParam('order_id');
+        /** @var Order $order */
         $order = $this->orderRepository->get($orderId);
+
         try {
-            $this->orderAnalyse->updateShippingAddress([$order]);
-            $msg =  __('Shipping address for order #%1 corrected', $order->getIncrementId());
-            $this->messageManager->addSuccessMessage($msg);
-        } catch (CouldNotSaveException|LocalizedException $exception) {
+            $analysisResults = $this->orderAnalysis->analyse([$order]);
+            $analysisResult = $analysisResults[(int) $order->getEntityId()];
+            if (!$analysisResult) {
+                throw new LocalizedException(__('Could not perform ADDRESSFACTORY DIRECT analysis for Order'));
+            }
+            $wasUpdated = $this->orderAnalysis->updateShippingAddress($order, $analysisResult);
+            if ($wasUpdated) {
+                $this->messageManager->addSuccessMessage(__('Order address updated with ADDRESSFACTORY DIRECT suggestion'));
+            } else {
+                throw new LocalizedException(__('Could not update Order address with ADDRESSFACTORY DIRECT suggestion'));
+            }
+        } catch (LocalizedException $exception) {
             $this->messageManager->addErrorMessage($exception->getMessage());
         }
 

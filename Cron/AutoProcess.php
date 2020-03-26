@@ -9,14 +9,15 @@ namespace PostDirekt\Addressfactory\Cron;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
-use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Model\Order;
+use PostDirekt\Addressfactory\Model\AnalysisResult;
 use PostDirekt\Addressfactory\Model\AnalysisStatus;
 use PostDirekt\Addressfactory\Model\Config;
-use PostDirekt\Addressfactory\Model\DeliverabilityStatus;
+use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 use PostDirekt\Addressfactory\Model\OrderAnalysis;
+use PostDirekt\Addressfactory\Model\OrderUpdater;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -53,6 +54,11 @@ class AutoProcess
     private $orderRepository;
 
     /**
+     * @var OrderUpdater
+     */
+    private $orderUpdater;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -63,6 +69,7 @@ class AutoProcess
         SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
         FilterBuilder $filterBuilder,
         OrderRepositoryInterface $orderRepository,
+        OrderUpdater $orderUpdater,
         LoggerInterface $logger
     ) {
         $this->config = $config;
@@ -70,98 +77,75 @@ class AutoProcess
         $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
         $this->filterBuilder = $filterBuilder;
         $this->orderRepository = $orderRepository;
+        $this->orderUpdater = $orderUpdater;
         $this->logger = $logger;
     }
 
     /**
-     * Executed via Cron to process all new Orders that have been put into status "pending"
+     * Executed via Cron to analyse and process all new Orders that have been put into analyisis status "pending"
      */
     public function execute(): void
     {
         if (!$this->config->isAnalysisViaCron()) {
             return;
         }
-        $orders = $this->loadOrders();
-        $this->logger->info(
-            sprintf(
-                'ADDRESSFACTORY DIRECT: Processing Order(s) %s ...',
-                $this->getIdList($orders)
-            )
-        );
+        $orders = $this->loadPendingOrders();
+        $analysisResults = $this->orderAnalysisService->analyse($orders);
 
-        $this->process($orders);
+        foreach ($orders as $order) {
+            $analysisResult = $analysisResults[(int)$order->getEntityId()];
+            if ($analysisResult) {
+                $this->process($order, $analysisResult);
+            } else {
+                $this->logger->error(
+                    sprintf('ADDRESSFACTORY DIRECT: Order %s could not be analysed', $order->getIncrementId())
+                );
+            }
+        }
     }
 
     /**
-     * Analyse every given order and
+     * Process given order according to the module configuration:
      *
      * - put it on hold,
      * - cancel it or
      * - update the shipping address
      *
-     * according to the module configuration.
-     *
-     * @param OrderInterface[] $orders
+     * @param Order $order
+     * @param AnalysisResult $analysisResult
      */
-    private function process(array $orders): void
+    private function process(Order $order, AnalysisResult $analysisResult): void
     {
-        /** @var OrderInterface[][] $scopes Orders sorted by storeId */
-        $scopes = [];
-        foreach ($orders as $order) {
-            $scopes[$order->getStoreId()][] = $order;
-        }
+        $this->logger->info(
+            sprintf('ADDRESSFACTORY DIRECT: Processing Order %s ...', $order->getIncrementId())
+        );
 
-        try {
-            $this->orderAnalysisService->analyse($orders);
-        } catch (LocalizedException $exception) {
-            $msg = sprintf(
-                'ADDRESSFACTORY DIRECT: Order(s) %s could not be analysed, skipping',
-                $this->getIdList($orders)
-            );
-            $this->logger->error($msg, ['exception' => $exception]);
-            return;
-        }
-
-        foreach ($scopes as $scope => $scopedOrders) {
-            $this->logger->info("ADDRESSFACTORY DIRECT: Processing Orders from scope id '$scope' ...");
-            try {
-                if ($this->config->isHoldNonDeliverableOrders($scope)) {
-                    $heldOrders = $this->orderAnalysisService->holdNonDeliverable($scopedOrders);
-                    $msg = sprintf(
-                        'ADDRESSFACTORY DIRECT: Order(s) %s cancelled',
-                        $this->getIdList($heldOrders)
-                    );
-                    $this->logger->info($msg);
-                }
-                if ($this->config->isAutoCancelNonDeliverableOrders($scope)) {
-                    $cancelledOrders = $this->orderAnalysisService->cancelUndeliverable($scopedOrders);
-                    $msg = sprintf(
-                        'ADDRESSFACTORY DIRECT: Order(s) %s cancelled',
-                        $this->getIdList($cancelledOrders)
-                    );
-                    $this->logger->info($msg);
-                }
-                if ($this->config->isAutoUpdateShippingAddress($scope)) {
-                    $this->orderAnalysisService->updateShippingAddress($scopedOrders);
-                    $this->logger->info(
-                        sprintf(
-                            'ADDRESSFACTORY DIRECT: Order(s) %s shipping addresses updated',
-                            $this->getIdList($scopedOrders)
-                        )
-                    );
-                }
-            } catch (CouldNotSaveException|LocalizedException $exception) {
-                $msg = sprintf(
-                    'ADDRESSFACTORY DIRECT: Order(s) %s could not be processed',
-                    $this->getIdList($scopedOrders)
-                );
-                $this->logger->error($msg, ['exception' => $exception]);
+        if ($this->config->isHoldNonDeliverableOrders($order->getStoreId())) {
+            $isOnHold = $this->orderUpdater->holdIfNonDeliverable($order, $analysisResult);
+            if ($isOnHold) {
+                $this->logger->info(sprintf(
+                    'ADDRESSFACTORY DIRECT: Non-deliverable Order "%s" put on hold',
+                    $order->getIncrementId()
+                ));
             }
-            $msg = sprintf(
-                'ADDRESSFACTORY DIRECT: Order(s) %s were successfully processed!',
-                $this->getIdList($scopedOrders)
-            );
-            $this->logger->info($msg);
+        }
+        if ($this->config->isAutoCancelNonDeliverableOrders($order->getStoreId())) {
+            $isCanceled = $this->orderUpdater->cancelIfUndeliverable($order, $analysisResult);
+            if ($isCanceled) {
+                $this->logger->info(sprintf(
+                    'ADDRESSFACTORY DIRECT: Undeliverable Order "%s" cancelled',
+                    $order->getIncrementId()
+                ));
+            }
+        }
+        if ($this->config->isAutoUpdateShippingAddress($order->getStoreId())) {
+            $isUpdated = $this->orderAnalysisService->updateShippingAddress($order, $analysisResult);
+            if ($isUpdated) {
+                $this->logger->info(sprintf(
+                    'ADDRESSFACTORY DIRECT: ADDRESSFACTORY DIRECT: Order "%s" address updated',
+                    $order->getIncrementId()
+                ));
+            }
         }
     }
 
@@ -170,10 +154,10 @@ class AutoProcess
      *
      * @return OrderInterface[]
      */
-    private function loadOrders(): array
+    private function loadPendingOrders(): array
     {
         $pendingFilter = $this->filterBuilder->setField('status_table.' . AnalysisStatus::STATUS)
-            ->setValue(DeliverabilityStatus::PENDING)
+            ->setValue(AnalysisStatusUpdater::PENDING)
             ->setConditionType('eq')
             ->create();
 
@@ -193,24 +177,5 @@ class AutoProcess
         }
 
         return $collection->getItems();
-    }
-
-    /**
-     * Get a comma-separated list of all Order increment id's for convenient logging.
-     *
-     * @param OrderInterface[] $orders
-     * @return string
-     */
-    private function getIdList(array $orders): string
-    {
-        return implode(
-            ', ',
-            array_map(
-                static function (OrderInterface $order) {
-                    return $order->getIncrementId();
-                },
-                $orders
-            )
-        );
     }
 }

@@ -8,12 +8,11 @@ namespace PostDirekt\Addressfactory\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 use PostDirekt\Addressfactory\Model\Config;
-use PostDirekt\Addressfactory\Model\DeliverabilityStatus;
+use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 use PostDirekt\Addressfactory\Model\OrderAnalysis;
+use PostDirekt\Addressfactory\Model\OrderUpdater;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -37,9 +36,14 @@ class SetNewOrderDeliverabilityStatus implements ObserverInterface
     private $analyseService;
 
     /**
-     * @var DeliverabilityStatus
+     * @var AnalysisStatusUpdater
      */
     private $deliverabilityStatus;
+
+    /**
+     * @var OrderUpdater
+     */
+    private $orderUpdater;
 
     /**
      * @var LoggerInterface
@@ -49,13 +53,15 @@ class SetNewOrderDeliverabilityStatus implements ObserverInterface
     public function __construct(
         Config $config,
         OrderAnalysis $analyseService,
-        DeliverabilityStatus $deliverabilityStatus,
-        LoggerInterface $logger
+        AnalysisStatusUpdater $deliverabilityStatus,
+        LoggerInterface $logger,
+        OrderUpdater $orderUpdater
     ) {
         $this->config = $config;
         $this->analyseService = $analyseService;
         $this->deliverabilityStatus = $deliverabilityStatus;
         $this->logger = $logger;
+        $this->orderUpdater = $orderUpdater;
     }
 
     public function execute(Observer $observer): void
@@ -81,7 +87,7 @@ class SetNewOrderDeliverabilityStatus implements ObserverInterface
 
         $orderId = (int)$order->getEntityId();
         $status = $this->deliverabilityStatus->getStatus($orderId);
-        if ($status !== DeliverabilityStatus::NOT_ANALYSED) {
+        if ($status !== AnalysisStatusUpdater::NOT_ANALYSED) {
             // The order already has been analysed
             return;
         }
@@ -92,19 +98,22 @@ class SetNewOrderDeliverabilityStatus implements ObserverInterface
         }
 
         if ($this->config->isAnalysisOnOrderPlace($storeId)) {
-            try {
-                $this->analyseService->analyse([$order]);
-                if ($this->config->isHoldNonDeliverableOrders($storeId)) {
-                    $this->analyseService->holdNonDeliverable([$order]);
-                }
-                if ($this->config->isAutoCancelNonDeliverableOrders($storeId)) {
-                    $this->analyseService->cancelUndeliverable([$order]);
-                }
-                if ($this->config->isAutoUpdateShippingAddress($storeId)) {
-                    $this->analyseService->updateShippingAddress([$order]);
-                }
-            } catch (LocalizedException|CouldNotSaveException $exception) {
-                $this->logger->error($exception->getMessage());
+            $analysisResults = $this->analyseService->analyse([$order]);
+            $analysisResult = $analysisResults[$orderId];
+            if (!$analysisResult) {
+                $this->logger->error(
+                    sprintf('ADDRESSFACTORY DIRECT: Order %s could not be analysed', $order->getIncrementId())
+                );
+                return;
+            }
+            if ($this->config->isHoldNonDeliverableOrders($storeId)) {
+                $this->orderUpdater->holdIfNonDeliverable($order, $analysisResult);
+            }
+            if ($this->config->isAutoCancelNonDeliverableOrders($storeId)) {
+                $this->orderUpdater->cancelIfUndeliverable($order, $analysisResult);
+            }
+            if ($this->config->isAutoUpdateShippingAddress($storeId)) {
+                $this->analyseService->updateShippingAddress($order, $analysisResult);
             }
         }
     }

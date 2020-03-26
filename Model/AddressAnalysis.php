@@ -10,7 +10,6 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderAddressInterface;
-use Magento\Sales\Api\OrderAddressRepositoryInterface;
 use PostDirekt\Core\Model\Config as CoreConfig;
 use PostDirekt\Sdk\AddressfactoryDirect\Api\Data\RecordInterface;
 use PostDirekt\Sdk\AddressfactoryDirect\Api\ServiceFactoryInterface;
@@ -64,11 +63,6 @@ class AddressAnalysis
     private $analysisResultFactory;
 
     /**
-     * @var OrderAddressRepositoryInterface
-     */
-    private $orderAddressRepository;
-
-    /**
      * @var SearchCriteriaBuilder
      */
     private $searchCriteriaBuilder;
@@ -81,7 +75,6 @@ class AddressAnalysis
         Config $moduleConfig,
         LoggerInterface $logger,
         AnalysisResultFactory $analysisResultFactory,
-        OrderAddressRepositoryInterface $orderAddressRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->analysisResultRepository = $analysisResultRepository;
@@ -91,7 +84,6 @@ class AddressAnalysis
         $this->moduleConfig = $moduleConfig;
         $this->logger = $logger;
         $this->analysisResultFactory = $analysisResultFactory;
-        $this->orderAddressRepository = $orderAddressRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
@@ -100,7 +92,7 @@ class AddressAnalysis
      * @return AnalysisResult[]
      * @throws LocalizedException
      */
-    public function analyze(array $addresses): array
+    public function analyse(array $addresses): array
     {
         $addressIds = [];
         foreach ($addresses as $address) {
@@ -151,36 +143,6 @@ class AddressAnalysis
         $analysisResults = $newAnalysisResults + $analysisResults;
 
         return $analysisResults;
-    }
-
-    /**
-     * @param OrderAddressInterface[] $addresses
-     * @return AnalysisResult[]
-     * @throws LocalizedException
-     * @throws CouldNotSaveException    The repository interface is missing this annotation,
-     *                                  but its default implementation can throw it.
-     *
-     * @deprecated  Use PostDirekt\Addressfactory\Model\AddressUpdater::update instead
-     */
-    public function update(array $addresses): array
-    {
-        $results = $this->analyze($addresses);
-        foreach ($addresses as $address) {
-            if (!isset($results[$address->getEntityId()])) {
-                continue;
-            }
-            $analysisResult = $results[$address->getEntityId()];
-            $street = implode(' ', [$analysisResult->getStreet(), $analysisResult->getStreetNumber()]);
-            $address->setStreet($street);
-            $address->setFirstname($analysisResult->getFirstName());
-            $address->setLastname($analysisResult->getLastName());
-            $address->setPostcode($analysisResult->getPostalCode());
-            $address->setCity($analysisResult->getCity());
-
-            $this->orderAddressRepository->save($address);
-        }
-
-        return $results;
     }
 
     /**

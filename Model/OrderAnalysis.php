@@ -30,9 +30,14 @@ class OrderAnalysis
     private $deliverabilityScoreService;
 
     /**
-     * @var DeliverabilityStatus
+     * @var AnalysisStatusUpdater
      */
     private $deliverabilityStatus;
+
+    /**
+     * @var AddressUpdater
+     */
+    private $addressUpdater;
 
     /**
      * @var OrderManagementInterface
@@ -42,19 +47,23 @@ class OrderAnalysis
     public function __construct(
         AddressAnalysis $addressAnalysisService,
         DeliverabilityCodes $deliverabilityScoreService,
-        DeliverabilityStatus $deliverabilityStatus,
-        OrderManagementInterface $orderService
+        AnalysisStatusUpdater $deliverabilityStatus,
+        OrderManagementInterface $orderService,
+        AddressUpdater $addressUpdater
     ) {
         $this->addressAnalysisService = $addressAnalysisService;
         $this->deliverabilityScoreService = $deliverabilityScoreService;
         $this->deliverabilityStatus = $deliverabilityStatus;
         $this->orderService = $orderService;
+        $this->addressUpdater = $addressUpdater;
     }
 
     /**
      * @param Order[] $orders
      * @return Order[]  List of Orders that were put on hold
      * @throws LocalizedException
+     *
+     * @deprecated Use \PostDirekt\Addressfactory\Model\OrderUpdater::holdIfNonDeliverable instead
      */
     public function holdNonDeliverable(array $orders): array
     {
@@ -83,6 +92,8 @@ class OrderAnalysis
      * @param Order[] $orders
      * @return Order[]  List of Orders that were cancelled
      * @throws LocalizedException
+     *
+     * @deprecated Use \PostDirekt\Addressfactory\Model\OrderUpdater::cancelIfUndeliverable instead
      */
     public function cancelUndeliverable(array $orders): array
     {
@@ -108,36 +119,11 @@ class OrderAnalysis
     }
 
     /**
-     * @param Order[] $orders
-     * @throws LocalizedException
-     * @throws CouldNotSaveException
-     */
-    public function updateShippingAddress(array $orders): void
-    {
-        $addresses = [];
-        foreach ($orders as $order) {
-            $addresses[] = $order->getShippingAddress();
-        }
-        try {
-            $this->addressAnalysisService->update($addresses);
-            foreach ($orders as $order) {
-                $this->deliverabilityStatus->setStatusAddressCorrected((int) $order->getId());
-            }
-        } catch (LocalizedException|CouldNotSaveException $exception) {
-            foreach ($orders as $order) {
-                $this->deliverabilityStatus->setStatusAnalysisFailed((int) $order->getId());
-            }
-            throw $exception;
-        }
-    }
-
-    /**
      * Get ADDRESSFACTORY DIRECT Deliverability analysis objects
      * for the Shipping Address of every given Order.
      *
      * @param Order[] $orders
      * @return AnalysisResult[] Dictionary: [(int) $order->getEntityId() => AnalysisResult]
-     * @throws LocalizedException
      */
     public function analyse(array $orders): array
     {
@@ -147,12 +133,9 @@ class OrderAnalysis
         }
 
         try {
-            $analysisResults = $this->addressAnalysisService->analyze($addresses);
+            $analysisResults = $this->addressAnalysisService->analyse($addresses);
         } catch (LocalizedException $exception) {
-            foreach ($orders as $order) {
-                $this->deliverabilityStatus->setStatusAnalysisFailed((int)$order->getId());
-            }
-            throw $exception;
+            $analysisResults = [];
         }
         $result = [];
         foreach ($orders as $order) {
@@ -163,6 +146,24 @@ class OrderAnalysis
 
         return $result;
     }
+
+    /**
+     * @param Order $order
+     * @param AnalysisResult $analysisResult
+     * @return bool
+     */
+    public function updateShippingAddress(Order $order, AnalysisResult $analysisResult): bool
+    {
+        $wasUpdated = $this->addressUpdater->update($analysisResult, $order->getShippingAddress());
+        if ($wasUpdated) {
+            $this->deliverabilityStatus->setStatusAddressCorrected((int) $order->getEntityId());
+        } else {
+            $this->deliverabilityStatus->setStatusAnalysisFailed((int)$order->getEntityId());
+        }
+
+        return $wasUpdated;
+    }
+
 
     private function updateDeliverabilityStatus(int $orderId, ?AnalysisResult $analysisResult): void
     {

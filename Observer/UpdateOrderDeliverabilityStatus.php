@@ -8,7 +8,7 @@ namespace PostDirekt\Addressfactory\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use PostDirekt\Addressfactory\Model\DeliverabilityStatus;
+use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 
 /**
  * Class UpdateOrderDeliverabilityStatus
@@ -28,18 +28,18 @@ class UpdateOrderDeliverabilityStatus implements ObserverInterface
      * Updating the status to "address corrected" beforehand would cancel that analysis.
      */
     private const ADDRESS_CORRECTIBLE_STATUSES = [
-        DeliverabilityStatus::ANALYSIS_FAILED,
-        DeliverabilityStatus::UNDELIVERABLE,
-        DeliverabilityStatus::POSSIBLY_DELIVERABLE,
-        DeliverabilityStatus::DELIVERABLE
+        AnalysisStatusUpdater::ANALYSIS_FAILED,
+        AnalysisStatusUpdater::UNDELIVERABLE,
+        AnalysisStatusUpdater::POSSIBLY_DELIVERABLE,
+        AnalysisStatusUpdater::DELIVERABLE
     ];
 
     /**
-     * @var DeliverabilityStatus
+     * @var AnalysisStatusUpdater
      */
     private $deliverableStatus;
 
-    public function __construct(DeliverabilityStatus $deliverableStatus)
+    public function __construct(AnalysisStatusUpdater $deliverableStatus)
     {
         $this->deliverableStatus = $deliverableStatus;
     }

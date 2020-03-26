@@ -10,7 +10,7 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PostDirekt\Addressfactory\Model\AnalysisResult;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
-use PostDirekt\Addressfactory\Model\DeliverabilityStatus;
+use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\AddressDe;
 use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\SimpleProduct;
 
@@ -31,8 +31,8 @@ class AnalysisFixture
             OrderFixture::createOrder(new AddressDe(), [new SimpleProduct()], $shippingMethod)
         ];
 
-        /** @var DeliverabilityStatus $statusManagement */
-        $statusManagement = Bootstrap::getObjectManager()->get(DeliverabilityStatus::class);
+        /** @var AnalysisStatusUpdater $statusManagement */
+        $statusManagement = Bootstrap::getObjectManager()->get(AnalysisStatusUpdater::class);
 
         foreach ($orders as $order) {
             $statusManagement->setStatusPending((int) $order->getEntityId());
@@ -59,8 +59,8 @@ class AnalysisFixture
             OrderFixture::createOrder(new AddressDe(), [new SimpleProduct()], $shippingMethod)
         ];
 
-        /** @var DeliverabilityStatus $statusManagement */
-        $statusManagement = Bootstrap::getObjectManager()->get(DeliverabilityStatus::class);
+        /** @var AnalysisStatusUpdater $statusManagement */
+        $statusManagement = Bootstrap::getObjectManager()->get(AnalysisStatusUpdater::class);
         /** @var AnalysisResultRepository $repository */
         $repository = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
 
