@@ -10,7 +10,7 @@ use Magento\Backend\App\Action;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 use Magento\Ui\Component\MassAction\Filter;
 use PostDirekt\Addressfactory\Model\OrderAnalysis;
@@ -62,6 +62,9 @@ class Improve extends Action
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $resultRedirect->setUrl($this->_redirect->getRefererUrl());
 
+        /**
+         * Fetch orders selected via Mass Action
+         */
         try {
             $collection = $this->collectionFactory->create();
             $collection->join(
@@ -72,23 +75,44 @@ class Improve extends Action
             $collection->addAttributeToFilter('sales_order_address.address_type', 'shipping');
             $collection->addAttributeToFilter('sales_order_address.country_id', 'DE');
             $orderCollection = $this->filter->getCollection($collection);
-            $this->orderAnalysisService->updateShippingAddress($orderCollection->getItems());
         } catch (LocalizedException $exception) {
             $this->messageManager->addErrorMessage($exception->getMessage());
             return $resultRedirect;
         }
 
-        $incrementIds = [];
-        /** @var OrderInterface $order */
-        foreach ($orderCollection->getItems() as $order) {
-            $incrementIds[] = $order->getIncrementId();
+        /** @var Order[] $orders */
+        $orders = $orderCollection->getItems();
+
+        /**
+         * Perform deliverability analysis for all orders (or fetch from DB)
+         */
+        $analysisResults = $this->orderAnalysisService->analyse($orders);
+
+        $updatedOrderIds = [];
+        $failedOrderIds = [];
+        foreach ($orders as $order) {
+            $analysisResult = $analysisResults[(int) $order->getEntityId()];
+            /* Try to update the shipping address of each order */
+            $wasUpdated = $analysisResult
+                ? $this->orderAnalysisService->updateShippingAddress($order, $analysisResult)
+                : false;
+            if ($wasUpdated) {
+                $updatedOrderIds[] = $order->getIncrementId();
+            } else {
+                $failedOrderIds[] = $order->getIncrementId();
+            }
         }
-        if (empty($incrementIds)) {
-            $msg = __('No Orders were updated.');
-        } else {
-            $msg = __('Order(s) %1 were successfully updated.', implode(', ', $incrementIds));
+
+        if (!empty($updatedOrderIds)) {
+            $this->messageManager->addSuccessMessage(
+                __('Order(s) %1 were successfully updated.', implode(', ', $updatedOrderIds))
+            );
         }
-        $this->messageManager->addSuccessMessage($msg);
+        if (!empty($failedOrderIds)) {
+            $this->messageManager->addErrorMessage(
+                __('Order(s) %1 could not be updated.', implode(', ', $updatedOrderIds))
+            );
+        }
 
         return $resultRedirect;
     }

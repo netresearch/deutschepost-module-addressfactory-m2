@@ -13,12 +13,12 @@ use Magento\Sales\Model\ResourceModel\GridInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class DeliverabilityStatus
+ * Class AnalysisStatusUpdater
  *
  * @author   Andreas Müller <andreas.mueller@netresearch.de>
  * @link     https://www.netresearch.de/
  */
-class DeliverabilityStatus
+class AnalysisStatusUpdater
 {
     public const NOT_ANALYSED = 'not_analysed';
     public const PENDING = 'pending';

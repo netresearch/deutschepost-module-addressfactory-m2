@@ -6,9 +6,7 @@ declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Test\Integration\TestCase\Model;
 
-use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Sales\Api\OrderAddressRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -143,7 +141,7 @@ class AddressAnalysisTest extends TestCase
                 'serviceFactory' => $mockServiceFactory
             ]
         );
-        $result = $addressAnalysis->analyze($addresses);
+        $result = $addressAnalysis->analyse($addresses);
 
         self::assertCount(2, $result);
 
@@ -223,7 +221,7 @@ class AddressAnalysisTest extends TestCase
             ]
         );
 
-        $results = $addressAnalysis->analyze($addresses);
+        $results = $addressAnalysis->analyse($addresses);
 
         // assert one out of two records were retrieved from web service
         self::assertSame(1, $addressVerificationServiceStub->getRequestedRecordsCount());
@@ -281,97 +279,6 @@ class AddressAnalysisTest extends TestCase
 
         $this->expectException(LocalizedException::class);
         $this->expectExceptionMessage(__('Service exception: %1', 'no records')->render());
-        $result = $addressAnalysis->analyze($addresses);
-    }
-
-    /**
-     * Test covers case where addresses are analyzed and the order address is updated and persisted.
-     *
-     * assert that order address is updated with data from analysis result and is saved.
-     *
-     * @test
-     * @magentoDataFixture createAnalysisResults
-     * @throws LocalizedException
-     */
-    public function updateSuccess(): void
-    {
-        $addresses = [];
-        foreach (self::$orders as $order) {
-            $addresses[] = $order->getShippingAddress();
-        }
-
-        /** @var ServiceFactory|MockObject $mockServiceFactory */
-        $mockServiceFactory = $this->getMockBuilder(ServiceFactory::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $mockServiceFactory
-            ->expects(static::never())
-            ->method('createAddressVerificationService');
-
-        /** @var AddressAnalysis $addressAnalysis */
-        $addressAnalysis = Bootstrap::getObjectManager()->create(
-            AddressAnalysis::class,
-            [
-                'serviceFactory' => $mockServiceFactory
-            ]
-        );
-        $result = $addressAnalysis->update($addresses);
-        /** @var OrderAddressRepositoryInterface $orderAddressRepository */
-        $orderAddressRepository = Bootstrap::getObjectManager()->create(OrderAddressRepositoryInterface::class);
-        foreach ($result as $analysisResult) {
-            $savedOrder = $orderAddressRepository->get($analysisResult->getOrderAddressId());
-            self::assertEquals($savedOrder->getCity(), $analysisResult->getCity());
-            self::assertEquals($savedOrder->getEntityId(), $analysisResult->getOrderAddressId());
-            self::assertEquals($savedOrder->getPostcode(), $analysisResult->getPostalCode());
-        }
-    }
-
-    /**
-     * Test covers case where addresses are analyzed and the order address is updated and a error occurs during save.
-     *
-     * assert that order address repository save throws exception.
-     *
-     * @test
-     * @magentoDataFixture createAnalysisResults
-     */
-    public function updateFailed(): void
-    {
-        $addresses = array_map(
-            static function (Order $order) {
-                return $order->getShippingAddress();
-            },
-            self::$orders
-        );
-
-        /** @var ServiceFactory|MockObject $mockServiceFactory */
-        $mockServiceFactory = $this->getMockBuilder(ServiceFactory::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $mockServiceFactory
-            ->expects(static::never())
-            ->method('createAddressVerificationService');
-
-        /** @var OrderAddressRepositoryInterface|MockObject $orderAddressRepositoryMock */
-        $orderAddressRepositoryMock = $this->getMockBuilder(OrderAddressRepositoryInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $orderAddressRepositoryMock
-            ->expects(static::once())
-            ->method('save')
-            ->willThrowException(new CouldNotSaveException(__("The order address couldn't be saved.")));
-
-        /** @var AddressAnalysis $addressAnalysis */
-        $addressAnalysis = Bootstrap::getObjectManager()->create(
-            AddressAnalysis::class,
-            [
-                'serviceFactory' => $mockServiceFactory,
-                'orderAddressRepository' => $orderAddressRepositoryMock
-            ]
-        );
-
-        $this->expectException(CouldNotSaveException::class);
-        $this->expectExceptionMessage("The order address couldn't be saved.");
-
-        $addressAnalysis->update($addresses);
+        $result = $addressAnalysis->analyse($addresses);
     }
 }

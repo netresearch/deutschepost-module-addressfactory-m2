@@ -10,11 +10,12 @@ use Magento\Backend\App\Action;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 use Magento\Ui\Component\MassAction\Filter;
 use PostDirekt\Addressfactory\Model\Config;
 use PostDirekt\Addressfactory\Model\OrderAnalysis;
+use PostDirekt\Addressfactory\Model\OrderUpdater;
 
 /**
  * Bulk Check Address
@@ -47,6 +48,11 @@ class Check extends Action
     private $orderAnalysisService;
 
     /**
+     * @var OrderUpdater
+     */
+    private $orderUpdater;
+
+    /**
      * @var Config
      */
     private $moduleConfig;
@@ -56,13 +62,15 @@ class Check extends Action
         CollectionFactory $collectionFactory,
         OrderAnalysis $orderAnalysisService,
         Config $moduleConfig,
-        Action\Context $context
+        Action\Context $context,
+        OrderUpdater $orderUpdater
     ) {
         parent::__construct($context);
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         $this->orderAnalysisService = $orderAnalysisService;
         $this->moduleConfig = $moduleConfig;
+        $this->orderUpdater = $orderUpdater;
     }
 
     public function execute(): ResultInterface
@@ -80,28 +88,57 @@ class Check extends Action
             $collection->addAttributeToFilter('sales_order_address.address_type', 'shipping');
             $collection->addAttributeToFilter('sales_order_address.country_id', 'DE');
             $orderCollection = $this->filter->getCollection($collection);
-            if ($this->moduleConfig->isHoldNonDeliverableOrders()) {
-                $this->orderAnalysisService->holdNonDeliverable($orderCollection->getItems());
-            }
-            if ($this->moduleConfig->isAutoCancelNonDeliverableOrders()) {
-                $this->orderAnalysisService->cancelUndeliverable($orderCollection->getItems());
-            }
         } catch (LocalizedException $exception) {
             $this->messageManager->addErrorMessage($exception->getMessage());
             return $resultRedirect;
         }
 
-        $incrementIds = [];
-        /** @var OrderInterface $order */
-        foreach ($orderCollection->getItems() as $order) {
-            $incrementIds[] = $order->getIncrementId();
+        /** @var Order[] $orders */
+        $orders = $orderCollection->getItems();
+
+        /**
+         * Perform deliverability analysis for all orders (or fetch from DB)
+         */
+        $analysisResults = $this->orderAnalysisService->analyse($orders);
+
+        $heldOrderIds = [];
+        $canceledOrderIds = [];
+        $failedOrderIds = [];
+        foreach ($orders as $order) {
+            $analysisResult = $analysisResults[(int) $order->getEntityId()];
+            if (!$analysisResult) {
+                $failedOrderIds[] = $order->getIncrementId();
+                continue;
+            }
+            if ($this->moduleConfig->isHoldNonDeliverableOrders()) {
+                $isOnHold = $this->orderUpdater->holdIfNonDeliverable($order, $analysisResult);
+                if ($isOnHold) {
+                    $heldOrderIds[] = $order->getIncrementId();
+                }
+            }
+            if ($this->moduleConfig->isAutoCancelNonDeliverableOrders()) {
+                $isCanceled = $this->orderUpdater->cancelIfUndeliverable($order, $analysisResult);
+                if ($isCanceled) {
+                    $canceledOrderIds[] = $order->getIncrementId();
+                }
+            }
         }
-        if (empty($incrementIds)) {
-            $msg = __('No Orders were analysed.');
-        } else {
-            $msg = __('Order(s) %1 were successfully analysed.', implode(', ', $incrementIds));
+
+        if (!empty($heldOrderIds)) {
+            $this->messageManager->addSuccessMessage(
+                __('Non-deliverable Order(s) %1 were put on hold.', implode(', ', $heldOrderIds))
+            );
         }
-        $this->messageManager->addSuccessMessage($msg);
+        if (!empty($canceledOrderIds)) {
+            $this->messageManager->addSuccessMessage(
+                __('Undeliverable Order(s) %1 were canceled.', implode(', ', $canceledOrderIds))
+            );
+        }
+        if (!empty($failedOrderIds)) {
+            $this->messageManager->addErrorMessage(
+                __('Order(s) %1 could not be analysed with ADDRESSFACTORY DIRECT.', implode(', ', $failedOrderIds))
+            );
+        }
 
         return $resultRedirect;
     }

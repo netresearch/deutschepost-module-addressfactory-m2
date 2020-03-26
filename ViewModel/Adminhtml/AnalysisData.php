@@ -19,7 +19,7 @@ use Magento\Sales\Model\OrderRepository;
 use PostDirekt\Addressfactory\Model\AnalysisResult;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
 use PostDirekt\Addressfactory\Model\DeliverabilityCodes;
-use PostDirekt\Addressfactory\Model\DeliverabilityStatus;
+use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 
 /**
  * Class AnalysisData
@@ -55,7 +55,7 @@ class AnalysisData implements ArgumentInterface
     private $deliverablility;
 
     /**
-     * @var DeliverabilityStatus
+     * @var AnalysisStatusUpdater
      */
     private $deliveryStatus;
 
@@ -75,7 +75,7 @@ class AnalysisData implements ArgumentInterface
         Request $request,
         OrderRepository $orderRepository,
         DeliverabilityCodes $deliverablility,
-        DeliverabilityStatus $deliveryStatus,
+        AnalysisStatusUpdater $deliveryStatus,
         Url $urlBuilder
     ) {
         $this->analysisResultRepository = $analysisResultRepository;
@@ -178,8 +178,11 @@ class AnalysisData implements ArgumentInterface
     {
         $order = $this->getOrder();
         $status = $this->deliveryStatus->getStatus((int) $order->getEntityId());
+        if (!$order) {
+            return false;
+        }
 
-        return $status !== DeliverabilityStatus::DELIVERABLE && $order->canCancel();
+        return $status !== AnalysisStatusUpdater::DELIVERABLE && $order->canCancel();
     }
 
     public function showUnholdButton(): bool
@@ -201,7 +204,8 @@ class AnalysisData implements ArgumentInterface
     public function allowAddressCorrect(): bool
     {
         $orderId = (int) $this->request->getParam('order_id');
-        return $this->deliveryStatus->getStatus($orderId) !== DeliverabilityStatus::ADDRESS_CORRECTED;
+
+        return $this->deliveryStatus->getStatus($orderId) !== AnalysisStatusUpdater::ADDRESS_CORRECTED;
     }
 
     public function getManualEditUrl(): string
