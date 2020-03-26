@@ -25,7 +25,9 @@ Building,Building
 City,City
 "City addition","City addition"
 "Configuration Name","Configuration Name"
+"Could not perform ADDRESSFACTORY DIRECT analysis for Order","Could not perform ADDRESSFACTORY DIRECT analysis for Order"
 "Could not save analysis result.","Could not save analysis result."
+"Could not update Order address with ADDRESSFACTORY DIRECT suggestion","Could not update Order address with ADDRESSFACTORY DIRECT suggestion"
 Country,Country
 "Deliverability Analysis","Deliverability Analysis"
 "Deliverability Status","Deliverability Status"
@@ -43,12 +45,13 @@ Logging,Logging
 Medium,Medium
 "Module version:","Module version:"
 "No Automatic Analysis","No Automatic Analysis"
-"No Orders were analysed.","No Orders were analysed."
-"No Orders were updated.","No Orders were updated."
+"Non-deliverable Order put on hold","Non-deliverable Order put on hold"
+"Non-deliverable Order(s) %1 were put on hold.","Non-deliverable Order(s) %1 were put on hold."
 "Non-deliverable Orders","Non-deliverable Orders"
 "Not analysed","Not analysed"
-"Order state changed to ""%1""","Order state changed to ""%1"""
-"Order(s) %1 were successfully analysed.","Order(s) %1 were successfully analysed."
+"Order address updated with ADDRESSFACTORY DIRECT suggestion","Order address updated with ADDRESSFACTORY DIRECT suggestion"
+"Order(s) %1 could not be analysed with ADDRESSFACTORY DIRECT.","Order(s) %1 could not be analysed with ADDRESSFACTORY DIRECT."
+"Order(s) %1 could not be updated.","Order(s) %1 could not be updated."
 "Order(s) %1 were successfully updated.","Order(s) %1 were successfully updated."
 "Other Actions","Other Actions"
 Pending,Pending
@@ -62,18 +65,17 @@ Person,Person
 "Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
 "Sandbox Mode","Sandbox Mode"
 "Service exception: %1","Service exception: %1"
-"Shipping address for order #%1 corrected","Shipping address for order #%1 corrected"
 Street,Street
 Strong,Strong
 "Suggested Shipping Address","Suggested Shipping Address"
-"The order address couldn't be saved.","The order address couldn't be saved."
 "Unable to save analysis result.","Unable to save analysis result."
 "Unable to save analysis results","Unable to save analysis results"
 "Unable to save analysis status.","Unable to save analysis status."
 Undeliverable,Undeliverable
+"Undeliverable Order canceled","Undeliverable Order canceled"
+"Undeliverable Order(s) %1 were canceled.","Undeliverable Order(s) %1 were canceled."
 "Undeliverable Orders","Undeliverable Orders"
 "Unhold Order","Unhold Order"
-"Updated shipping address for order #%1","Updated shipping address for order #%1"
 Warnings,Warnings
 Weak,Weak
 "You must also have Magento general logging enabled.","You must also have Magento general logging enabled."

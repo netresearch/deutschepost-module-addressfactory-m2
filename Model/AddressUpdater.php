@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace PostDirekt\Addressfactory\Model;
 
 use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Api\OrderAddressRepositoryInterface;
 
@@ -32,13 +33,25 @@ class AddressUpdater
      * - city
      * - postal code
      *
-     * @param OrderAddressInterface $address
+     * Note: Do not use this method directly when operating on Order scope,
+     * use PostDirekt\Addressfactory\Model\OrderAnalysis::updateShippingAddress instead
+     * to keep the Order's analysis status in sync.
+     *
      * @param AnalysisResult $analysisResult
-     * @throws CouldNotSaveException    The repository interface is missing this annotation,
-     *                                  but its default implementation can throw it.
+     * @param OrderAddressInterface|null $address
+     * @return bool If the Address update was successfull
      */
-    public function update(OrderAddressInterface $address, AnalysisResult $analysisResult): void
+    public function update(AnalysisResult $analysisResult, ?OrderAddressInterface $address = null): bool
     {
+        if ($address === null) {
+            try {
+                $address = $this->orderAddressRepository->get($analysisResult->getOrderAddressId());
+            } catch (NoSuchEntityException $exception) {
+                // The repository interface is missing the annotation,
+                // but its default implementation can throw NoSuchEntityException.
+                return false;
+            }
+        }
         $street = implode(' ', [$analysisResult->getStreet(), $analysisResult->getStreetNumber()]);
         $address->setStreet($street);
         $address->setFirstname($analysisResult->getFirstName());
@@ -46,6 +59,14 @@ class AddressUpdater
         $address->setPostcode($analysisResult->getPostalCode());
         $address->setCity($analysisResult->getCity());
 
-        $this->orderAddressRepository->save($address);
+        try {
+            $this->orderAddressRepository->save($address);
+        } catch (CouldNotSaveException $exception) {
+            // The repository interface is missing the annotation,
+            // but its default implementation can throw CouldNotSaveException.
+            return false;
+        }
+
+        return true;
     }
 }

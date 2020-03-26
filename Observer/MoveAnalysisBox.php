@@ -59,7 +59,7 @@ class MoveAnalysisBox implements ObserverInterface
 
         $order = $block->getOrder();
         $shippingAddress = $order->getShippingAddress();
-        if (!$shippingAddress || !$order instanceof OrderInterface || $shippingAddress->getCountryId() !== 'DE') {
+        if (!$order instanceof OrderInterface || !$shippingAddress || $shippingAddress->getCountryId() !== 'DE') {
             // wrong type, virtual or corrupt order
             return;
         }

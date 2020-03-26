@@ -12,8 +12,10 @@ use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Model\Order;
 use PostDirekt\Addressfactory\Model\Config;
 use PostDirekt\Addressfactory\Model\OrderAnalysis;
+use PostDirekt\Addressfactory\Model\OrderUpdater;
 
 /**
  * AddressAnalysis
@@ -45,16 +47,23 @@ class Analyse extends Action
      */
     private $orderRepository;
 
+    /**
+     * @var OrderUpdater
+     */
+    private $orderUpdater;
+
     public function __construct(
         Config $config,
         OrderAnalysis $orderAnalysisService,
         OrderRepositoryInterface $orderRepository,
-        Context $context
+        Context $context,
+        OrderUpdater $orderUpdater
     ) {
         parent::__construct($context);
         $this->config = $config;
         $this->orderAnalysisService = $orderAnalysisService;
         $this->orderRepository = $orderRepository;
+        $this->orderUpdater = $orderUpdater;
     }
 
     /**
@@ -64,34 +73,42 @@ class Analyse extends Action
      */
     public function execute(): ResultInterface
     {
-        $orderId = $this->getRequest()->getParam('order_id');
+        $orderId = (int)$this->getRequest()->getParam('order_id');
+        /** @var Order $order */
         $order = $this->orderRepository->get($orderId);
-        $previousOrderState = $order->getState();
-
-        try {
-            $this->orderAnalysisService->analyse([$order]);
-            if ($this->config->isHoldNonDeliverableOrders($order->getStoreId())) {
-                $this->orderAnalysisService->holdNonDeliverable([$order]);
-            }
-            if ($this->config->isAutoCancelNonDeliverableOrders($order->getStoreId())) {
-                $this->orderAnalysisService->cancelUndeliverable([$order]);
-            }
-            if ($this->config->isAutoUpdateShippingAddress($order->getStoreId())) {
-                $this->orderAnalysisService->updateShippingAddress([$order]);
-                $msg =  __('Updated shipping address for order #%1', $order->getIncrementId());
-                $this->messageManager->addSuccessMessage($msg);
-            }
-        } catch (LocalizedException $exception) {
-            $this->messageManager->addErrorMessage($exception->getMessage());
-        }
-
-        if ($order->getState() !== $previousOrderState) {
-            $msg = __('Order state changed to "%1"', $order->getState());
-            $this->messageManager->addSuccessMessage($msg);
-        }
 
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $resultRedirect->setUrl($this->_redirect->getRefererUrl());
+
+        try {
+            $analysisResults = $this->orderAnalysisService->analyse([$order]);
+            $analysisResult = $analysisResults[$orderId];
+            if (!$analysisResult) {
+                throw new LocalizedException(__('Could not perform ADDRESSFACTORY DIRECT analysis for Order'));
+            }
+        } catch (LocalizedException $exception) {
+            $this->messageManager->addErrorMessage($exception->getMessage());
+            return $resultRedirect;
+        }
+
+        if ($this->config->isHoldNonDeliverableOrders($order->getStoreId())) {
+            $isOnHold = $this->orderUpdater->holdIfNonDeliverable($order, $analysisResult);
+            if ($isOnHold) {
+                $this->messageManager->addSuccessMessage(__('Non-deliverable Order put on hold'));
+            }
+        }
+        if ($this->config->isAutoCancelNonDeliverableOrders($order->getStoreId())) {
+            $isCanceled = $this->orderUpdater->cancelIfUndeliverable($order, $analysisResult);
+            if ($isCanceled) {
+                $this->messageManager->addSuccessMessage(__('Undeliverable Order canceled', $order->getIncrementId()));
+            }
+        }
+        if ($this->config->isAutoUpdateShippingAddress($order->getStoreId())) {
+            $isUpdated = $this->orderAnalysisService->updateShippingAddress($order, $analysisResult);
+            if ($isUpdated) {
+                $this->messageManager->addSuccessMessage(__('Order address updated with ADDRESSFACTORY DIRECT suggestion'));
+            }
+        }
 
         return $resultRedirect;
     }
