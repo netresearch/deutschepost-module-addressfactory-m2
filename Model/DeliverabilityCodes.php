@@ -181,7 +181,12 @@ class DeliverabilityCodes
             $statusCode = substr($code, -3, 3);
 
             if (isset($mappedFieldCodes[$fieldCode], $mappedStatusCodes[$statusCode])) {
-                $labels[] = ucfirst(trim($mappedFieldCodes[$fieldCode] . ' ' . $mappedStatusCodes[$statusCode]));
+                $iconCode = $this->mapToIcon($fieldCode);
+                $label = ucfirst(trim($mappedFieldCodes[$fieldCode] . ' ' . $mappedStatusCodes[$statusCode]));
+                $labels[] = [
+                    'icon' => $iconCode,
+                    'label' => $label
+                ];
             }
         }
 
@@ -201,5 +206,28 @@ class DeliverabilityCodes
          */
         $removals = ['BAC201110', 'BAC010103', 'BAC010104'];
         return array_diff($codes, $removals);
+    }
+
+    private function mapToIcon(string $fieldCode): string
+    {
+        $inHouse = ['010','012', '030'];
+
+        switch ($fieldCode) {
+            case '000':
+                $iconCode = 'icon-alert';
+                break;
+            case in_array($fieldCode, $inHouse, true):
+                $iconCode = 'icon-house';
+                break;
+            case '050':
+                $iconCode = 'icon-user-account';
+                break;
+            case '040':
+                $iconCode = 'icon-user-group';
+                break;
+            default:
+                $iconCode = 'icon-info';
+        }
+        return $iconCode;
     }
 }
