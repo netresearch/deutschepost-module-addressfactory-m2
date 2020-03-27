@@ -168,6 +168,8 @@ class DeliverabilityCodes
         ];
 
         $labels = [];
+        // remove redundant codes
+        $codes = $this->filterInapplicable($codes);
 
         foreach ($codes as $code) {
             if (isset($mappedCodes[$code])) {
@@ -184,5 +186,20 @@ class DeliverabilityCodes
         }
 
         return $labels;
+    }
+
+    /**
+     * @param string[] $codes
+     * @return string[]
+     */
+    private function filterInapplicable(array $codes): array
+    {
+        /**
+         * BAC201110 - House numbers can be separated by the API, but Magento cannot take advantage of this
+         * BAC010103, BAC010104 - This is always explained in more detail by another code.
+         *                        Also, this is a false positive in connection with BAC201110
+         */
+        $removals = ['BAC201110', 'BAC010103', 'BAC010104'];
+        return array_diff($codes, $removals);
     }
 }
