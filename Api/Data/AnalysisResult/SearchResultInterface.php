@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace PostDirekt\Addressfactory\Api\Data\AnalysisResult;
 
 use Magento\Framework\Api\SearchResultsInterface;
-use PostDirekt\Addressfactory\Model\AnalysisResult;
+use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 
 /**
  * AnalysisSearchResultInterface
@@ -20,14 +20,14 @@ interface SearchResultInterface extends SearchResultsInterface
     /**
      * Get Event list.
      *
-     * @return AnalysisResult[]
+     * @return AnalysisResultInterface[]
      */
     public function getItems();
 
     /**
      * Set event_id list.
      *
-     * @param AnalysisResult[] $items
+     * @param AnalysisResultInterface[] $items
      * @return $this
      */
     public function setItems(array $items): SearchResultInterface;

@@ -6,6 +6,8 @@ declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Test\Integration\TestCase\Controller\Order\Address;
 
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
@@ -14,11 +16,8 @@ use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 use PHPUnit\Framework\MockObject\MockObject;
 use PostDirekt\Addressfactory\Model\AddressAnalysis;
-use PostDirekt\Addressfactory\Model\AnalysisResult;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\AddressDe;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\SimpleProduct;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderFixture;
+use PostDirekt\Addressfactory\Test\Integration\Fixture\AnalysisFixture;
 use PostDirekt\Sdk\AddressfactoryDirect\Service\ServiceFactory;
 
 /**
@@ -46,43 +45,11 @@ class AutocorrectTest extends AbstractBackendController
     private static $order;
 
     /**
-     * @var AnalysisResult
-     */
-    private static $analysisResult;
-
-    /**
-     * Create order fixture for DE recipient address.
-     *
-     * @throws \Exception
-     */
-    private static function createOrders(): void
-    {
-        $shippingMethod = 'flatrate_flatrate';
-        self::$order = OrderFixture::createOrder(new AddressDe(), [new SimpleProduct()], $shippingMethod);
-    }
-
-    /**
      * @throws \Exception
      */
     public static function createAnalysisResults(): void
     {
-        self::createOrders();
-
-        $analysisResultRepo = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
-        $address = self::$order->getShippingAddress();
-        /** @var AnalysisResult $analysisResult */
-        $analysisResult = Bootstrap::getObjectManager()->create(AnalysisResult::class);
-        $analysisResult->setOrderAddressId((int)$address->getEntityId());
-        $analysisResult->setStreet('Musterstr.');
-        $analysisResult->setLastName('Mumpitz');
-        $analysisResult->setFirstName('Jochen');
-        $analysisResult->setCity('Görlitz');
-        $analysisResult->setPostalCode('02345');
-        $analysisResult->setStatusCodes(['PDC050106', 'PDC040106']);
-        $analysisResult->setStreetNumber('12');
-        /** @var AnalysisResultRepository $analysisResultRepo */
-        $analysisResultRepo->save($analysisResult);
-        self::$analysisResult = $analysisResult;
+        self::$order = AnalysisFixture::createDeliverableAnalyzedOrder();
     }
 
     /**
@@ -90,8 +57,8 @@ class AutocorrectTest extends AbstractBackendController
      * @magentoDataFixture createAnalysisResults
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_update_shipping_address 0
      *
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws InputException
+     * @throws NoSuchEntityException
      */
     public function autocorrectAddressSuccess()
     {
@@ -122,9 +89,14 @@ class AutocorrectTest extends AbstractBackendController
         $order = $orderRepository->get((int) self::$order->getId());
         /** @var OrderAddressInterface $shippingAddress */
         $shippingAddress = $order->getShippingAddress();
-        self::assertEquals(self::$analysisResult->getPostalCode(), $shippingAddress->getPostcode());
-        self::assertEquals(self::$analysisResult->getCity(), $shippingAddress->getCity());
-        self::assertContains(self::$analysisResult->getStreetNumber(), self::$analysisResult->getStreetNumber());
+
+        /** @var AnalysisResultRepository $resultRepo */
+        $resultRepo = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
+        $analysisResult = $resultRepo->getByAddressId((int)$shippingAddress->getEntityId());
+
+        self::assertEquals($analysisResult->getPostalCode(), $shippingAddress->getPostcode());
+        self::assertEquals($analysisResult->getCity(), $shippingAddress->getCity());
+        self::assertContains($analysisResult->getStreetNumber(), $analysisResult->getStreetNumber());
     }
 
     /**

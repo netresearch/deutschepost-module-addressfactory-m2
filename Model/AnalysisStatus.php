@@ -30,18 +30,8 @@ class AnalysisStatus extends AbstractModel
         return (int) $this->getData(self::ORDER_ID);
     }
 
-    public function setOrderId(int $orderId): void
-    {
-        $this->setData(self::ORDER_ID, $orderId);
-    }
-
     public function getStatus(): string
     {
         return (string) $this->getData(self::STATUS);
-    }
-
-    public function setStatus(string $status): void
-    {
-        $this->setData(self::STATUS, $status);
     }
 }

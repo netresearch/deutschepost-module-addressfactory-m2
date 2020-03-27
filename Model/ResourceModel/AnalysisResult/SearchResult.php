@@ -9,6 +9,7 @@ namespace PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 use PostDirekt\Addressfactory\Api\Data\AnalysisResult\SearchResultInterface;
+use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 use PostDirekt\Addressfactory\Model\AnalysisResult;
 use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult as AnalysisResultResource;
 
@@ -82,7 +83,7 @@ class SearchResult extends AbstractCollection implements SearchResultInterface
     /**
      * Set items list.
      *
-     * @param AnalysisResult[] $items
+     * @param AnalysisResultInterface[] $items
      * @return $this
      * @throws \Exception
      */

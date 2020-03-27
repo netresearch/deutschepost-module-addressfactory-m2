@@ -10,6 +10,8 @@ use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
+use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterfaceFactory;
 use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult\SearchResult;
 use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult\SearchResultFactory;
 use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult as AnalysisResultResource;
@@ -28,7 +30,7 @@ class AnalysisResultRepository
     private $resource;
 
     /**
-     * @var AnalysisResultFactory
+     * @var AnalysisResultInterfaceFactory
      */
     private $analysisResultFactory;
 
@@ -44,7 +46,7 @@ class AnalysisResultRepository
 
     public function __construct(
         AnalysisResultResource $resource,
-        AnalysisResultFactory $analysisResultFactory,
+        AnalysisResultInterfaceFactory $analysisResultFactory,
         SearchResultFactory $searchResultFactory,
         CollectionProcessorInterface $collectionProcessor
     ) {
@@ -54,13 +56,12 @@ class AnalysisResultRepository
         $this->collectionProcessor = $collectionProcessor;
     }
 
-
     /**
      * @param int $addressId
-     * @return AnalysisResult
+     * @return AnalysisResultInterface
      * @throws NoSuchEntityException
      */
-    public function getByAddressId(int $addressId): AnalysisResult
+    public function getByAddressId(int $addressId): AnalysisResultInterface
     {
         $analysisResult = $this->analysisResultFactory->create();
         $this->resource->load($analysisResult, $addressId);
@@ -86,11 +87,11 @@ class AnalysisResultRepository
     }
 
     /**
-     * @param AnalysisResult $analysisResult
-     * @return AnalysisResult
+     * @param AnalysisResultInterface $analysisResult
+     * @return AnalysisResultInterface
      * @throws CouldNotSaveException
      */
-    public function save(AnalysisResult $analysisResult): AnalysisResult
+    public function save(AnalysisResultInterface $analysisResult): AnalysisResultInterface
     {
         try {
             $this->resource->save($analysisResult);
@@ -102,7 +103,7 @@ class AnalysisResultRepository
     }
 
     /**
-     * @param AnalysisResult[] $analysisResults
+     * @param AnalysisResultInterface[] $analysisResults
      * @return SearchResult
      * @throws CouldNotSaveException
      */
