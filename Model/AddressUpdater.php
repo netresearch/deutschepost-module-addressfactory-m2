@@ -10,6 +10,7 @@ use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Api\OrderAddressRepositoryInterface;
+use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 
 class AddressUpdater
 {
@@ -37,11 +38,11 @@ class AddressUpdater
      * use PostDirekt\Addressfactory\Model\OrderAnalysis::updateShippingAddress instead
      * to keep the Order's analysis status in sync.
      *
-     * @param AnalysisResult $analysisResult
+     * @param AnalysisResultInterface $analysisResult
      * @param OrderAddressInterface|null $address
      * @return bool If the Address update was successfull
      */
-    public function update(AnalysisResult $analysisResult, ?OrderAddressInterface $address = null): bool
+    public function update(AnalysisResultInterface $analysisResult, ?OrderAddressInterface $address = null): bool
     {
         if ($address === null) {
             try {

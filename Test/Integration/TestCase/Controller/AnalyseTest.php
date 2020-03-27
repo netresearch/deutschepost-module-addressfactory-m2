@@ -14,11 +14,8 @@ use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 use PHPUnit\Framework\MockObject\MockObject;
 use PostDirekt\Addressfactory\Model\AddressAnalysis;
-use PostDirekt\Addressfactory\Model\AnalysisResult;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\AddressDe;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\SimpleProduct;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderFixture;
+use PostDirekt\Addressfactory\Test\Integration\Fixture\AnalysisFixture;
 use PostDirekt\Sdk\AddressfactoryDirect\Service\ServiceFactory;
 
 /**
@@ -45,44 +42,14 @@ class AnalyseTest extends AbstractBackendController
      */
     private static $order;
 
-    /**
-     * @var AnalysisResult
-     */
-    private static $analysisResult;
-
-    /**
-     * Create order fixture for DE recipient address.
-     *
-     * @throws \Exception
-     */
-    private static function createOrders(): void
-    {
-        $shippingMethod = 'flatrate_flatrate';
-        self::$order = OrderFixture::createOrder(new AddressDe(), [new SimpleProduct()], $shippingMethod);
-    }
-
-    /**
-     * @throws \Exception
-     */
     public static function createAnalysisResults(): void
     {
-        self::createOrders();
+        self::$order = AnalysisFixture::createDeliverableAnalyzedOrder();
+    }
 
-        $analysisResultRepo = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
-        $address = self::$order->getShippingAddress();
-        /** @var AnalysisResult $analysisResult */
-        $analysisResult = Bootstrap::getObjectManager()->create(AnalysisResult::class);
-        $analysisResult->setOrderAddressId((int)$address->getEntityId());
-        $analysisResult->setStreet('Musterstr.');
-        $analysisResult->setLastName('Mumpitz');
-        $analysisResult->setFirstName('Jochen');
-        $analysisResult->setCity('Görlitz');
-        $analysisResult->setPostalCode('02345');
-        $analysisResult->setStatusCodes(['PDC050106', 'PDC040106']);
-        $analysisResult->setStreetNumber('12');
-        /** @var AnalysisResultRepository $analysisResultRepo */
-        $analysisResultRepo->save($analysisResult);
-        self::$analysisResult = $analysisResult;
+    public static function createUndeliverableAnalysisResults(): void
+    {
+        self::$order = AnalysisFixture::createUndeliverableAnalyzedOrder();
     }
 
     /**
@@ -91,7 +58,7 @@ class AnalyseTest extends AbstractBackendController
      * assert that order is canceled.
      *
      * @test
-     * @magentoDataFixture createAnalysisResults
+     * @magentoDataFixture createUndeliverableAnalysisResults
      * @magentoConfigFixture default_store postdirekt/addressfactory/hold_non_deliverable_orders 1
      */
     public function holdNonDeliverableOrderSuccess(): void
@@ -131,7 +98,7 @@ class AnalyseTest extends AbstractBackendController
      * assert that order is not on hold.
      *
      * @test
-     * @magentoDataFixture createAnalysisResults
+     * @magentoDataFixture createUndeliverableAnalysisResults
      * @magentoConfigFixture default_store postdirekt/addressfactory/hold_non_deliverable_orders 0
      */
     public function holdNonDeliverableOrderWithDisabledConfig(): void
@@ -171,7 +138,7 @@ class AnalyseTest extends AbstractBackendController
      * assert that order is canceled.
      *
      * @test
-     * @magentoDataFixture createAnalysisResults
+     * @magentoDataFixture createUndeliverableAnalysisResults
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_cancel_orders 1
      */
     public function autoCancelNonDeliverableOrdersSuccess()
@@ -212,7 +179,7 @@ class AnalyseTest extends AbstractBackendController
      * assert that order is not canceled.
      *
      * @test
-     * @magentoDataFixture createAnalysisResults
+     * @magentoDataFixture createUndeliverableAnalysisResults
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_cancel_orders 0
      */
     public function autoCancelNonDeliverableOrdersWithDisabledConfig()
@@ -286,9 +253,14 @@ class AnalyseTest extends AbstractBackendController
         $order = $orderRepository->get((int) self::$order->getId());
         /** @var OrderAddressInterface $shippingAddress */
         $shippingAddress = $order->getShippingAddress();
-        self::assertEquals(self::$analysisResult->getPostalCode(), $shippingAddress->getPostcode());
-        self::assertEquals(self::$analysisResult->getCity(), $shippingAddress->getCity());
-        self::assertContains(self::$analysisResult->getStreetNumber(), self::$analysisResult->getStreetNumber());
+
+        /** @var AnalysisResultRepository $resultRepo */
+        $resultRepo = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
+        $analysisResult = $resultRepo->getByAddressId((int) $shippingAddress->getEntityId());
+
+        self::assertEquals($analysisResult->getPostalCode(), $shippingAddress->getPostcode());
+        self::assertEquals($analysisResult->getCity(), $shippingAddress->getCity());
+        self::assertContains($analysisResult->getStreetNumber(), $analysisResult->getStreetNumber());
     }
 
     /**
@@ -330,9 +302,15 @@ class AnalyseTest extends AbstractBackendController
         $order = $orderRepository->get((int) self::$order->getId());
         /** @var OrderAddressInterface $shippingAddress */
         $shippingAddress = $order->getShippingAddress();
-        self::assertNotEquals(self::$analysisResult->getPostalCode(), $shippingAddress->getPostcode());
-        self::assertNotEquals(self::$analysisResult->getCity(), $shippingAddress->getCity());
-        self::assertNotContains(self::$analysisResult->getStreetNumber(), $shippingAddress->getStreet());
+
+        /** @var AnalysisResultRepository $resultRepo */
+        $resultRepo = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
+        $analysisResult = $resultRepo->getByAddressId((int) $shippingAddress->getEntityId());
+
+
+        self::assertNotEquals($analysisResult->getPostalCode(), $shippingAddress->getPostcode());
+        self::assertNotEquals($analysisResult->getCity(), $shippingAddress->getCity());
+        self::assertNotContains($analysisResult->getStreetNumber(), $shippingAddress->getStreet());
     }
 
 

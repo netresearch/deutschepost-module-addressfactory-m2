@@ -6,10 +6,10 @@ declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Model;
 
-use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Model\Order;
+use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 
 /**
  * OrderAnalysis
@@ -123,7 +123,7 @@ class OrderAnalysis
      * for the Shipping Address of every given Order.
      *
      * @param Order[] $orders
-     * @return AnalysisResult[] Dictionary: [(int) $order->getEntityId() => AnalysisResult]
+     * @return AnalysisResultInterface[] Dictionary: [(int) $order->getEntityId() => AnalysisResult]
      */
     public function analyse(array $orders): array
     {
@@ -149,10 +149,10 @@ class OrderAnalysis
 
     /**
      * @param Order $order
-     * @param AnalysisResult $analysisResult
+     * @param AnalysisResultInterface $analysisResult
      * @return bool
      */
-    public function updateShippingAddress(Order $order, AnalysisResult $analysisResult): bool
+    public function updateShippingAddress(Order $order, AnalysisResultInterface $analysisResult): bool
     {
         $wasUpdated = $this->addressUpdater->update($analysisResult, $order->getShippingAddress());
         if ($wasUpdated) {
@@ -164,8 +164,7 @@ class OrderAnalysis
         return $wasUpdated;
     }
 
-
-    private function updateDeliverabilityStatus(int $orderId, ?AnalysisResult $analysisResult): void
+    private function updateDeliverabilityStatus(int $orderId, ?AnalysisResultInterface $analysisResult): void
     {
         if (!$analysisResult) {
             $this->deliverabilityStatus->setStatusAnalysisFailed($orderId);

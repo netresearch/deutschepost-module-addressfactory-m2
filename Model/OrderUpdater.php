@@ -8,6 +8,7 @@ namespace PostDirekt\Addressfactory\Model;
 
 use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Model\Order;
+use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 
 class OrderUpdater
 {
@@ -29,10 +30,10 @@ class OrderUpdater
 
     /**
      * @param Order $order
-     * @param AnalysisResult $analysisResult
+     * @param AnalysisResultInterface $analysisResult
      * @return bool If Order was put on hold
      */
-    public function holdIfNonDeliverable(Order $order, AnalysisResult $analysisResult): bool
+    public function holdIfNonDeliverable(Order $order, AnalysisResultInterface $analysisResult): bool
     {
         if (!$order->canHold()) {
             return false;
@@ -47,10 +48,10 @@ class OrderUpdater
 
     /**
      * @param Order $order
-     * @param AnalysisResult $analysisResult
+     * @param AnalysisResultInterface $analysisResult
      * @return bool If Order was cancelled
      */
-    public function cancelIfUndeliverable(Order $order, AnalysisResult $analysisResult): bool
+    public function cancelIfUndeliverable(Order $order, AnalysisResultInterface $analysisResult): bool
     {
         if (!$order->canCancel()) {
             return false;

@@ -11,7 +11,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Model\Order;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
-use PostDirekt\Addressfactory\Model\AnalysisResult;
+use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
 use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\AddressDe;
 use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\SimpleProduct;
@@ -55,19 +55,19 @@ class AnalysisResultRepositoryTest extends TestCase
         $order = self::$order;
 
         $data = ['data' => [
-                AnalysisResult::ORDER_ADDRESS_ID => (int) $order->getAddresses()[0]->getEntityId(),
-                AnalysisResult::FIRST_NAME => 'Hans',
-                AnalysisResult::LAST_NAME => 'Muster',
-                AnalysisResult::CITY => 'Bonn',
-                AnalysisResult::POSTAL_CODE => '01234',
-                AnalysisResult::STREET => 'Musterstr.',
-                AnalysisResult::STREET_NUMBER => '12',
-                AnalysisResult::STATUS_CODE => '12345'
+                AnalysisResultInterface::ORDER_ADDRESS_ID => (int) $order->getAddresses()[0]->getEntityId(),
+                AnalysisResultInterface::FIRST_NAME => 'Hans',
+                AnalysisResultInterface::LAST_NAME => 'Muster',
+                AnalysisResultInterface::CITY => 'Bonn',
+                AnalysisResultInterface::POSTAL_CODE => '01234',
+                AnalysisResultInterface::STREET => 'Musterstr.',
+                AnalysisResultInterface::STREET_NUMBER => '12',
+                AnalysisResultInterface::STATUS_CODE => '12345'
             ]
         ];
 
-        /** @var AnalysisResult $analysisResult */
-        $analysisResult = Bootstrap::getObjectManager()->create(AnalysisResult::class, $data);
+        /** @var AnalysisResultInterface $analysisResult */
+        $analysisResult = Bootstrap::getObjectManager()->create(AnalysisResultInterface::class, $data);
         /** @var AnalysisResultRepository $repository */
         $repository = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
         $repository->save($analysisResult);

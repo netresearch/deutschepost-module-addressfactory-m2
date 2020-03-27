@@ -80,7 +80,7 @@ class AutoProcessTest extends TestCase
      */
     public static function createAnalyzedOrders(): void
     {
-        self::$analyzedOrders = AnalysisFixture::createAnalyzedOrders();
+        self::$analyzedOrders = AnalysisFixture::createMixedAnalyzedOrders();
     }
 
     /**

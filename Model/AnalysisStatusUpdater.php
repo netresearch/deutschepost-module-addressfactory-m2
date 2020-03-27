@@ -91,66 +91,60 @@ class AnalysisStatusUpdater
 
     public function setStatusPending(int $orderId): bool
     {
-        $analysisStatus = $this->statusFactory->create();
-        $analysisStatus->setData([
+        $analysisStatus = $this->statusFactory->create(['data' => [
             AnalysisStatus::ORDER_ID => $orderId,
             AnalysisStatus::STATUS => self::PENDING
-        ]);
+        ]]);
 
         return $this->updateStatus($analysisStatus);
     }
 
     public function setStatusUndeliverable(int $orderId): bool
     {
-        $analysisStatus = $this->statusFactory->create();
-        $analysisStatus->setData([
+        $analysisStatus = $this->statusFactory->create(['data' => [
             AnalysisStatus::ORDER_ID => $orderId,
             AnalysisStatus::STATUS => self::UNDELIVERABLE
-        ]);
+        ]]);
 
         return $this->updateStatus($analysisStatus);
     }
 
     public function setStatusPossiblyDeliverable(int $orderId): bool
     {
-        $analysisStatus = $this->statusFactory->create();
-        $analysisStatus->setData([
+        $analysisStatus = $this->statusFactory->create(['data' => [
             AnalysisStatus::ORDER_ID => $orderId,
             AnalysisStatus::STATUS => self::POSSIBLY_DELIVERABLE
-        ]);
+        ]]);
 
         return $this->updateStatus($analysisStatus);
     }
 
     public function setStatusDeliverable(int $orderId): bool
     {
-        $analysisStatus = $this->statusFactory->create();
-        $analysisStatus->setData([
+        $analysisStatus = $this->statusFactory->create(['data' => [
             AnalysisStatus::ORDER_ID => $orderId,
             AnalysisStatus::STATUS => self::DELIVERABLE
-        ]);
+        ]]);
 
         return $this->updateStatus($analysisStatus);
     }
 
     public function setStatusAddressCorrected(int $orderId): bool
     {
-        $analysisStatus = $this->statusFactory->create();
-        $analysisStatus->setData([
+        $analysisStatus = $this->statusFactory->create(['data' => [
             AnalysisStatus::ORDER_ID => $orderId,
             AnalysisStatus::STATUS => self::ADDRESS_CORRECTED
-        ]);
+        ]]);
 
         return $this->updateStatus($analysisStatus);
     }
 
     public function setStatusAnalysisFailed(int $orderId): bool
     {
-        $analysisStatus = $this->statusFactory->create();
-        $analysisStatus->setData([
+        $analysisStatus = $this->statusFactory->create(['data' => [
             AnalysisStatus::ORDER_ID => $orderId,
             AnalysisStatus::STATUS => self::ANALYSIS_FAILED
-        ]);
+        ]]);
 
         return $this->updateStatus($analysisStatus);
     }
