@@ -11,6 +11,8 @@ use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use PostDirekt\Core\Model\Config as CoreConfig;
+use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
+use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterfaceFactory;
 use PostDirekt\Sdk\AddressfactoryDirect\Api\Data\RecordInterface;
 use PostDirekt\Sdk\AddressfactoryDirect\Api\ServiceFactoryInterface;
 use PostDirekt\Sdk\AddressfactoryDirect\Exception\AuthenticationException;
@@ -58,7 +60,7 @@ class AddressAnalysis
     private $logger;
 
     /**
-     * @var AnalysisResultFactory
+     * @var AnalysisResultInterfaceFactory
      */
     private $analysisResultFactory;
 
@@ -74,7 +76,7 @@ class AddressAnalysis
         CoreConfig $coreConfig,
         Config $moduleConfig,
         LoggerInterface $logger,
-        AnalysisResultFactory $analysisResultFactory,
+        AnalysisResultInterfaceFactory $analysisResultFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->analysisResultRepository = $analysisResultRepository;
@@ -89,7 +91,7 @@ class AddressAnalysis
 
     /**
      * @param OrderAddressInterface[] $addresses
-     * @return AnalysisResult[]
+     * @return AnalysisResultInterface[]
      * @throws LocalizedException
      */
     public function analyse(array $addresses): array
@@ -147,26 +149,28 @@ class AddressAnalysis
 
     /**
      * @param RecordInterface[] $records
-     * @return AnalysisResult[]
+     * @return AnalysisResultInterface[]
      */
     private function mapRecordsResponse(array $records): array
     {
         $newAnalysisResults = [];
         foreach ($records as $record) {
-            $newAnalysisResult = $this->analysisResultFactory->create();
+            $data = [];
             if ($record->getAddress()) {
-                $newAnalysisResult->setPostalCode($record->getAddress()->getPostalCode());
-                $newAnalysisResult->setCity($record->getAddress()->getCity());
-                $newAnalysisResult->setStreet($record->getAddress()->getStreetName());
-                $newAnalysisResult->setStreetNumber(trim(implode(' ', [
+                $data[AnalysisResultInterface::POSTAL_CODE] = $record->getAddress()->getPostalCode();
+                $data[AnalysisResultInterface::CITY] = $record->getAddress()->getCity();
+                $data[AnalysisResultInterface::STREET] = $record->getAddress()->getStreetName();
+                $data[AnalysisResultInterface::STREET_NUMBER] = trim(implode(' ', [
                     $record->getAddress()->getStreetNumber(),
                     $record->getAddress()->getStreetNumberAddition()
-                ])));
+                ]));
             }
-            $newAnalysisResult->setFirstName($record->getPerson() ? $record->getPerson()->getFirstName() : '');
-            $newAnalysisResult->setLastName($record->getPerson() ? $record->getPerson()->getLastName() : '');
-            $newAnalysisResult->setOrderAddressId($record->getRecordId());
-            $newAnalysisResult->setStatusCodes($record->getStatusCodes());
+            $data[AnalysisResultInterface::FIRST_NAME] = $record->getPerson() ?
+                $record->getPerson()->getFirstName() : '';
+            $data[AnalysisResultInterface::LAST_NAME] = $record->getPerson() ? $record->getPerson()->getLastName() : '';
+            $data[AnalysisResultInterface::ORDER_ADDRESS_ID] = $record->getRecordId();
+            $data[AnalysisResultInterface::STATUS_CODE] = implode(',', $record->getStatusCodes());
+            $newAnalysisResult = $this->analysisResultFactory->create(['data' => $data]);
             $newAnalysisResults[$newAnalysisResult->getOrderAddressId()] = $newAnalysisResult;
         }
 

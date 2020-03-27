@@ -16,7 +16,7 @@ use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\OrderRepository;
-use PostDirekt\Addressfactory\Model\AnalysisResult;
+use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
 use PostDirekt\Addressfactory\Model\DeliverabilityCodes;
 use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
@@ -65,7 +65,7 @@ class AnalysisData implements ArgumentInterface
     private $urlBuilder;
 
     /**
-     * @var AnalysisResult|null
+     * @var AnalysisResultInterface|null
      */
     private $analysisResult;
 
@@ -255,7 +255,7 @@ class AnalysisData implements ArgumentInterface
         return $order;
     }
 
-    private function getAnalysisResult(): ?AnalysisResult
+    private function getAnalysisResult(): ?AnalysisResultInterface
     {
         if ($this->analysisResult) {
             return $this->analysisResult;
@@ -275,7 +275,7 @@ class AnalysisData implements ArgumentInterface
         return $this->analysisResult;
     }
 
-    private function areDifferent(OrderAddressInterface $orderAddress, AnalysisResult $analysisResult): bool
+    private function areDifferent(OrderAddressInterface $orderAddress, AnalysisResultInterface $analysisResult): bool
     {
         $street = trim(implode(' ', [$analysisResult->getStreet(), $analysisResult->getStreetNumber()]));
         $orderStreet = trim(implode('', $orderAddress->getStreet()));

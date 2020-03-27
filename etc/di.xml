@@ -2,6 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="PostDirekt\Sdk\AddressfactoryDirect\Api\ServiceFactoryInterface" type="PostDirekt\Sdk\AddressfactoryDirect\Service\ServiceFactory"/>
     <preference for="PostDirekt\Addressfactory\Api\Data\AnalysisResult\SearchResultInterface" type="PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult\SearchResult"/>
+    <preference for="PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface" type="PostDirekt\Addressfactory\Model\AnalysisResult"/>
 
     <!-- # virtual types -->
     <virtualType name="Magento\Sales\Model\ResourceModel\Order\Grid">
@@ -48,5 +49,16 @@
         <arguments>
             <argument name="orderRepository" xsi:type="object">PostDirekt\Addressfactory\Cron\OrderRepository\Virtual</argument>
         </arguments>
+    </type>
+
+    <!-- # interceptor plugins -->
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin name="postdirekt_addressfactory_manifest_order_deliverability_status" type="PostDirekt\Addressfactory\Plugin\Sales\OrderRepositoryPlugin" sortOrder="100"/>
+    </type>
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin name="postdirekt_addressfactory_manifest_order_address" type="PostDirekt\Addressfactory\Plugin\AddAnalysisToAddress"/>
+    </type>
+    <type name="Magento\Sales\Model\ResourceModel\Order\Address\Collection">
+        <plugin name="postdirekt_addressfactory_add_analysis_to_order_address" type="PostDirekt\Addressfactory\Plugin\AddAnalysisToAddressCollection"/>
     </type>
 </config>

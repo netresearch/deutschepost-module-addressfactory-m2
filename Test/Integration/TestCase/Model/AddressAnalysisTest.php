@@ -12,12 +12,8 @@ use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PostDirekt\Addressfactory\Model\AddressAnalysis;
-use PostDirekt\Addressfactory\Model\AnalysisResult;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\AddressDe;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\AddressUs;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\SimpleProduct;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderFixture;
+use PostDirekt\Addressfactory\Test\Integration\Fixture\AnalysisFixture;
 use PostDirekt\Addressfactory\Test\Integration\TestDouble\AddressVerificationServiceStub;
 use PostDirekt\Sdk\AddressfactoryDirect\Service\AddressVerificationService\Address;
 use PostDirekt\Sdk\AddressfactoryDirect\Service\AddressVerificationService\Person;
@@ -38,49 +34,14 @@ class AddressAnalysisTest extends TestCase
     private static $orders = [];
 
     /**
-     * @var AnalysisResult[]
-     */
-    private static $analysisResults = [];
-
-    /**
-     * Create order fixture for DE recipient address.
-     *
-     * @throws \Exception
-     */
-    private static function createOrders(): void
-    {
-        $shippingMethod = 'flatrate_flatrate';
-        self::$orders = [
-            OrderFixture::createOrder(new AddressDe(), [new SimpleProduct()], $shippingMethod),
-            OrderFixture::createOrder(new AddressUs(), [new SimpleProduct()], $shippingMethod),
-        ];
-    }
-
-    /**
      * @throws \Exception
      */
     public static function createAnalysisResults(): void
     {
-        self::createOrders();
-
-        $analysisResultRepo = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
-
-        foreach (self::$orders as $order) {
-            $address = $order->getShippingAddress();
-            /** @var AnalysisResult $analysisResult */
-            $analysisResult = Bootstrap::getObjectManager()->create(AnalysisResult::class);
-            $analysisResult->setOrderAddressId((int)$address->getEntityId());
-            $analysisResult->setStreet(implode(' ', $address->getStreet()));
-            $analysisResult->setLastName($address->getLastname());
-            $analysisResult->setFirstName($address->getFirstname());
-            $analysisResult->setCity($address->getCity());
-            $analysisResult->setPostalCode($address->getPostcode());
-            $analysisResult->setStatusCodes(['test']);
-            $analysisResult->setStreetNumber('12');
-            /** @var AnalysisResultRepository $analysisResultRepo */
-            $analysisResultRepo->save($analysisResult);
-            self::$analysisResults[$analysisResult->getOrderAddressId()] = $analysisResult;
-        }
+        self::$orders = [
+            AnalysisFixture::createDeliverableAnalyzedOrder(),
+            AnalysisFixture::createUndeliverableAnalyzedOrder(),
+        ];
     }
 
     /**
@@ -88,25 +49,7 @@ class AddressAnalysisTest extends TestCase
      */
     public static function createPartialAnalysisResult(): void
     {
-        self::createOrders();
-
-        $analysisResultRepo = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
-        $order = self::$orders[0];
-
-        $address = $order->getShippingAddress();
-        /** @var AnalysisResult $analysisResult */
-        $analysisResult = Bootstrap::getObjectManager()->create(AnalysisResult::class);
-        $analysisResult->setOrderAddressId((int)$address->getEntityId());
-        $analysisResult->setStreet(implode(' ', $address->getStreet()));
-        $analysisResult->setLastName($address->getLastname());
-        $analysisResult->setFirstName($address->getFirstname());
-        $analysisResult->setCity($address->getCity());
-        $analysisResult->setPostalCode($address->getPostcode());
-        $analysisResult->setStatusCodes(['test']);
-        $analysisResult->setStreetNumber('12');
-        /** @var AnalysisResultRepository $analysisResultRepo */
-        $analysisResultRepo->save($analysisResult);
-        self::$analysisResults[$analysisResult->getOrderAddressId()] = $analysisResult;
+        self::$orders = AnalysisFixture::createMixedAnalyzedOrders();
     }
 
     /**
@@ -121,6 +64,7 @@ class AddressAnalysisTest extends TestCase
      */
     public function allAddressesAreAnalyzed(): void
     {
+        /** @var Order\Address[] $addresses */
         $addresses = [];
         foreach (self::$orders as $order) {
             $addresses[] = $order->getShippingAddress();
@@ -145,10 +89,13 @@ class AddressAnalysisTest extends TestCase
 
         self::assertCount(2, $result);
 
-        foreach ($result as $analysisResult) {
+        /** @var AnalysisResultRepository $resultRepo */
+        $resultRepo = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
+        foreach ($addresses as $address) {
+            $analysisResult = $resultRepo->getByAddressId((int) $address->getEntityId());
             self::assertEquals(
-                self::$analysisResults[$analysisResult->getOrderAddressId()]->getCity(),
-                $analysisResult->getCity()
+                $analysisResult->getCity(),
+                $result[$address->getEntityId()]->getCity()
             );
         }
     }
@@ -200,7 +147,7 @@ class AddressAnalysisTest extends TestCase
             'testDeliveryInstruction'
         );
 
-        $testRecord = new Record((int) $addresses[1]->getEntityId(), $person, $address);
+        $testRecord = new Record((int) $addresses[0]->getEntityId(), $person, $address);
         $addressVerificationServiceStub = new AddressVerificationServiceStub();
         $addressVerificationServiceStub->records = [$testRecord];
 
@@ -223,12 +170,12 @@ class AddressAnalysisTest extends TestCase
 
         $results = $addressAnalysis->analyse($addresses);
 
-        // assert one out of two records were retrieved from web service
+        // assert one out of thee records was retrieved from web service
         self::assertSame(1, $addressVerificationServiceStub->getRequestedRecordsCount());
 
         self::assertArrayHasKey($testRecord->getRecordId(), $results, 'AnalysisResult from the API is missing from results');
         self::assertArrayHasKey($addresses[0]->getEntityId(), $results, 'AnalysisResult from the DB is missing from results');
-        self::assertCount(2, $results);
+        self::assertCount(3, $results);
 
         $resultOne = $results[$testRecord->getRecordId()];
         $resultTwo = $results[$addresses[0]->getEntityId()];
@@ -279,6 +226,7 @@ class AddressAnalysisTest extends TestCase
 
         $this->expectException(LocalizedException::class);
         $this->expectExceptionMessage(__('Service exception: %1', 'no records')->render());
-        $result = $addressAnalysis->analyse($addresses);
+
+        $addressAnalysis->analyse($addresses);
     }
 }

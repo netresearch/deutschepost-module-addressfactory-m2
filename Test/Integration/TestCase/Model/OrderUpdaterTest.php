@@ -8,15 +8,9 @@ namespace PostDirekt\Addressfactory\Test\Integration\TestCase\Model;
 use Magento\Sales\Model\Order;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
-use PostDirekt\Addressfactory\Model\AnalysisResult;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
-use PostDirekt\Addressfactory\Model\AnalysisStatusRepository;
-use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 use PostDirekt\Addressfactory\Model\OrderUpdater;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\AddressDe;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\AddressUs;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\SimpleProduct;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderFixture;
+use PostDirekt\Addressfactory\Test\Integration\Fixture\AnalysisFixture;
 
 class OrderUpdaterTest extends TestCase
 {
@@ -25,77 +19,20 @@ class OrderUpdaterTest extends TestCase
      */
     private static $orders = [];
 
-    /**
-     * Create order fixture for DE recipient address.
-     *
-     * @throws \Exception
-     */
-    private static function createOrders(): void
+    public static function createAnalysisResultsWithUndeliverableStatus(): void
     {
-        $shippingMethod = 'flatrate_flatrate';
         self::$orders = [
-            OrderFixture::createOrder(new AddressDe(), [new SimpleProduct()], $shippingMethod),
-            OrderFixture::createOrder(new AddressUs(), [new SimpleProduct()], $shippingMethod),
+            AnalysisFixture::createUndeliverableAnalyzedOrder(),
+            AnalysisFixture::createUndeliverableAnalyzedOrder(),
         ];
     }
 
-    /**
-     * @throws \Exception
-     */
-    public static function createAnalysisResultsWithUndeliverableStatus(): void
-    {
-        self::createOrders();
-
-        $analysisResultRepo = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
-
-        foreach (self::$orders as $order) {
-            $address = $order->getShippingAddress();
-            /** @var AnalysisResult $analysisResult */
-            $analysisResult = Bootstrap::getObjectManager()->create(AnalysisResult::class);
-            $analysisResult->setOrderAddressId((int)$address->getEntityId());
-            $analysisResult->setStreet(implode(' ', $address->getStreet()));
-            $analysisResult->setLastName('Lustig');
-            $analysisResult->setFirstName('Peter');
-            $analysisResult->setCity($address->getCity());
-            $analysisResult->setPostalCode($address->getPostcode());
-            $analysisResult->setStatusCodes(
-                [
-                    'PDC050106', //DeliverabilityScore::PERSON_NOT_DELIVERABLE
-                    'PDC040106', //DeliverabilityScore::HOUSEHOLD_UNDELIVERABLE
-                ]
-            );
-            $analysisResult->setStreetNumber('12');
-            /** @var AnalysisResultRepository $analysisResultRepo */
-            $analysisResultRepo->save($analysisResult);
-        }
-    }
-
-    /**
-     * @throws \Exception
-     */
     public static function createAnalysisResultsWithDeliverableStatus(): void
     {
-        self::createOrders();
-
-        $analysisResultRepo = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
-
-        foreach (self::$orders as $order) {
-            $address = $order->getShippingAddress();
-            /** @var AnalysisResult $analysisResult */
-            $analysisResult = Bootstrap::getObjectManager()->create(AnalysisResult::class);
-            $analysisResult->setOrderAddressId((int)$address->getEntityId());
-            $analysisResult->setStreet(implode(' ', $address->getStreet()));
-            $analysisResult->setLastName('Lustig');
-            $analysisResult->setFirstName('Peter');
-            $analysisResult->setCity($address->getCity());
-            $analysisResult->setPostalCode($address->getPostcode());
-            $analysisResult->setStatusCodes(
-                ['PDC050105'] // DeliverabilityScore::PERSON_DELIVERABLE
-            );
-            $analysisResult->setStreetNumber('12');
-            /** @var AnalysisResultRepository $analysisResultRepo */
-            $analysisResultRepo->save($analysisResult);
-        }
+        self::$orders = [
+            AnalysisFixture::createDeliverableAnalyzedOrder(),
+            AnalysisFixture::createDeliverableAnalyzedOrder(),
+        ];
     }
 
     /**
@@ -116,7 +53,7 @@ class OrderUpdaterTest extends TestCase
         foreach (self::$orders as $order) {
             $wasHeld = $orderUpdater->holdIfNonDeliverable(
                 $order,
-                $resultRepo->getByAddressId($order->getShippingAddressId())
+                $resultRepo->getByAddressId((int) $order->getShippingAddressId())
             );
             self::assertTrue($wasHeld);
             self::assertEquals(Order::STATE_HOLDED, $order->getState());
@@ -124,9 +61,9 @@ class OrderUpdaterTest extends TestCase
     }
 
     /**
-     * Test covers case where analyse status code for order is not deliverable.
+     * Test covers case where analyse status code for order is deliverable.
      *
-     * assert that order status is on hold
+     * assert that order status is NOT on hold
      *
      * @test
      * @magentoDataFixture createAnalysisResultsWithDeliverableStatus
@@ -141,7 +78,7 @@ class OrderUpdaterTest extends TestCase
         foreach (self::$orders as $order) {
             $wasHeld = $orderUpdater->holdIfNonDeliverable(
                 $order,
-                $resultRepo->getByAddressId($order->getShippingAddressId())
+                $resultRepo->getByAddressId((int) $order->getShippingAddressId())
             );
             self::assertFalse($wasHeld);
             self::assertNotEquals(Order::STATE_HOLDED, $order->getState());
@@ -164,10 +101,9 @@ class OrderUpdaterTest extends TestCase
         $resultRepo = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
 
         foreach (self::$orders as $order) {
-            $wasCancelled = $orderUpdater->cancelIfUndeliverable(
-                $order,
-                $resultRepo->getByAddressId($order->getShippingAddressId())
-            );
+            $analysisResult = $resultRepo->getByAddressId((int) $order->getData('shipping_address_id'));
+            $wasCancelled = $orderUpdater->cancelIfUndeliverable($order, $analysisResult);
+
             self::assertTrue($wasCancelled);
             self::assertTrue($order->isCanceled());
         }
@@ -191,7 +127,7 @@ class OrderUpdaterTest extends TestCase
         foreach (self::$orders as $order) {
             $wasCancelled = $orderUpdater->cancelIfUndeliverable(
                 $order,
-                $resultRepo->getByAddressId($order->getShippingAddressId())
+                $resultRepo->getByAddressId((int) $order->getShippingAddressId())
             );
             self::assertFalse($wasCancelled);
             self::assertFalse($order->isCanceled());

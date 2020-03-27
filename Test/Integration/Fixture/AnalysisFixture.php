@@ -8,7 +8,7 @@ namespace PostDirekt\Addressfactory\Test\Integration\Fixture;
 
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\TestFramework\Helper\Bootstrap;
-use PostDirekt\Addressfactory\Model\AnalysisResult;
+use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
 use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\AddressDe;
@@ -48,53 +48,83 @@ class AnalysisFixture
      * Method can be parametrized if required.
      *
      * @return OrderInterface[]
-     * @throws \Exception
      */
-    public static function createAnalyzedOrders(): array
+    public static function createMixedAnalyzedOrders(): array
     {
-        $shippingMethod = 'flatrate_flatrate';
-        $orders = [
-            OrderFixture::createOrder(new AddressDe(), [new SimpleProduct()], $shippingMethod),
-            OrderFixture::createOrder(new AddressDe(), [new SimpleProduct()], $shippingMethod),
-            OrderFixture::createOrder(new AddressDe(), [new SimpleProduct()], $shippingMethod)
+        return [
+            self::createAnalysisFailedOrder(),
+            self::createUndeliverableAnalyzedOrder(),
+            self::createDeliverableAnalyzedOrder(),
         ];
+    }
 
+    public static function createAnalysisFailedOrder(): OrderInterface
+    {
+        /** @var AnalysisStatusUpdater $statusManagement */
+        $statusManagement = Bootstrap::getObjectManager()->get(AnalysisStatusUpdater::class);
+
+        $shippingMethod = 'flatrate_flatrate';
+        $order = OrderFixture::createOrder(new AddressDe(), [new SimpleProduct()], $shippingMethod);
+
+        // no response received from web service, no analysis result to create for order #0.
+        $statusManagement->setStatusAnalysisFailed((int)$order->getEntityId());
+
+        return $order;
+    }
+
+
+    public static function createDeliverableAnalyzedOrder(): OrderInterface
+    {
         /** @var AnalysisStatusUpdater $statusManagement */
         $statusManagement = Bootstrap::getObjectManager()->get(AnalysisStatusUpdater::class);
         /** @var AnalysisResultRepository $repository */
         $repository = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
 
-        // no response received from web service, no analysis result to create.
-        $statusManagement->setStatusAnalysisFailed((int) $orders[0]->getEntityId());
-
-        // save analysis result and status for order #1
-        /** @var AnalysisResult $analysisResult */
-        $analysisResult = Bootstrap::getObjectManager()->create(AnalysisResult::class);
-        $analysisResult->setOrderAddressId((int) $orders[1]->getData('shipping_address_id'));
-        $analysisResult->setStreet('Zea Drive');
-        $analysisResult->setStreetNumber('9017 A');
-        $analysisResult->setFirstName('Uncle');
-        $analysisResult->setLastName('Undeliverable');
-        $analysisResult->setCity('Badminton');
-        $analysisResult->setPostalCode('99999');
-        $analysisResult->setStatusCodes(['PDC050500', 'PDC040106']);
-        $repository->save($analysisResult);
-        $statusManagement->setStatusUndeliverable((int) $orders[1]->getEntityId());
-
+        $shippingMethod = 'flatrate_flatrate';
+        $order = OrderFixture::createOrder(new AddressDe(), [new SimpleProduct()], $shippingMethod);
         // save analysis result and status for order #2
-        /** @var AnalysisResult $analysisResult */
-        $analysisResult = Bootstrap::getObjectManager()->create(AnalysisResult::class);
-        $analysisResult->setOrderAddressId((int) $orders[2]->getData('shipping_address_id'));
-        $analysisResult->setStreet('Gutenberg Ave.');
-        $analysisResult->setStreetNumber('1');
-        $analysisResult->setFirstName('Colin');
-        $analysisResult->setLastName('Correct');
-        $analysisResult->setCity('Goodinborough');
-        $analysisResult->setPostalCode('11111');
-        $analysisResult->setStatusCodes(['PDC050105']);
-        $repository->save($analysisResult);
-        $statusManagement->setStatusDeliverable((int) $orders[2]->getEntityId());
+        $data = ['data' => [
+            AnalysisResultInterface::ORDER_ADDRESS_ID => (int)$order->getDatA('shipping_address_id'),
+            AnalysisResultInterface::FIRST_NAME => 'Colin',
+            AnalysisResultInterface::LAST_NAME => 'Correct',
+            AnalysisResultInterface::CITY => 'Goodinborough',
+            AnalysisResultInterface::POSTAL_CODE => '11111',
+            AnalysisResultInterface::STREET => 'Gutenberg Ave.',
+            AnalysisResultInterface::STREET_NUMBER => '1',
+            AnalysisResultInterface::STATUS_CODE => 'PDC050105',
+        ]];
 
-        return $orders;
+        $analysisResult = Bootstrap::getObjectManager()->create(AnalysisResultInterface::class, $data);
+        $repository->save($analysisResult);
+        $statusManagement->setStatusDeliverable((int)$order->getEntityId());
+
+        return $order;
+    }
+
+    public static function createUndeliverableAnalyzedOrder(): OrderInterface
+    {
+        /** @var AnalysisStatusUpdater $statusManagement */
+        $statusManagement = Bootstrap::getObjectManager()->get(AnalysisStatusUpdater::class);
+        /** @var AnalysisResultRepository $repository */
+        $repository = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
+
+        $order = OrderFixture::createOrder(new AddressDe(), [new SimpleProduct()], 'flatrate_flatrate');
+        $data = ['data' => [
+            AnalysisResultInterface::ORDER_ADDRESS_ID => (int)$order->getData('shipping_address_id'),
+            AnalysisResultInterface::FIRST_NAME => 'Uncle',
+            AnalysisResultInterface::LAST_NAME => 'Undeliverable',
+            AnalysisResultInterface::CITY => 'Badminton',
+            AnalysisResultInterface::POSTAL_CODE => '99999',
+            AnalysisResultInterface::STREET => 'Zea Drive',
+            AnalysisResultInterface::STREET_NUMBER => '9017 A',
+            AnalysisResultInterface::STATUS_CODE => 'BAC000111',
+        ]
+        ];
+        $analysisResult = Bootstrap::getObjectManager()->create(AnalysisResultInterface::class, $data);
+        $repository->save($analysisResult);
+
+        $statusManagement->setStatusUndeliverable((int)$order->getEntityId());
+
+        return $order;
     }
 }
