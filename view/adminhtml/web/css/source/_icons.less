@@ -1,0 +1,115 @@
+@base-size: .938rem;
+@sm-size: .625rem;
+@xs-size: .313rem;
+
+.icony(@color) {
+    display: flex;
+    align-items: center;
+
+    &:before {
+        &:extend(.abs-icon all);
+        font-size: 150%;
+        color: @color;
+        content: @icon-product__content;
+        margin: 0 @sm-size 0 0;
+    }
+}
+
+.pd_infox_box {
+
+    .icon {
+        position: relative;
+
+        &:before {
+            &:extend(.abs-icon all);
+            content:'';
+            display: inline-block;
+            font-size: inherit;
+            min-width: @base-size;
+            text-align: center;
+        }
+
+        &.button {
+            &:before {
+                margin: 0 @base-size 0 0;
+            }
+        }
+    }
+
+    .icon-catalog {
+        &:before {
+            content: @icon-product__content;
+            position: relative;
+            bottom: -.1rem;
+            margin: 0 @xs-size 0 0;
+        }
+    }
+    .icon-info {
+        &:before {
+            content: @icon-alert-round__content;
+        }
+    }
+    .icon-house {
+        &:before {
+            content: @icon-home__content;
+        }
+    }
+
+    .icon-user-account {
+        &:before {
+            content: @icon-account__content;
+        }
+    }
+
+    .icon-user-group {
+        &:before {
+            content: @icon-customers__content;
+            text-align: left;
+            min-width: @base-size * 1.6;
+        }
+        &:after {
+            &:extend(.abs-icon all);
+            content: @icon-customers__content;
+            display: inline-block;
+            font-size: inherit;
+            position: absolute;
+            left: .7rem;
+            top: .125rem;
+        }
+    }
+    .icon-recover {
+        &:before {
+            content: @icon-recover__content;
+        }
+    }
+
+    .icon-import {
+        &:before {
+            content: @icon-import__content;
+        }
+    }
+
+    .icon-success {
+        &:before {
+            content: @icon-check-mage__content;
+        }
+    }
+
+    .icon-edit {
+        &:before {
+            content: @icon-edit__content;
+        }
+    }
+
+    .icon-cancel {
+        &:before {
+            content: @icon-remove-small__content;
+        }
+    }
+
+    .icon-alert {
+        &:before {
+            content: @icon-warning__content;
+        }
+    }
+}

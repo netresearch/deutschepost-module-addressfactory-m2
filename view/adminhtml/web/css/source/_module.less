@@ -1,3 +1,4 @@
+@import '_icons.less';
 @base_space: 10px;
 
 #config-edit-form {
@@ -84,55 +85,74 @@
 }
 
 .pd_logo {
-    padding-bottom: 10px;
+    padding: 10px 0;
 }
 
 .pd_infox_box {
     background-color: #FFF6DC;
     padding: 10px;
+
+    h3 {
+       margin: 0 0 20px 0;
+    }
+
+    .action-buttons {
+
+        p {
+            margin: 0 0 10px 0;
+
+            &:last-child {
+                margin: 0;
+            }
+        }
+    }
 }
 
 .pd_address_sugestion {
     background-color: white;
-    padding:10px
-}
+    padding:10px;
 
-.circle(@color) {
-    display: flex;
-    align-items: center;
-    font-size: 90%;
-    &:before {
-        height: 20px;
-        width: 20px;
-        flex-shrink: 0;
-        border-radius: 50%;
-        display: inline-block;
-        margin: 0 10px 0 5px;
-        content:'';
-        background: @color;
-        border: 1px solid gray;
+    dl {
+        margin: 0 0 20px 0;
+
+        dd {
+            margin: 0 0 0 20px;
+        }
+        b {
+            color: #0a6c9f;
+        }
     }
 }
 
+
+.deliverability_score {
+    font-size: 1.3em
+}
+
 .undeliverable {
-    .circle(red);
+    .icony(red);
 }
 
 .deliverable {
-    .circle(lawngreen);
+    .icony(#50be03);
 }
 
 .possibly_deliverable {
-    .circle(yellow);
+    .icony(#ffcc01);
 }
 
 .pending {
-    .circle(#e4e4e4);
+    .icony(#afafaf);
 }
 
 .detected_issues_info {
-    padding: 20px 0;
+    padding: 20px 0 10px 0;
+
     ul {
-        margin-left: 40px;
+        margin-left: 20px;
+        list-style-type: none;
+        li {
+            margin: 0 0 5px 0;
+        }
     }
 }

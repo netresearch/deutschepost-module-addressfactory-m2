@@ -21,14 +21,22 @@ $viewModel = $block->getData('viewModel');
     </div>
 
     <?php if ($viewModel->showAnalysisResults()): ?>
-        <span class="<?= $block->escapeHtmlAttr($viewModel->getScore()) ?>">
-            <b><?= $block->escapeHtml($viewModel->getHumanReadableScore()) ?></b>
+        <span class="deliverability_score <?= $block->escapeHtmlAttr($viewModel->getScore()) ?>">
+            <?= $block->escapeHtml($viewModel->getHumanReadableScore()) ?>
         </span>
         <div class="detected_issues_info">
             <h4><?= $block->escapeHtml(__('Detected Issues'))?></h4>
             <ul>
             <?php foreach ($viewModel->getDetectedIssues() as $issue): ?>
-                <li><span><?= $block->escapeHtml($issue) ?></span></li>
+                <li>
+                    <?php if ($issue['icon'] !== '') : ?>
+                    <span class="icon <?= $issue['icon']?>">
+                    <?php else: ?>
+                    <span>
+                    <?php endif; ?>
+                        <?= $block->escapeHtml($issue['label']) ?>
+                    </span>
+                </li>
             <?php endforeach;?>
             </ul>
         </div>
@@ -41,7 +49,7 @@ $viewModel = $block->getData('viewModel');
                 </dl>
 
                 <?php if ($viewModel->allowAddressCorrect()) : ?>
-                    <a class="button action-primary"
+                    <a class="button action-primary icon icon-import"
                         href="<?= $block->escapeUrl($viewModel->getPerformAddressAutocorrectUrl())?>"
                     ><?= $block->escapeHtml(__('Auto-Correct Address'))?></a>
                 <?php endif; ?>
@@ -49,17 +57,17 @@ $viewModel = $block->getData('viewModel');
             </div>
         <?php endif; ?>
 
-        <h3><?= $block->escapeHtml(__('Other Actions')) ?></h3>
-        <div class="pd_infox_box">
+        <div class="pd_infox_box action-buttons">
+            <h3><?= $block->escapeHtml(__('Other Actions')) ?></h3>
             <p>
-                <a class="button action-default"
+                <a class="button action-default icon icon-edit"
                    href="<?= $block->escapeUrl($viewModel->getManualEditUrl()) ?>"
                 ><?= $block->escapeHtml(__('Manually Edit Address')) ?></a>
             </p>
             <?php if ($viewModel->showUnholdButton()): ?>
                 <p>
                     <button id="order-view-addressfactory-unhold-button"
-                       class="button action-default"
+                       class="button action-default icon icon-success"
                        data-url="<?= $viewModel->getUnholdOrderUrl() ?>"
                     ><?= $block->escapeHtml(__('Unhold Order'))?></button>
                 </p>
@@ -68,7 +76,7 @@ $viewModel = $block->getData('viewModel');
             <?php if ($viewModel->showCancelButton()): ?>
                 <p>
                     <button id="order-view-addressfactory-cancel-button"
-                            class="button action-secondary"
+                            class="button action-secondary icon icon-cancel"
                             data-url="<?= $viewModel->getCancelOrderUrl()?>"
                     ><?= $block->escapeHtml(__('Cancel Order'))?></button>
                 </p>
@@ -84,7 +92,7 @@ $viewModel = $block->getData('viewModel');
 
     <?php else: ?>
         <a
-            class="button action-primary"
+            class="button action-primary icon icon-recover"
             href="<?= $block->escapeUrl($viewModel->getPerformAnalysisUrl()) ?>">
             <?= $block->escapeHtml(__('Perform Deliverability Analysis')) ?>
         </a>
