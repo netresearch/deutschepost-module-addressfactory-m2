@@ -18,8 +18,9 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\OrderRepository;
 use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
-use PostDirekt\Addressfactory\Model\DeliverabilityCodes;
+use PostDirekt\Addressfactory\Model\AnalysisStatusRepository;
 use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
+use PostDirekt\Addressfactory\Model\DeliverabilityCodes;
 
 /**
  * Class AnalysisData
@@ -57,7 +58,7 @@ class AnalysisData implements ArgumentInterface
     /**
      * @var AnalysisStatusUpdater
      */
-    private $deliveryStatus;
+    private $analysisStatus;
 
     /**
      * @var Url
@@ -70,21 +71,21 @@ class AnalysisData implements ArgumentInterface
     private $analysisResult;
 
     public function __construct(
-        AnalysisResultRepository $analysisResultRepository,
-        AssetRepository $assetRepository,
         Request $request,
-        OrderRepository $orderRepository,
         DeliverabilityCodes $deliverablility,
-        AnalysisStatusUpdater $deliveryStatus,
-        Url $urlBuilder
+        AnalysisStatusUpdater $analysisStatus,
+        Url $urlBuilder,
+        AssetRepository $assetRepository,
+        OrderRepository $orderRepository,
+        AnalysisResultRepository $analysisResultRepository
     ) {
-        $this->analysisResultRepository = $analysisResultRepository;
-        $this->assetRepository = $assetRepository;
         $this->request = $request;
-        $this->orderRepository = $orderRepository;
         $this->deliverablility = $deliverablility;
-        $this->deliveryStatus = $deliveryStatus;
+        $this->analysisStatus = $analysisStatus;
         $this->urlBuilder = $urlBuilder;
+        $this->assetRepository = $assetRepository;
+        $this->orderRepository = $orderRepository;
+        $this->analysisResultRepository = $analysisResultRepository;
     }
 
     public function getLogoUrl(): string
@@ -107,7 +108,8 @@ class AnalysisData implements ArgumentInterface
         $scores = [
             DeliverabilityCodes::POSSIBLY_DELIVERABLE => __('Possibly Deliverable'),
             DeliverabilityCodes::DELIVERABLE => __('Deliverable'),
-            DeliverabilityCodes::UNDELIVERABLE => __('Undeliverable')
+            DeliverabilityCodes::UNDELIVERABLE => __('Undeliverable'),
+            DeliverabilityCodes::CORRECTION_REQUIRED => __('Correction Recommended'),
         ];
 
         return $scores[$this->getScore()]->render() ?? '';
@@ -123,7 +125,10 @@ class AnalysisData implements ArgumentInterface
             return DeliverabilityCodes::POSSIBLY_DELIVERABLE;
         }
 
-        return $this->deliverablility->computeScore($analysisResult->getStatusCodes());
+        $status = $this->analysisStatus->getStatus((int) $this->getOrder()->getEntityId());
+        $wasAlreadyUpdated = $status === AnalysisStatusUpdater::ADDRESS_CORRECTED;
+
+        return $this->deliverablility->computeScore($analysisResult->getStatusCodes(), $wasAlreadyUpdated);
     }
 
     public function getFormattedAddress(): ?string
@@ -158,7 +163,7 @@ class AnalysisData implements ArgumentInterface
     }
 
     /**
-     * @return string[]
+     * @return string[][]
      */
     public function getDetectedIssues(): array
     {
@@ -177,10 +182,10 @@ class AnalysisData implements ArgumentInterface
     public function showCancelButton(): bool
     {
         $order = $this->getOrder();
-        $status = $this->deliveryStatus->getStatus((int) $order->getEntityId());
         if (!$order) {
             return false;
         }
+        $status = $this->analysisStatus->getStatus((int) $order->getEntityId());
 
         return $status !== AnalysisStatusUpdater::DELIVERABLE && $order->canCancel();
     }
@@ -205,7 +210,7 @@ class AnalysisData implements ArgumentInterface
     {
         $orderId = (int) $this->request->getParam('order_id');
 
-        return $this->deliveryStatus->getStatus($orderId) !== AnalysisStatusUpdater::ADDRESS_CORRECTED;
+        return $this->analysisStatus->getStatus($orderId) !== AnalysisStatusUpdater::ADDRESS_CORRECTED;
     }
 
     public function getManualEditUrl(): string

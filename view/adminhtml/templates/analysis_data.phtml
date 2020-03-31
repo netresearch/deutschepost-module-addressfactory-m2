@@ -25,20 +25,23 @@ $viewModel = $block->getData('viewModel');
             <?= $block->escapeHtml($viewModel->getHumanReadableScore()) ?>
         </span>
         <div class="detected_issues_info">
-            <h4><?= $block->escapeHtml(__('Detected Issues'))?></h4>
-            <ul>
-            <?php foreach ($viewModel->getDetectedIssues() as $issue): ?>
-                <li>
-                    <?php if ($issue['icon'] !== '') : ?>
-                    <span class="icon <?= $issue['icon']?>">
-                    <?php else: ?>
-                    <span>
-                    <?php endif; ?>
-                        <?= $block->escapeHtml($issue['label']) ?>
-                    </span>
-                </li>
-            <?php endforeach;?>
-            </ul>
+            <?php if ($infos = $viewModel->getDetectedIssues()): ?>
+                <h4><?= $block->escapeHtml(__('Address Information'))?></h4>
+                <ul>
+                <?php foreach ($infos as $info): ?>
+                    <li>
+                        <?php if ($info['icon'] !== '') : ?>
+                        <span class="icon <?= $block->escapeHtmlAttr($info['icon']) ?>"
+                              title="<?= $block->escapeHtmlAttr($info['code']) ?>">
+                        <?php else: ?>
+                        <span title="<?= $block->escapeHtmlAttr($info['code']) ?>">
+                        <?php endif; ?>
+                            <?= $block->escapeHtml($info['label']) ?>
+                        </span>
+                    </li>
+                <?php endforeach;?>
+                </ul>
+            <?php endif; ?>
         </div>
 
         <?php if ($viewModel->showSuggestedAddress()) : ?>
@@ -92,7 +95,7 @@ $viewModel = $block->getData('viewModel');
 
     <?php else: ?>
         <a
-            class="button action-primary icon icon-recover"
+            class="button action-primary"
             href="<?= $block->escapeUrl($viewModel->getPerformAnalysisUrl()) ?>">
             <?= $block->escapeHtml(__('Perform Deliverability Analysis')) ?>
         </a>

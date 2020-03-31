@@ -24,7 +24,7 @@ class AnalysisStatusOptions implements OptionSourceInterface
      */
     public function toOptionArray(): array
     {
-        $options = [
+        return [
             [
                 'value' => AnalysisStatusUpdater::NOT_ANALYSED,
                 'label' => __('Not analysed')
@@ -52,9 +52,11 @@ class AnalysisStatusOptions implements OptionSourceInterface
             [
                 'value' => AnalysisStatusUpdater::ANALYSIS_FAILED,
                 'label' => __('Analysis failed')
+            ],
+            [
+                'value' => AnalysisStatusUpdater::CORRECTION_REQUIRED,
+                'label' => __('Correction recommended')
             ]
         ];
-
-        return $options;
     }
 }

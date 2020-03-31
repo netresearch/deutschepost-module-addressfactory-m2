@@ -171,7 +171,11 @@ class OrderAnalysis
             return;
         }
 
-        $statusCode = $this->deliverabilityScoreService->computeScore($analysisResult->getStatusCodes());
+        $currentStatus = $this->deliverabilityStatus->getStatus($orderId);
+        $statusCode = $this->deliverabilityScoreService->computeScore(
+            $analysisResult->getStatusCodes(),
+            $currentStatus === AnalysisStatusUpdater::ADDRESS_CORRECTED
+        );
         switch ($statusCode) {
             case DeliverabilityCodes::DELIVERABLE:
                 $this->deliverabilityStatus->setStatusDeliverable($orderId);
@@ -181,6 +185,9 @@ class OrderAnalysis
                 break;
             case DeliverabilityCodes::UNDELIVERABLE:
                 $this->deliverabilityStatus->setStatusUndeliverable($orderId);
+                break;
+            case DeliverabilityCodes::CORRECTION_REQUIRED:
+                $this->deliverabilityStatus->setStatusCorrectionRequired($orderId);
         }
     }
 }
