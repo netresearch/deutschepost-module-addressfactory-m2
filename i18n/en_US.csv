@@ -1,3 +1,4 @@
+"Address Information","Address Information"
 "Address corrected","Address corrected"
 "Address not correctable","Address not correctable"
 "Addressfactory & Magento","Addressfactory & Magento"
@@ -25,6 +26,8 @@ Building,Building
 City,City
 "City addition","City addition"
 "Configuration Name","Configuration Name"
+"Correction Recommended","Correction Recommended"
+"Correction recommended","Correction recommended"
 "Could not perform ADDRESSFACTORY DIRECT analysis for Order","Could not perform ADDRESSFACTORY DIRECT analysis for Order"
 "Could not save analysis result.","Could not save analysis result."
 "Could not update Order address with ADDRESSFACTORY DIRECT suggestion","Could not update Order address with ADDRESSFACTORY DIRECT suggestion"
@@ -32,7 +35,6 @@ Country,Country
 "Deliverability Analysis","Deliverability Analysis"
 "Deliverability Status","Deliverability Status"
 Deliverable,Deliverable
-"Detected Issues","Detected Issues"
 Enabled,Enabled
 Errors,Errors
 "House address","House address"
@@ -63,6 +65,7 @@ Person,Person
 "Postal code","Postal code"
 "Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper."
 "Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+"Receiver not found in Post reference data","Receiver not found in Post reference data"
 "Sandbox Mode","Sandbox Mode"
 "Service exception: %1","Service exception: %1"
 Street,Street

@@ -17,6 +17,7 @@ class DeliverabilityCodes
     public const DELIVERABLE = 'deliverable';
     public const UNDELIVERABLE = 'undeliverable';
     public const POSSIBLY_DELIVERABLE = 'possibly_deliverable';
+    public const CORRECTION_REQUIRED = 'correction_required';
 
     private const PERSON_DELIVERABLE = 'PDC050105';
     private const PERSON_NOT_DELIVERABLE = 'PDC050106';
@@ -28,12 +29,26 @@ class DeliverabilityCodes
     private const BUILDING_UNDELIVERABLE = 'PDC030106';
     private const NOT_CORRECTABLE = 'BAC000111';
 
+    private const STATUS_CODES_SIGNIFICANTLY_CORRECTED = ['103', '108'];
+
     /**
      * @param string[] $codes
+     * @param bool $wasAlreadyUpdated
      * @return string
      */
-    public function computeScore(array $codes): string
+    public function computeScore(array $codes, bool $wasAlreadyUpdated = false): string
     {
+        $codes = $this->filterInapplicable($codes);
+
+        if (!$wasAlreadyUpdated) {
+            foreach ($codes as $code) {
+                $statusCode = substr($code, -3, 3);
+                if (in_array($statusCode, self::STATUS_CODES_SIGNIFICANTLY_CORRECTED, true)) {
+                    return self::CORRECTION_REQUIRED;
+                }
+            }
+        }
+
         if (\in_array(self::NOT_CORRECTABLE, $codes, true)) {
             return self::UNDELIVERABLE;
         }
@@ -81,12 +96,26 @@ class DeliverabilityCodes
 
     /**
      * @param string[] $codes
-     * @return string[]
+     * @return string[][]
      */
     public function getLabels(array $codes): array
     {
         $mappedCodes = [
-            self::NOT_CORRECTABLE => __('Address not correctable'),
+            self::NOT_CORRECTABLE => [
+                'icon' => 'icon-alert',
+                'label' => __('Address not correctable'),
+                'code' => self::NOT_CORRECTABLE,
+            ],
+            'FNC000500' => [
+                'icon' => 'icon-alert',
+                'label' => __('Receiver not found in Post reference data'),
+                'code' => 'FNC000500',
+            ]
+        ];
+
+        $mappedModuleCodes = [
+            'BAC' => '',
+            'FNC' => '',
         ];
 
         $mappedFieldCodes = [
@@ -177,15 +206,21 @@ class DeliverabilityCodes
                 continue;
             }
 
+            $moduleCode = substr($code, 0, 3);
             $fieldCode = substr($code, -6, 3);
             $statusCode = substr($code, -3, 3);
 
-            if (isset($mappedFieldCodes[$fieldCode], $mappedStatusCodes[$statusCode])) {
+            if (isset($mappedModuleCodes[$moduleCode], $mappedFieldCodes[$fieldCode], $mappedStatusCodes[$statusCode])) {
                 $iconCode = $this->mapToIcon($fieldCode);
-                $label = ucfirst(trim($mappedFieldCodes[$fieldCode] . ' ' . $mappedStatusCodes[$statusCode]));
+                $label = ucfirst(trim(
+                    $mappedModuleCodes[$moduleCode] . ' '
+                     . $mappedFieldCodes[$fieldCode] . ' '
+                     . $mappedStatusCodes[$statusCode]
+                ));
                 $labels[] = [
                     'icon' => $iconCode,
-                    'label' => $label
+                    'label' => $label,
+                    'code' => $code,
                 ];
             }
         }
@@ -201,10 +236,10 @@ class DeliverabilityCodes
     {
         /**
          * BAC201110 - House numbers can be separated by the API, but Magento cannot take advantage of this
-         * BAC010103, BAC010104 - This is always explained in more detail by another code.
-         *                        Also, this is a false positive in connection with BAC201110
+         * BAC010103, BAC010104 - These are always explained in more detail by another code.
+         * FNC201103 - Street number addition corrected: This is a false positive in connection with BAC201110
          */
-        $removals = ['BAC201110', 'BAC010103', 'BAC010104'];
+        $removals = ['BAC201110', 'BAC010103', 'BAC010104', 'FNC201103'];
         return array_diff($codes, $removals);
     }
 
