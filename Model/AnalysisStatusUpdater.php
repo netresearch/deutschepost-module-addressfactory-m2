@@ -23,6 +23,7 @@ class AnalysisStatusUpdater
     public const NOT_ANALYSED = 'not_analysed';
     public const PENDING = 'pending';
     public const UNDELIVERABLE = 'undeliverable';
+    public const CORRECTION_REQUIRED = 'correction_required';
     public const POSSIBLY_DELIVERABLE = 'possibly_deliverable';
     public const DELIVERABLE = 'deliverable';
     public const ADDRESS_CORRECTED = 'address_corrected';
@@ -108,6 +109,17 @@ class AnalysisStatusUpdater
 
         return $this->updateStatus($analysisStatus);
     }
+
+    public function setStatusCorrectionRequired(int $orderId): bool
+    {
+        $analysisStatus = $this->statusFactory->create(['data' => [
+            AnalysisStatus::ORDER_ID => $orderId,
+            AnalysisStatus::STATUS => self::CORRECTION_REQUIRED
+        ]]);
+
+        return $this->updateStatus($analysisStatus);
+    }
+
 
     public function setStatusPossiblyDeliverable(int $orderId): bool
     {

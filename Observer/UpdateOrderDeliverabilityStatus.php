@@ -31,7 +31,8 @@ class UpdateOrderDeliverabilityStatus implements ObserverInterface
         AnalysisStatusUpdater::ANALYSIS_FAILED,
         AnalysisStatusUpdater::UNDELIVERABLE,
         AnalysisStatusUpdater::POSSIBLY_DELIVERABLE,
-        AnalysisStatusUpdater::DELIVERABLE
+        AnalysisStatusUpdater::DELIVERABLE,
+        AnalysisStatusUpdater::CORRECTION_REQUIRED
     ];
 
     /**
