@@ -21,6 +21,7 @@ use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
 use PostDirekt\Addressfactory\Model\AnalysisStatusRepository;
 use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 use PostDirekt\Addressfactory\Model\DeliverabilityCodes;
+use PostDirekt\Addressfactory\Model\AddressUpdater;
 
 /**
  * Class AnalysisData
@@ -61,6 +62,11 @@ class AnalysisData implements ArgumentInterface
     private $analysisStatus;
 
     /**
+     * @var AddressUpdater
+     */
+    private $addressUpdater;
+
+    /**
      * @var Url
      */
     private $urlBuilder;
@@ -77,7 +83,8 @@ class AnalysisData implements ArgumentInterface
         Url $urlBuilder,
         AssetRepository $assetRepository,
         OrderRepository $orderRepository,
-        AnalysisResultRepository $analysisResultRepository
+        AnalysisResultRepository $analysisResultRepository,
+        AddressUpdater $addressUpdater
     ) {
         $this->request = $request;
         $this->deliverablility = $deliverablility;
@@ -86,6 +93,7 @@ class AnalysisData implements ArgumentInterface
         $this->assetRepository = $assetRepository;
         $this->orderRepository = $orderRepository;
         $this->analysisResultRepository = $analysisResultRepository;
+        $this->addressUpdater = $addressUpdater;
     }
 
     public function getLogoUrl(): string
@@ -203,7 +211,7 @@ class AnalysisData implements ArgumentInterface
             return false;
         }
 
-        return $this->areDifferent($this->getOrderAddress(), $analysisResult);
+        return $this->addressUpdater->addressesAreDifferent($analysisResult, $this->getOrderAddress());
     }
 
     public function allowAddressCorrect(): bool
@@ -278,17 +286,5 @@ class AnalysisData implements ArgumentInterface
         }
 
         return $this->analysisResult;
-    }
-
-    private function areDifferent(OrderAddressInterface $orderAddress, AnalysisResultInterface $analysisResult): bool
-    {
-        $street = trim(implode(' ', [$analysisResult->getStreet(), $analysisResult->getStreetNumber()]));
-        $orderStreet = trim(implode('', $orderAddress->getStreet()));
-
-        return ($orderAddress->getFirstname() !== $analysisResult->getFirstName() ||
-            $orderAddress->getLastname() !== $analysisResult->getLastName() ||
-            $orderAddress->getCity() !== $analysisResult->getCity() ||
-            $orderAddress->getPostcode() !== $analysisResult->getPostalCode() ||
-            $street !== $orderStreet);
     }
 }
