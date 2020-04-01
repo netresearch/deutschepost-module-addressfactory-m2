@@ -157,8 +157,6 @@ class OrderAnalysis
         $wasUpdated = $this->addressUpdater->update($analysisResult, $order->getShippingAddress());
         if ($wasUpdated) {
             $this->deliverabilityStatus->setStatusAddressCorrected((int) $order->getEntityId());
-        } else {
-            $this->deliverabilityStatus->setStatusAnalysisFailed((int)$order->getEntityId());
         }
 
         return $wasUpdated;
