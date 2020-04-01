@@ -53,6 +53,11 @@ class AddressUpdater
                 return false;
             }
         }
+
+        if (!$this->addressesAreDifferent($analysisResult, $address)) {
+            return false;
+        }
+
         $street = implode(' ', [$analysisResult->getStreet(), $analysisResult->getStreetNumber()]);
         $address->setStreet($street);
         $address->setFirstname($analysisResult->getFirstName());
@@ -69,5 +74,19 @@ class AddressUpdater
         }
 
         return true;
+    }
+
+    public function addressesAreDifferent(
+        AnalysisResultInterface $analysisResult,
+        OrderAddressInterface $orderAddress
+    ): bool {
+        $street = trim(implode(' ', [$analysisResult->getStreet(), $analysisResult->getStreetNumber()]));
+        $orderStreet = trim(implode('', $orderAddress->getStreet()));
+
+        return ($orderAddress->getFirstname() !== $analysisResult->getFirstName() ||
+            $orderAddress->getLastname() !== $analysisResult->getLastName() ||
+            $orderAddress->getCity() !== $analysisResult->getCity() ||
+            $orderAddress->getPostcode() !== $analysisResult->getPostalCode() ||
+            $street !== $orderStreet);
     }
 }
