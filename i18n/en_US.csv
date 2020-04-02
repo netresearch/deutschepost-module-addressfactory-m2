@@ -4,7 +4,6 @@
 "Addressfactory & Magento","Addressfactory & Magento"
 "Addressfactory Direct Deliverability Status","Addressfactory Direct Deliverability Status"
 "Addressfactory Direct Settings","Addressfactory Direct Settings"
-"Adjustment Strength","Adjustment Strength"
 "Analysis failed","Analysis failed"
 "Analysis on Order placement","Analysis on Order placement"
 "Analysis result with order address id %1 does not exist.","Analysis result with order address id %1 does not exist."
@@ -37,6 +36,7 @@ Country,Country
 Deliverable,Deliverable
 Enabled,Enabled
 Errors,Errors
+Everything,Everything
 "House address","House address"
 Household,Household
 "Improveable Orders","Improveable Orders"
@@ -44,7 +44,6 @@ Household,Household
 Logging,Logging
 "Mandate Name","Mandate Name"
 "Manually Edit Address","Manually Edit Address"
-Medium,Medium
 "Module version:","Module version:"
 "No Automatic Analysis","No Automatic Analysis"
 "Non-deliverable Order put on hold","Non-deliverable Order put on hold"
@@ -66,10 +65,8 @@ Person,Person
 "Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper."
 "Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
 "Receiver not found in Post reference data","Receiver not found in Post reference data"
-"Sandbox Mode","Sandbox Mode"
 "Service exception: %1","Service exception: %1"
 Street,Street
-Strong,Strong
 "Suggested Shipping Address","Suggested Shipping Address"
 "Unable to save analysis result.","Unable to save analysis result."
 "Unable to save analysis results","Unable to save analysis results"
@@ -79,8 +76,6 @@ Undeliverable,Undeliverable
 "Undeliverable Order(s) %1 were canceled.","Undeliverable Order(s) %1 were canceled."
 "Undeliverable Orders","Undeliverable Orders"
 "Unhold Order","Unhold Order"
-Warnings,Warnings
-Weak,Weak
 "You must also have Magento general logging enabled.","You must also have Magento general logging enabled."
 "address type changed","address type changed"
 ambigouus,ambigouus

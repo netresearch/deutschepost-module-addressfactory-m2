@@ -128,7 +128,7 @@ class AddressAnalysis
                 $this->coreConfig->getApiUser(),
                 $this->coreConfig->getApiPassword(),
                 $this->logger,
-                $this->moduleConfig->isSandboxMode()
+                false
             );
             $records = $service->getRecords($recordRequests, null, $this->moduleConfig->getConfigurationName());
             $newAnalysisResults = $this->mapRecordsResponse($records);

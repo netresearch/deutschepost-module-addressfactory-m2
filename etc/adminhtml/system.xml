@@ -31,17 +31,8 @@
                     </depends>
                     <source_model>PostDirekt\Addressfactory\Model\Config\Source\LogLevel</source_model>
                  </field>
-                <field id="sandbox_mode" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0"
-                       translate="label button_label" type="Netresearch\ConfigFields\Model\Type\Checkbox">
-                    <button_label>Enabled</button_label>
-                    <label>Sandbox Mode</label>
-                </field>
                 <field id="configuration_name" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Configuration Name</label>
-                </field>
-                <field id="adjustment_strength" translate="label" type="Netresearch\ConfigFields\Model\Type\Radioset" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Adjustment Strength</label>
-                    <source_model>PostDirekt\Addressfactory\Model\Config\Source\AdjustmentLevel</source_model>
                 </field>
                 <field id="mandate_name" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" translate="label" type="text">
                     <label>Mandate Name</label>

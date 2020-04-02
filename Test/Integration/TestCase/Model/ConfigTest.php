@@ -16,8 +16,6 @@ class ConfigTest extends TestCase
      * @magentoConfigFixture default_store postdirekt/addressfactory/mandate_name TestMandate
      * @magentoConfigFixture default_store postdirekt/addressfactory/logging 1
      * @magentoConfigFixture default_store postdirekt/addressfactory/log_level 500
-     * @magentoConfigFixture default_store postdirekt/addressfactory/sandbox_mode 0
-     * @magentoConfigFixture default_store postdirekt/addressfactory/adjustment_strength 2
      * @magentoConfigFixture default_store postdirekt/addressfactory/configuration_name TestConfigurationName
      * @magentoConfigFixture default_store postdirekt/addressfactory/hold_non_deliverable_orders 1
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_cancel_orders 1
@@ -34,8 +32,6 @@ class ConfigTest extends TestCase
         self::assertSame('TestMandate', $subject->getMandateName($store->getCode()));
         self::assertTrue($subject->isLoggingEnabled($store->getCode()));
         self::assertSame('500', $subject->getLogLevel($store->getCode()));
-        self::assertFalse($subject->isSandboxMode($store->getCode()));
-        self::assertSame('2', $subject->getAdjustmentStrength($store->getCode()));
         self::assertSame('TestConfigurationName', $subject->getConfigurationName($store->getCode()));
         self::assertTrue($subject->isHoldNonDeliverableOrders($store->getCode()));
         self::assertTrue($subject->isAutoCancelNonDeliverableOrders($store->getCode()));
@@ -55,8 +51,6 @@ class ConfigTest extends TestCase
         self::assertSame('1.0.0', $subject->getModuleVersion());
         self::assertSame('', $subject->getMandateName($store->getCode()));
         self::assertSame('400', $subject->getLogLevel($store->getCode()));
-        self::assertTrue($subject->isSandboxMode($store->getCode()));
-        self::assertSame('1', $subject->getAdjustmentStrength($store->getCode()));
         self::assertSame('', $subject->getConfigurationName($store->getCode()));
         self::assertFalse($subject->isHoldNonDeliverableOrders($store->getCode()));
         self::assertFalse($subject->isAutoCancelNonDeliverableOrders($store->getCode()));
