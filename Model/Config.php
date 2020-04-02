@@ -14,16 +14,15 @@ class Config
 {
     private const CONFIG_PATH_VERSION = 'postdirekt/addressfactory/version';
     private const CONFIG_PATH_MANDATENAME = 'postdirekt/addressfactory/mandate_name';
-    private const CONFIG_PATH_LOGGING = 'postdirekt/addressfactory/logging';
-    private const CONFIG_PATH_LOGLEVEL = 'postdirekt/addressfactory/log_level';
-    private const CONFIG_PATH_SANDBOXMODE = 'postdirekt/addressfactory/sandbox_mode';
-    private const CONFIG_PATH_ADJUSTMENTSTRENGTH = 'postdirekt/addressfactory/adjustment_strength';
     private const CONFIG_PATH_CONFIGURATIONNAME = 'postdirekt/addressfactory/configuration_name';
 
     private const CONFIG_PATH_HOLD_NON_DELIVERABLE_ORDERS = 'postdirekt/addressfactory/hold_non_deliverable_orders';
     private const CONFIG_PATH_HOLD_AUTO_CANCEL_ORDERS = 'postdirekt/addressfactory/auto_cancel_orders';
     private const CONFIG_PATH_HOLD_AUTO_UPDATE_SHIPPING_ADDRESS = 'postdirekt/addressfactory/auto_update_shipping_address';
     private const CONFIG_PATH_AUTOMATIC_ADDRESS_ANALYSE = 'postdirekt/addressfactory/automatic_address_analysis';
+
+    public const CONFIG_PATH_LOGGING = 'postdirekt/addressfactory/logging';
+    public const CONFIG_PATH_LOGLEVEL = 'postdirekt/addressfactory/log_level';
 
     /**
      * @var ScopeConfigInterface
@@ -68,38 +67,12 @@ class Config
 
     /**
      * @param string|int|null $store
-     * @return bool
-     */
-    public function isSandboxMode($store = null): bool
-    {
-        return (bool) $this->scopeConfig->getValue(
-            self::CONFIG_PATH_SANDBOXMODE,
-            ScopeInterface::SCOPE_STORE,
-            $store
-        );
-    }
-
-    /**
-     * @param string|int|null $store
      * @return string
      */
     public function getConfigurationName($store = null): string
     {
         return (string) $this->scopeConfig->getValue(
             self::CONFIG_PATH_CONFIGURATIONNAME,
-            ScopeInterface::SCOPE_STORE,
-            $store
-        );
-    }
-
-    /**
-     * @param string|int|null $store
-     * @return string
-     */
-    public function getAdjustmentStrength($store = null): string
-    {
-        return (string) $this->scopeConfig->getValue(
-            self::CONFIG_PATH_ADJUSTMENTSTRENGTH,
             ScopeInterface::SCOPE_STORE,
             $store
         );

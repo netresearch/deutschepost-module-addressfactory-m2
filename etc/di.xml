@@ -33,21 +33,55 @@
             </argument>
         </arguments>
     </virtualType>
-   <virtualType name="PostDirekt\Addressfactory\Cron\OrderRepository\Virtual" type="Magento\Sales\Model\OrderRepository">
+    <virtualType name="PostDirekt\Addressfactory\Cron\OrderRepository\Virtual" type="Magento\Sales\Model\OrderRepository">
        <arguments>
            <argument name="collectionProcessor" xsi:type="object">PostDirekt\Addressfactory\Cron\CollectionProcessor\Virtual</argument>
        </arguments>
-   </virtualType>
+    </virtualType>
+
+    <!-- # logging setup -->
+    <virtualType name="PostDirekt\Addressfactory\Logger\Handler\Virtual" type="PostDirekt\Addressfactory\Model\Util\ApiLogHandler">
+        <arguments>
+            <argument name="fileName" xsi:type="string">var/log/postdirekt_addressfactory.log</argument>
+            <argument name="logEnabledConfigPath" xsi:type="const">PostDirekt\Addressfactory\Model\Config::CONFIG_PATH_LOGGING</argument>
+            <argument name="logLevelConfigPath" xsi:type="const">PostDirekt\Addressfactory\Model\Config::CONFIG_PATH_LOGLEVEL</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PostDirekt\Addressfactory\Model\Logger\Virtual" type="Monolog\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">addressfactory_direct</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="apilog" xsi:type="object">PostDirekt\Addressfactory\Logger\Handler\Virtual</item>
+            </argument>
+        </arguments>
+    </virtualType>
 
     <!-- # argument di overrides -->
     <type name="PostDirekt\Addressfactory\Model\AnalysisStatusUpdater">
         <arguments>
             <argument name="orderGrid" xsi:type="object">Magento\Sales\Model\ResourceModel\Order\Grid</argument>
+            <argument name="logger" xsi:type="object">PostDirekt\Addressfactory\Model\Logger\Virtual</argument>
         </arguments>
     </type>
     <type name="PostDirekt\Addressfactory\Cron\AutoProcess">
         <arguments>
             <argument name="orderRepository" xsi:type="object">PostDirekt\Addressfactory\Cron\OrderRepository\Virtual</argument>
+            <argument name="logger" xsi:type="object">PostDirekt\Addressfactory\Model\Logger\Virtual</argument>
+        </arguments>
+    </type>
+    <type name="PostDirekt\Addressfactory\Model\AddressAnalysis">
+        <arguments>
+            <argument name="logger" xsi:type="object">PostDirekt\Addressfactory\Model\Logger\Virtual</argument>
+        </arguments>
+    </type>
+    <type name="PostDirekt\Addressfactory\Observer\SetNewOrderDeliverabilityStatus">
+        <arguments>
+            <argument name="logger" xsi:type="object">PostDirekt\Addressfactory\Model\Logger\Virtual</argument>
+        </arguments>
+    </type>
+    <type name="PostDirekt\Addressfactory\Model\ResourceModel\Provider\UpdatedStatusIdListProvider">
+        <arguments>
+            <argument name="logger" xsi:type="object">PostDirekt\Addressfactory\Model\Logger\Virtual</argument>
         </arguments>
     </type>
 
