@@ -1,10 +1,9 @@
-"Address Information","Adress-Informationen"
+"Address Information",Adress-Informationen
 "Address corrected","Adresse korrigiert"
 "Address not correctable","Addresse nicht korrigierbar"
 "Addressfactory & Magento","Addressfactory & Magento"
 "Addressfactory Direct Deliverability Status","Addressfactory Direct Zustellbarkeits-Status"
 "Addressfactory Direct Settings","Addressfactory Direct Einstellungen"
-"Adjustment Strength",Abgleichhärte
 "Analysis failed","Analyse fehlgeschlagen"
 "Analysis on Order placement","Analyse bei Bestellungsabschluß"
 "Analysis result with order address id %1 does not exist.","Analyse für Bestelladresse mit id %1 existiert nicht"
@@ -37,6 +36,7 @@ Country,Land
 Deliverable,Zustellbar
 Enabled,Aktiviert
 Errors,Fehler
+Everything,Alles
 "House address",Hausanschrift
 Household,Haushalt
 "Improveable Orders","Korrigierbare Bestellungen"
@@ -44,7 +44,6 @@ Household,Haushalt
 Logging,Logging
 "Mandate Name",Mandanten-Name
 "Manually Edit Address","Adresse manuell ändern"
-Medium,Mittel
 "Module version:",Modulversion
 "No Automatic Analysis","Keine automatische Analyse"
 "Non-deliverable Order put on hold","Nicht-zustellbare Bestellung zurückgestellt"
@@ -66,10 +65,8 @@ Person,Person
 "Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper."
 "Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
 "Receiver not found in Post reference data","Nicht in Post Referenzdaten gefunden"
-"Sandbox Mode",Sandbox-Modus
 "Service exception: %1","Schnittstellen-Fehler: %1"
 Street,Straße
-Strong,Stark
 "Suggested Shipping Address","Vorgeschlagene Lieferadresse"
 "Unable to save analysis result.","Analyse konnte nicht gespeichert werden."
 "Unable to save analysis results","Analyse-Ergebnisse konnten nicht gespeichert werden"
@@ -79,8 +76,6 @@ Undeliverable,Unzustellbar
 "Undeliverable Order(s) %1 were canceled.","Unzustellbare Bestellung(en) %1 storniert"
 "Undeliverable Orders","Unzustellbare Bestellungen"
 "Unhold Order","Bestellung freigeben"
-Warnings,Warnungen
-Weak,Schwach
 "You must also have Magento general logging enabled.","Das allgemeine Magento-Logging muss ebenfalls aktiviert sein."
 "address type changed","Anschriftentyp geändert"
 ambigouus,mehrdeutig

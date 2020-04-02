@@ -23,8 +23,8 @@ class LogLevel implements OptionSourceInterface
     public function toOptionArray(): array
     {
         return [
+            ['value' => (string) Monolog::INFO, 'label' => __('Everything')],
             ['value' => (string) Monolog::ERROR, 'label' => __('Errors')],
-            ['value' => (string) Monolog::WARNING, 'label' => __('Warnings')],
         ];
     }
 }
