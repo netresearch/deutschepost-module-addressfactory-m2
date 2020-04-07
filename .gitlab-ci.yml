@@ -9,12 +9,9 @@ stages:
     - test-additional
     - mftf
     - install
+    - docs
     - build
     - validate
-
-default:
-    before_script:
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
 static-analysis:
     stage: analyze
@@ -67,6 +64,23 @@ package-validate:
         - ci-validate $(ci-get-package-name).zip
     dependencies:
         - package-build
+
+# Documentation generation
+wiki2pdf:
+    stage: docs
+    image: registry.netresearch.de/magento-ci/wiki2pdf
+    only:
+        - develop
+        - master
+        - /^(release|hotfix)-.*$/
+        - PDTWO-84
+    script:
+        - ci-wiki2pdf Documentation-English.md PostDirekt_Addressfactory_EndUserDocumentation.pdf
+        - ci-wiki2pdf Documentation-German.md PostDirekt_Addressfactory_Endkundendokumentation.pdf
+    artifacts:
+        when: on_success
+        paths:
+            - ./*.pdf
 
 # Crucial tests (lowest Mage+PHP + highest Mage+PHP)
 phpunit-7.1-ce2.3:
