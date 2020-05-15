@@ -1,7 +1,8 @@
 image: registry.netresearch.de/magento-ci/ci-toolchain:latest
 
 services:
-    - docker:dind
+    - name: registry.netresearch.de/ci-helper/gitlab-worker-dind
+      alias: docker
 
 stages:
     - analyze
@@ -88,18 +89,6 @@ phpunit-7.1-ce2.3:
         PHP_VERSION: "7.1"
         MAGENTO_TAG_VERSION: "2.3"
         MAGENTO_EDITION: "ce"
-    extends: .phpunit
-    only:
-        - develop
-        - master
-        - /^(release|hotfix)-.*$/
-        - merge_requests
-
-phpunit-7.1-ee2.3:
-    variables:
-        PHP_VERSION: "7.1"
-        MAGENTO_TAG_VERSION: "2.3"
-        MAGENTO_EDITION: "ee"
     extends: .phpunit
     only:
         - develop
