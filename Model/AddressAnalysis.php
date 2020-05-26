@@ -130,7 +130,12 @@ class AddressAnalysis
                 $this->logger,
                 false
             );
-            $records = $service->getRecords($recordRequests, null, $this->moduleConfig->getConfigurationName());
+            $records = $service->getRecords(
+                $recordRequests,
+                null,
+                $this->moduleConfig->getConfigurationName(),
+                $this->moduleConfig->getMandateName()
+            );
             $newAnalysisResults = $this->mapRecordsResponse($records);
             $this->analysisResultRepository->saveList($newAnalysisResults);
         } catch (AuthenticationException $exception) {
