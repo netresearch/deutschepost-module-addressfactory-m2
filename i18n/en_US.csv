@@ -1,9 +1,10 @@
+"ADDRESSFACTORY DIRECT is a service of Deutsche Post Direkt for validating address data.","ADDRESSFACTORY DIRECT is a service of Deutsche Post Direkt for validating address data."
 "Address Information","Address Information"
 "Address corrected","Address corrected"
 "Address not correctable","Address not correctable"
-"Addressfactory & Magento","Addressfactory & Magento"
 "Addressfactory Direct Deliverability Status","Addressfactory Direct Deliverability Status"
 "Addressfactory Direct Settings","Addressfactory Direct Settings"
+"Address validation can be performed either manually or automatically after the order was placed.","Address validation can be performed either manually or automatically after the order was placed."
 "Analysis failed","Analysis failed"
 "Analysis on Order placement","Analysis on Order placement"
 "Analysis result with order address id %1 does not exist.","Analysis result with order address id %1 does not exist."
@@ -16,6 +17,7 @@
 "Automatically Cancel","Automatically Cancel"
 "Automatically Put on Hold","Automatically Put on Hold"
 "Automatically Update Shipping Address","Automatically Update Shipping Address"
+"Basis for this check is the postal reference file from Deutsche Post Direkt.","Basis for this check is the postal reference file from Deutsche Post Direkt."
 Building,Building
 "Bulk receiver name","Bulk receiver name"
 "Bulk recipient address","Bulk recipient address"
@@ -39,6 +41,7 @@ Errors,Errors
 Everything,Everything
 "House address","House address"
 Household,Household
+"If you do not have an account yet or your account is not enabled for ADDRESSFACTORY DIRECT, please use the %1Deutsche Post Direkt website%2 to use our address solutions.","If you do not have an account yet or your account is not enabled for ADDRESSFACTORY DIRECT, please use the %1Deutsche Post Direkt website%2 to use our address solutions."
 "Improveable Orders","Improveable Orders"
 "Log Level","Log Level"
 Logging,Logging
@@ -62,12 +65,14 @@ Person,Person
 "Possibly deliverable","Possibly deliverable"
 "Post Direkt Addressfactory","Post Direkt Addressfactory"
 "Postal code","Postal code"
-"Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper."
-"Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit.","Proin ut enim urna. Nullam quis purus id tortor consequat maximus. Aliquam placerat mauris tincidunt sapien condimentum semper. Proin feugiat ultricies felis, quis consequat mi consequat vitae. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
 "Receiver not found in Post reference data","Receiver not found in Post reference data"
 "Service exception: %1","Service exception: %1"
 Street,Street
 "Suggested Shipping Address","Suggested Shipping Address"
+"The address will be checked with regards to the format of the address (zipcode, street and city) as well as the probability of a successful delivery to the person at this address.","The address will be checked with regards to the format of the address (zipcode, street and city) as well as the probability of a successful delivery to the person at this address."
+"This database is unique in Germany with around 210 million current and former private addresses for validating purposes.","This database is unique in Germany with around 210 million current and former private addresses for validating purposes."
+"This module integrates ADDRESSFACTORY DIRECT services into Magento so that you can check the customer’s shipping address before fulfilling the order.","This module integrates ADDRESSFACTORY DIRECT services into Magento so that you can check the customer’s shipping address before fulfilling the order."
+"To get started","To get started"
 "Unable to save analysis result.","Unable to save analysis result."
 "Unable to save analysis results","Unable to save analysis results"
 "Unable to save analysis status.","Unable to save analysis status."
@@ -77,6 +82,7 @@ Undeliverable,Undeliverable
 "Undeliverable Orders","Undeliverable Orders"
 "Unhold Order","Unhold Order"
 "You must also have Magento general logging enabled.","You must also have Magento general logging enabled."
+"You need a valid Deutsche Post Direkt account.","You need a valid Deutsche Post Direkt account."
 "address type changed","address type changed"
 ambigouus,ambigouus
 different,different
