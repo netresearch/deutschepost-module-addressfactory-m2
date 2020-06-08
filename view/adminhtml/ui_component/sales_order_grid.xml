@@ -9,7 +9,7 @@ See LICENSE.md for license details.
                           component="Magento_Ui/js/form/element/ui-select"
                           template="ui/grid/filters/elements/ui-select">
                 <settings>
-                    <label translate="true">Addressfactory Direct Deliverability Status</label>
+                    <label translate="true">Shipping Address Check Status</label>
                     <dataScope>postdirekt_addressfactory_analysis_status</dataScope>
                     <options class="PostDirekt\Addressfactory\Component\Listing\Column\AnalysisStatusOptions"/>
                 </settings>
@@ -19,16 +19,16 @@ See LICENSE.md for license details.
             <action name="postdirekt_addressfactory_analyse">
                 <settings>
                     <type>autocreate</type>
-                    <label translate="true">Post Direkt Addressfactory</label>
+                    <label translate="true">Shipping Address Validation (ADDRESSFACTORY)</label>
                     <actions>
                         <action name="0">
                             <type>postdirekt_check</type>
-                            <label translate="true">Check Deliverability</label>
+                            <label translate="true">Check Shipping Address</label>
                             <url path="postdirekt/bulk/check"/>
                         </action>
                         <action name="1">
                             <type>postdirekt_improve</type>
-                            <label translate="true">Check and Improve Deliverability</label>
+                            <label translate="true">Check and Autocorrect Shipping Address</label>
                             <url path="postdirekt/bulk/improve"/>
                         </action>
                     </actions>
@@ -39,7 +39,7 @@ See LICENSE.md for license details.
     <columns name="sales_order_columns">
         <column name="postdirekt_addressfactory_analysis_status">
             <settings>
-                <label translate="true">Deliverability Status</label>
+                <label translate="true">Shipping Address Check Status</label>
                 <visible>false</visible>
                 <bodyTmpl>PostDirekt_Addressfactory/analysis-status</bodyTmpl>
                 <filter>postdirekt_addressfactory_analysis_status</filter>

@@ -3,7 +3,7 @@ See LICENSE.md for license details.
 -->
 <div class="data-grid-cell-content deliverability-status">
     <span ifnot="!!$row()[$col.index]"
-          data-bind="i18n: 'Not analysed'"
+          data-bind="i18n: 'Not checked'"
           class="pending"></span>
     <span if="$row()[$col.index] === 'pending'"
           data-bind="i18n: 'Pending'"

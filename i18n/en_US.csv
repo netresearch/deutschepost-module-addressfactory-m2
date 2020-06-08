@@ -1,10 +1,9 @@
 "ADDRESSFACTORY DIRECT is a service of Deutsche Post Direkt for validating address data.","ADDRESSFACTORY DIRECT is a service of Deutsche Post Direkt for validating address data."
 "Address Information","Address Information"
 "Address corrected","Address corrected"
-"Address not correctable","Address not correctable"
-"Addressfactory Direct Deliverability Status","Addressfactory Direct Deliverability Status"
-"Addressfactory Direct Settings","Addressfactory Direct Settings"
+"Address not valid","Address not valid"
 "Address validation can be performed either manually or automatically after the order was placed.","Address validation can be performed either manually or automatically after the order was placed."
+"Addressfactory Direct Settings","Addressfactory Direct Settings"
 "Analysis failed","Analysis failed"
 "Analysis on Order placement","Analysis on Order placement"
 "Analysis result with order address id %1 does not exist.","Analysis result with order address id %1 does not exist."
@@ -18,12 +17,11 @@
 "Automatically Put on Hold","Automatically Put on Hold"
 "Automatically Update Shipping Address","Automatically Update Shipping Address"
 "Basis for this check is the postal reference file from Deutsche Post Direkt.","Basis for this check is the postal reference file from Deutsche Post Direkt."
-Building,Building
 "Bulk receiver name","Bulk receiver name"
 "Bulk recipient address","Bulk recipient address"
 "Cancel Order","Cancel Order"
-"Check Deliverability","Check Deliverability"
-"Check and Improve Deliverability","Check and Improve Deliverability"
+"Check Shipping Address","Check Shipping Address"
+"Check and Autocorrect Shipping Address","Check and Autocorrect Shipping Address"
 City,City
 "City addition","City addition"
 "Configuration Name","Configuration Name"
@@ -33,13 +31,12 @@ City,City
 "Could not save analysis result.","Could not save analysis result."
 "Could not update Order address with ADDRESSFACTORY DIRECT suggestion","Could not update Order address with ADDRESSFACTORY DIRECT suggestion"
 Country,Country
-"Deliverability Analysis","Deliverability Analysis"
-"Deliverability Status","Deliverability Status"
 Deliverable,Deliverable
 Enabled,Enabled
 Errors,Errors
 Everything,Everything
 "House address","House address"
+"House number","House number"
 Household,Household
 "If you do not have an account yet or your account is not enabled for ADDRESSFACTORY DIRECT, please use the %1Deutsche Post Direkt website%2 to use our address solutions.","If you do not have an account yet or your account is not enabled for ADDRESSFACTORY DIRECT, please use the %1Deutsche Post Direkt website%2 to use our address solutions."
 "Improveable Orders","Improveable Orders"
@@ -52,21 +49,25 @@ Logging,Logging
 "Non-deliverable Order put on hold","Non-deliverable Order put on hold"
 "Non-deliverable Order(s) %1 were put on hold.","Non-deliverable Order(s) %1 were put on hold."
 "Non-deliverable Orders","Non-deliverable Orders"
-"Not analysed","Not analysed"
+"Not checked","Not checked"
+"Not found in reference","Not found in reference"
 "Order address updated with ADDRESSFACTORY DIRECT suggestion","Order address updated with ADDRESSFACTORY DIRECT suggestion"
 "Order(s) %1 could not be analysed with ADDRESSFACTORY DIRECT.","Order(s) %1 could not be analysed with ADDRESSFACTORY DIRECT."
 "Order(s) %1 could not be updated.","Order(s) %1 could not be updated."
 "Order(s) %1 were successfully updated.","Order(s) %1 were successfully updated."
 "Other Actions","Other Actions"
 Pending,Pending
-"Perform Deliverability Analysis","Perform Deliverability Analysis"
+"Perform Shipping Address Check","Perform Shipping Address Check"
 Person,Person
-"Possibly Deliverable","Possibly Deliverable"
 "Possibly deliverable","Possibly deliverable"
-"Post Direkt Addressfactory","Post Direkt Addressfactory"
 "Postal code","Postal code"
-"Receiver not found in Post reference data","Receiver not found in Post reference data"
 "Service exception: %1","Service exception: %1"
+"Shipping Address Check","Shipping Address Check"
+"Shipping Address Check Status","Shipping Address Check Status"
+"Shipping Address Deliverable","Shipping Address Deliverable"
+"Shipping Address Possibly Deliverable","Shipping Address Possibly Deliverable"
+"Shipping Address Undeliverable","Shipping Address Undeliverable"
+"Shipping Address Validation (ADDRESSFACTORY)","Shipping Address Validation (ADDRESSFACTORY)"
 Street,Street
 "Suggested Shipping Address","Suggested Shipping Address"
 "The address will be checked with regards to the format of the address (zipcode, street and city) as well as the probability of a successful delivery to the person at this address.","The address will be checked with regards to the format of the address (zipcode, street and city) as well as the probability of a successful delivery to the person at this address."
@@ -85,18 +86,18 @@ Undeliverable,Undeliverable
 "You need a valid Deutsche Post Direkt account.","You need a valid Deutsche Post Direkt account."
 "address type changed","address type changed"
 ambigouus,ambigouus
+"corrected marginally","corrected marginally"
+"corrected significantly","corrected significantly"
 different,different
 incorporated,incorporated
 "incorporated or renamed","incorporated or renamed"
 "is company address","is company address"
 "is foreign address","is foreign address"
-"marginally corrected","marginally corrected"
 "matched in Robinson list","matched in Robinson list"
 "matched in fake-name list","matched in fake-name list"
 moved,moved
 "not filled","not filled"
-"not matched","not matched"
+"not found","not found"
 "receiver deceased","receiver deceased"
 "reportedly deceased","reportedly deceased"
-"significantly corrected","significantly corrected"
 undeliverable,undeliverable

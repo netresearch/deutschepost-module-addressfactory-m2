@@ -27,7 +27,7 @@ class AnalysisStatusOptions implements OptionSourceInterface
         return [
             [
                 'value' => AnalysisStatusUpdater::NOT_ANALYSED,
-                'label' => __('Not analysed')
+                'label' => __('Not checked')
             ],
             [
                 'value' => AnalysisStatusUpdater::PENDING,
