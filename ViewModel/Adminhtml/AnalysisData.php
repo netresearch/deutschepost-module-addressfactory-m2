@@ -114,9 +114,9 @@ class AnalysisData implements ArgumentInterface
     {
         /** @var Phrase[] $scores */
         $scores = [
-            DeliverabilityCodes::POSSIBLY_DELIVERABLE => __('Possibly Deliverable'),
-            DeliverabilityCodes::DELIVERABLE => __('Deliverable'),
-            DeliverabilityCodes::UNDELIVERABLE => __('Undeliverable'),
+            DeliverabilityCodes::POSSIBLY_DELIVERABLE => __('Shipping Address Possibly Deliverable'),
+            DeliverabilityCodes::DELIVERABLE => __('Shipping Address Deliverable'),
+            DeliverabilityCodes::UNDELIVERABLE => __('Shipping Address Undeliverable'),
             DeliverabilityCodes::CORRECTION_REQUIRED => __('Correction Recommended'),
         ];
 
