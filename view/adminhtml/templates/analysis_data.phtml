@@ -17,7 +17,7 @@ $viewModel = $block->getData('viewModel');
 <div class="admin__page-section-item order-shipping-address pd_infox_box">
     <div class="admin__page-section-item-title">
         <img class="pd_logo" src='<?= $viewModel->getLogoUrl() ?>' alt="logo" width="150px">
-        <h2 class="title"><?= $block->escapeHtml(__('Deliverability Analysis')) ?></h2>
+        <h2 class="title"><?= $block->escapeHtml(__('Shipping Address Check')) ?></h2>
     </div>
 
     <?php if ($viewModel->showAnalysisResults()): ?>
@@ -97,7 +97,7 @@ $viewModel = $block->getData('viewModel');
         <a
             class="button action-primary"
             href="<?= $block->escapeUrl($viewModel->getPerformAnalysisUrl()) ?>">
-            <?= $block->escapeHtml(__('Perform Deliverability Analysis')) ?>
+            <?= $block->escapeHtml(__('Perform Shipping Address Check')) ?>
         </a>
     <?php endif; ?>
 </div>

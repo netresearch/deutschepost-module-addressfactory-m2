@@ -103,12 +103,12 @@ class DeliverabilityCodes
         $mappedCodes = [
             self::NOT_CORRECTABLE => [
                 'icon' => 'icon-alert',
-                'label' => __('Address not correctable'),
+                'label' => __('Address not valid'),
                 'code' => self::NOT_CORRECTABLE,
             ],
             'FNC000500' => [
                 'icon' => 'icon-alert',
-                'label' => __('Receiver not found in Post reference data'),
+                'label' => __('Not found in reference'),
                 'code' => 'FNC000500',
             ]
         ];
@@ -123,7 +123,7 @@ class DeliverabilityCodes
             '010' => __('House address'),
             '012' => __('Bulk recipient address'),
             '020' => __('Street'),
-            '030' => __('Building'),
+            '030' => __('House number'), // "Building"
             '040' => __('Household'),
             '050' => __('Person'),
             '060' => __('Postal code'),
@@ -168,8 +168,8 @@ class DeliverabilityCodes
         ];
 
         $mappedStatusCodes = [
-            '103' => __('significantly corrected'),
-            '104' => __('marginally corrected'),
+            '103' => __('corrected significantly'),
+            '104' => __('corrected marginally'),
             '106' => __('undeliverable'),
             '108' => __('incorporated or renamed'),
             '111' => __('different'),
@@ -179,7 +179,7 @@ class DeliverabilityCodes
             '121' => __('reportedly deceased'),
             '140' => __('matched in Robinson list'),
             '141' => __('matched in fake-name list'),
-            '500' => __('not matched'),
+            '500' => __('not found'), // "not matched"
             '501' => __('not filled'),
             '503' => __('ambigouus'),
             '504' => __('is foreign address'),
@@ -236,10 +236,10 @@ class DeliverabilityCodes
     {
         /**
          * BAC201110 - House numbers can be separated by the API, but Magento cannot take advantage of this
-         * BAC010103, BAC010104 - These are always explained in more detail by another code.
+         * BAC010103, BAC010104, BAC010500 - These are always explained in more detail by another code.
          * FNC201103 - Street number addition corrected: This is a false positive in connection with BAC201110
          */
-        $removals = ['BAC201110', 'BAC010103', 'BAC010104', 'FNC201103'];
+        $removals = ['BAC201110', 'BAC010103', 'BAC010500', 'BAC010104', 'FNC201103'];
         return array_diff($codes, $removals);
     }
 

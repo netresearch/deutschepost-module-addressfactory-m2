@@ -1,10 +1,9 @@
 "ADDRESSFACTORY DIRECT is a service of Deutsche Post Direkt for validating address data.","ADDRESSFACTORY DIRECT ist ein Service von Deutsche Post Direkt zur Validierung von Adressdaten."
 "Address Information",Adress-Informationen
 "Address corrected","Adresse korrigiert"
-"Address not correctable","Addresse nicht korrigierbar"
-"Addressfactory Direct Deliverability Status","Addressfactory Direct Zustellbarkeits-Status"
-"Addressfactory Direct Settings","Addressfactory Direct Einstellungen"
+"Address not valid","Adresse nicht valide"
 "Address validation can be performed either manually or automatically after the order was placed.","Nachdem Ihre Kunden eine Bestellung aufgegeben haben, können Sie die Versandadresse manuell oder automatisch prüfen."
+"Addressfactory Direct Settings","Addressfactory Direct Einstellungen"
 "Analysis failed","Analyse fehlgeschlagen"
 "Analysis on Order placement","Analyse bei Bestellungsabschluß"
 "Analysis result with order address id %1 does not exist.","Analyse für Bestelladresse mit id %1 existiert nicht"
@@ -16,14 +15,13 @@
 "Automatic Address Analysis","Automatische Adress-Analyse"
 "Automatically Cancel","Automatisch stornieren"
 "Automatically Put on Hold","Automatisch zurückstellen"
-"Automatically Update Shipping Address","Lieferaddresse automatisch aktualisieren"
+"Automatically Update Shipping Address","Versandadresse automatisch aktualisieren"
 "Basis for this check is the postal reference file from Deutsche Post Direkt.","Grundlage dieser Prüfung ist die postalische Referenzdatei von Deutsche Post Direkt."
-Building,Gebäude
 "Bulk receiver name",Großempfängername
 "Bulk recipient address",Großempfänder-Adresse
 "Cancel Order","Bestellung stornieren"
-"Check Deliverability","Zustellbarkeit überprüfen"
-"Check and Improve Deliverability","Zustellbarkeit überprüfen und verbessern"
+"Check Shipping Address","Versandaddresse prüfen"
+"Check and Autocorrect Shipping Address","Versandaddresse prüfen & autom. korrigieren"
 City,Ort
 "City addition",Ortszusatz
 "Configuration Name",Konfigurationsname
@@ -33,13 +31,12 @@ City,Ort
 "Could not save analysis result.","Analyse-Ergebnis konnte nicht gespeichert werden."
 "Could not update Order address with ADDRESSFACTORY DIRECT suggestion","Bestelladresse konnte nicht mit ADDRESSFACTORY DIRECT-Vorschlag aktualisiert werden"
 Country,Land
-"Deliverability Analysis",Zustellbarkeits-Analyse
-"Deliverability Status",Zustellbarkeits-Status
 Deliverable,Zustellbar
 Enabled,Aktiviert
 Errors,Fehler
 Everything,Alles
 "House address",Hausanschrift
+"House number",Hausnummer
 Household,Haushalt
 "If you do not have an account yet or your account is not enabled for ADDRESSFACTORY DIRECT, please use the %1Deutsche Post Direkt website%2 to use our address solutions.","Wenn Sie noch keinen gültigen oder aktivierten Account haben, kontaktieren Sie bitte die %1Deutsche Post Direkt%2 um von unseren Adresslösungen zu profitieren."
 "Improveable Orders","Korrigierbare Bestellungen"
@@ -52,23 +49,27 @@ Logging,Logging
 "Non-deliverable Order put on hold","Nicht-zustellbare Bestellung zurückgestellt"
 "Non-deliverable Order(s) %1 were put on hold.","Nicht-zustellbare Bestellung(en) %1 zurückgestellt"
 "Non-deliverable Orders","Nicht zustellbare Bestellungen"
-"Not analysed","Nicht analysiert"
+"Not checked","Nicht geprüft"
+"Not found in reference","Nicht in Referenz gefunden"
 "Order address updated with ADDRESSFACTORY DIRECT suggestion","Bestelladdresse mit ADDRESSFACTORY DIRECT-Vorschlag aktualisiert"
 "Order(s) %1 could not be analysed with ADDRESSFACTORY DIRECT.","Bestellung(en) %1 konnten nicht mit ADDRESSFACTORY DIRECT analysiert werden"
 "Order(s) %1 could not be updated.","Bestellung(en) %1 konnten nicht aktualisiert werden"
 "Order(s) %1 were successfully updated.","Bestellung(en) %1 wurden erfolgreich aktualisiert"
 "Other Actions","Weitere Aktionen"
 Pending,Ausstehend
-"Perform Deliverability Analysis","Zustellbarkeits-Analyse durchführen"
+"Perform Shipping Address Check","Versandadressen-Prüfung durchführen"
 Person,Person
-"Possibly Deliverable","Möglicherweise zustellbar"
 "Possibly deliverable","Möglicherweise zustellbar"
-"Post Direkt Addressfactory","Post Direkt Addressfactory"
 "Postal code",PLZ
-"Receiver not found in Post reference data","Nicht in Post Referenzdaten gefunden"
 "Service exception: %1","Schnittstellen-Fehler: %1"
+"Shipping Address Check",Versandadressen-Prüfung
+"Shipping Address Check Status",Versandadressen-Prüfungsstatus
+"Shipping Address Deliverable","Versandadresse zustellbar"
+"Shipping Address Possibly Deliverable","Versandadresse  eventuell zustellbar"
+"Shipping Address Undeliverable","Versandadresse nicht zustellbar"
+"Shipping Address Validation (ADDRESSFACTORY)","Versandadresse validieren (ADDRESSFACTORY)"
 Street,Straße
-"Suggested Shipping Address","Vorgeschlagene Lieferadresse"
+"Suggested Shipping Address","Vorgeschlagene Versandadresse"
 "The address will be checked with regards to the format of the address (zipcode, street and city) as well as the probability of a successful delivery to the person at this address.","Die Adresse wird geprüft in Bezug auf das Adressformat (Postleitzahl, Straßenname und Stadt) und die Wahrscheinlichkeit einer erfolgreichen Zustellung an den Empfänger."
 "This database is unique in Germany with around 210 million current and former private addresses for validating purposes.","Diese Datenbank ist in Deutschland einzigartig, mit etwa 210 Millionen aktuellen und ehemaligen Privatadressen für Validierungszwecke."
 "This module integrates ADDRESSFACTORY DIRECT services into Magento so that you can check the customer’s shipping address before fulfilling the order.","Dieses Modul integriert ADDRESSFACTORY DIRECT in Magento, damit Sie die Versandadressen Ihrer Kunden prüfen können, bevor sie die Bestellungen absenden."
@@ -85,18 +86,18 @@ Undeliverable,Unzustellbar
 "You need a valid Deutsche Post Direkt account.","Sie benötigen einen gültigen Account der Deutsche Post Direkt."
 "address type changed","Anschriftentyp geändert"
 ambigouus,mehrdeutig
+"corrected marginally","signifikant korrigiert"
+"corrected significantly","geringfügig korrigiert"
 different,abweichend
 incorporated,eingemeindet
 "incorporated or renamed","eingemeindet oder umbenannt"
 "is company address","ist Firmenadresse"
 "is foreign address","ist Auslandsadresse"
-"marginally corrected","geringfügig korrigiert"
 "matched in Robinson list","getroffen in Robinsonliste"
 "matched in fake-name list","getroffen in Fake-Namensliste"
 moved,umgezogen
 "not filled","nicht befüllt"
-"not matched","nicht getroffen"
+"not found","nicht gefunden"
 "receiver deceased","Empfänger verstorben"
 "reportedly deceased","Empfänger soll verstorben sein"
-"significantly corrected","signifikant korrigiert"
 undeliverable,unzustellbar
