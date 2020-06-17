@@ -13,6 +13,7 @@ stages:
     - docs
     - build
     - validate
+    - deploy
 
 static-analysis:
     stage: analyze
@@ -182,3 +183,16 @@ phpunit-7.3-ee2.3:
         paths:
             - build/shared/_output
     stage: mftf
+
+github:
+    stage: deploy
+    when: manual
+    variables:
+        GIT_STRATEGY: "clone"
+        VAULT_PATH: "projects/PostDirekt/Github/module-addressfactory-m2"
+    only:
+        - master
+    before_script:
+        - ci-github-before
+    script:
+        - ci-github
