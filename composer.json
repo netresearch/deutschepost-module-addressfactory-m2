@@ -6,8 +6,10 @@
     "license": "OSL-3.0",
     "authors": [
         {
-            "email": "gurjit.singh@netresearch.de",
-            "name": "Gurjit Singh"
+            "email": "plugins@netresearch.de",
+            "name": "Netresearch DTT GmbH",
+            "role": "Manufacturer",
+            "homepage": "https://www.netresearch.de/"
         }
     ],
     "autoload": {

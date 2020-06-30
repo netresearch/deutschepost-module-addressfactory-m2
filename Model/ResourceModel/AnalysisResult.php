@@ -9,12 +9,6 @@ namespace PostDirekt\Addressfactory\Model\ResourceModel;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\ResourceModel\Db\VersionControl\AbstractDb;
 
-/**
- * AnalysisResult ResourceModel
- *
- * @author  Sebastian Ertner <sebastian.ertner@netresearch.de>
- * @link    https://www.netresearch.de/
- */
 class AnalysisResult extends AbstractDb
 {
     /**

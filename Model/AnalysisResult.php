@@ -9,12 +9,6 @@ namespace PostDirekt\Addressfactory\Model;
 use Magento\Framework\Model\AbstractModel;
 use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 
-/**
- * AnalysisResult ResourceModel
- *
- * @author  Sebastian Ertner <sebastian.ertner@netresearch.de>
- * @link    https://www.netresearch.de/
- */
 class AnalysisResult extends AbstractModel implements AnalysisResultInterface
 {
     /**

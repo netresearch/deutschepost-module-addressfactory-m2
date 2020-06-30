@@ -20,12 +20,6 @@ use PostDirekt\Sdk\AddressfactoryDirect\Service\AddressVerificationService\Perso
 use PostDirekt\Sdk\AddressfactoryDirect\Service\AddressVerificationService\Record;
 use PostDirekt\Sdk\AddressfactoryDirect\Service\ServiceFactory;
 
-/**
- * AddressAnalysisTest
- *
- * @author  Sebastian Ertner <sebastian.ertner@netresearch.de>
- * @link    https://www.netresearch.de/
- */
 class AddressAnalysisTest extends TestCase
 {
     /**

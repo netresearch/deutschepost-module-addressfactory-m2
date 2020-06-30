@@ -17,12 +17,6 @@ use PostDirekt\Addressfactory\Model\Config;
 use PostDirekt\Addressfactory\Model\OrderAnalysis;
 use PostDirekt\Addressfactory\Model\OrderUpdater;
 
-/**
- * AddressAnalysis
- *
- * @author  Sebastian Ertner <sebastian.ertner@netresearch.de>
- * @link    https://www.netresearch.de/
- */
 class Analyse extends Action
 {
     /**

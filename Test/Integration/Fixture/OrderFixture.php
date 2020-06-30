@@ -30,9 +30,6 @@ use TddWizard\Fixtures\Customer\CustomerFixture;
  * Class OrderFixture
  *
  * @todo(nr): replace by tddwizard as soon as PRs are accepted.
- *
- * @author  Christoph Aßmann <christoph.assmann@netresearch.de>
- * @link    https://www.netresearch.de/
  */
 class OrderFixture
 {

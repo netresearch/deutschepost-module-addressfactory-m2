@@ -12,12 +12,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Model\ResourceModel\GridInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class AnalysisStatusUpdater
- *
- * @author   Andreas Müller <andreas.mueller@netresearch.de>
- * @link     https://www.netresearch.de/
- */
 class AnalysisStatusUpdater
 {
     public const NOT_ANALYSED = 'not_analysed';

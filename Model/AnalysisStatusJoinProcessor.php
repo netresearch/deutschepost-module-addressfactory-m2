@@ -12,12 +12,6 @@ use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Sales\Api\Data\OrderInterface;
 use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisStatus as AnalysisStatusResource;
 
-/**
- * Class AnalysisStatusJoinProcessor
- *
- * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
- * @link     https://www.netresearch.de/
- */
 class AnalysisStatusJoinProcessor implements CollectionProcessorInterface
 {
 

@@ -6,12 +6,6 @@ declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Test\Integration\Fixture\Data;
 
-/**
- * Class AddressUs
- *
- * @author  Gurjit Singh <gurjit.singh@netresearch.de>
- * @link    https://www.netresearch.de/
- */
 class AddressUs implements AddressInterface
 {
     public function getStreet(): string

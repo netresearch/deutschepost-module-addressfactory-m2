@@ -12,15 +12,8 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderAddressExtensionFactory;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order\ShippingAssignment;
-use PostDirekt\Addressfactory\Model\AddressAnalysis;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
 
-/**
- * Class AddressRepositoryPlugin
- *
- * @author  Andreas Müller <andreas.mueller@netresearch.de>
- * @link    https://www.netresearch.de
- */
 class AddAnalysisToAddress
 {
     /**

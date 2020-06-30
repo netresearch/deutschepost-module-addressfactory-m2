@@ -11,11 +11,6 @@ use Magento\Framework\Event\ObserverInterface;
 use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 
 /**
- * Class UpdateOrderDeliverabilityStatus
- *
- * @author   Andreas Müller <andreas.mueller@netresearch.de>
- * @link     https://www.netresearch.de/
- *
  * @event admin_sales_order_address_update
  */
 class UpdateOrderDeliverabilityStatus implements ObserverInterface

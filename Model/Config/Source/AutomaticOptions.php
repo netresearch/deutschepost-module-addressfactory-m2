@@ -8,12 +8,6 @@ namespace PostDirekt\Addressfactory\Model\Config\Source;
 
 use Magento\Framework\Data\OptionSourceInterface;
 
-/**
- * Class AutomaticOptions
- *
- * @author   Andreas Müller <andreas.mueller@netresearch.de>
- * @link     https://www.netresearch.de/
- */
 class AutomaticOptions implements OptionSourceInterface
 {
     public const NO_AUTOMATIC_ANALYSIS = '1';

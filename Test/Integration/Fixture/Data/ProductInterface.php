@@ -6,12 +6,6 @@ declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Test\Integration\Fixture\Data;
 
-/**
- * Interface ProductInterface
- *
- * @author  Christoph Aßmann <christoph.assmann@netresearch.de>
- * @link    https://www.netresearch.de/
- */
 interface ProductInterface
 {
     /**

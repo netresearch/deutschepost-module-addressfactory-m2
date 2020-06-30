@@ -9,12 +9,6 @@ namespace PostDirekt\Addressfactory\Model\Config\Source;
 use Magento\Framework\Data\OptionSourceInterface;
 use Magento\Framework\Logger\Monolog;
 
-/**
- * Class LogLevel
- *
- * @author   Gurjit Singh <gurjit.singh@netresearch.de>
- * @link     https://www.netresearch.de/
- */
 class LogLevel implements OptionSourceInterface
 {
     /**

@@ -9,12 +9,6 @@ namespace PostDirekt\Addressfactory\Model\ResourceModel;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\ResourceModel\Db\VersionControl\AbstractDb;
 
-/**
- * Class AnalysisStatus
- *
- * @author   Andreas Müller <andreas.mueller@netresearch.de>
- * @link     https://www.netresearch.de/
- */
 class AnalysisStatus extends AbstractDb
 {
     /**

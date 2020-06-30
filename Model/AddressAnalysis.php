@@ -21,12 +21,6 @@ use PostDirekt\Sdk\AddressfactoryDirect\Model\RequestType\InRecordWSType;
 use PostDirekt\Sdk\AddressfactoryDirect\RequestBuilder\RequestBuilder;
 use Psr\Log\LoggerInterface;
 
-/**
- * AddressAnalysis
- *
- * @author  Sebastian Ertner <sebastian.ertner@netresearch.de>
- * @link    https://www.netresearch.de/
- */
 class AddressAnalysis
 {
     /**

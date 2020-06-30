@@ -16,7 +16,7 @@
 "Automatically Cancel","Automatisch stornieren"
 "Automatically Put on Hold","Automatisch zurückstellen"
 "Automatically Update Shipping Address","Versandadresse automatisch aktualisieren"
-"Basis for this check is the postal reference file from Deutsche Post Direkt.","Grundlage dieser Prüfung ist die postalische Referenzdatei von Deutsche Post Direkt."
+"Basis for this check is the postal reference file from Deutsche Post Direkt.","Grundlage dieser Prüfung ist die Postreferenz-Datenbank von Deutsche Post Direkt."
 "Bulk receiver name",Großempfängername
 "Bulk recipient address",Großempfänder-Adresse
 "Cancel Order","Bestellung stornieren"
@@ -72,7 +72,7 @@ Street,Straße
 "Suggested Shipping Address","Vorgeschlagene Versandadresse"
 "The address will be checked with regards to the format of the address (zipcode, street and city) as well as the probability of a successful delivery to the person at this address.","Die Adresse wird geprüft in Bezug auf das Adressformat (Postleitzahl, Straßenname und Stadt) und die Wahrscheinlichkeit einer erfolgreichen Zustellung an den Empfänger."
 "This database is unique in Germany with around 210 million current and former private addresses for validating purposes.","Diese Datenbank ist in Deutschland einzigartig, mit etwa 210 Millionen aktuellen und ehemaligen Privatadressen für Validierungszwecke."
-"This module integrates ADDRESSFACTORY DIRECT services into Magento so that you can check the customer’s shipping address before fulfilling the order.","Dieses Modul integriert ADDRESSFACTORY DIRECT in Magento, damit Sie die Versandadressen Ihrer Kunden prüfen können, bevor sie die Bestellungen absenden."
+"This module integrates ADDRESSFACTORY DIRECT services into Magento so that you can check the customer’s shipping address before fulfilling the order.","Dieses Modul integriert ADDRESSFACTORY DIRECT in Magento, damit Sie die Versandadressen Ihrer Kunden prüfen können, bevor Sie die Bestellungen absenden."
 "To get started","Einfach loslegen:"
 "Unable to save analysis result.","Analyse konnte nicht gespeichert werden."
 "Unable to save analysis results","Analyse-Ergebnisse konnten nicht gespeichert werden"

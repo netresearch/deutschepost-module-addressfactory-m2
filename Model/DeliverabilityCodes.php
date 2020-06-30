@@ -6,12 +6,6 @@ declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Model;
 
-/**
- * Class DeliverabilityScore
- *
- * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
- * @link     https://www.netresearch.de/
- */
 class DeliverabilityCodes
 {
     public const DELIVERABLE = 'deliverable';

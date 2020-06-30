@@ -20,9 +20,6 @@ use Magento\Sales\Block\Adminhtml\Order\View\Info;
  *
  * It also sets the 'shipping_address_id' value for the block. This has the side effect that the original
  * 'addressfactory_analysis_data' block in the original position has no output.
- *
- * @author  Gurjit Singh <gurjit.singh@netresearch.de>
- * @link https://www.netresearch.de/
  */
 class MoveAnalysisBox implements ObserverInterface
 {

@@ -9,12 +9,6 @@ namespace PostDirekt\Addressfactory\Test\Unit\Model;
 use PHPUnit\Framework\TestCase;
 use PostDirekt\Addressfactory\Model\DeliverabilityCodes;
 
-/**
- * Class DeliverabilityScoreTest
- *
- * @author  Gurjit Singh <gurjit.singh@netresearch.de>
- * @link    https://www.netresearch.de/
- */
 class DeliverabilityScoreTest extends TestCase
 {
     public function testCompute(): void

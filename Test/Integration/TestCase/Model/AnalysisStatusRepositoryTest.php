@@ -17,12 +17,6 @@ use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\AddressDe;
 use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\SimpleProduct;
 use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderFixture;
 
-/**
- * Class AnalysisStatusRepositoryTest
- *
- * @author   Andreas Müller <andreas.mueller@netresearch.de>
- * @link     https://www.netresearch.de/
- */
 class AnalysisStatusRepositoryTest extends TestCase
 {
     protected static $order;
