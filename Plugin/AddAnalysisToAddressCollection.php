@@ -10,12 +10,6 @@ use Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface;
 use Magento\Sales\Model\Order\Address;
 use Magento\Sales\Model\ResourceModel\Order\Address\Collection;
 
-/**
- * Class AddAnalysisToAddressCollection
- *
- * @author  Andreas Müller <andreas.mueller@netresearch.de>
- * @link    https://www.netresearch.de
- */
 class AddAnalysisToAddressCollection
 {
     /**

@@ -20,12 +20,6 @@ use PostDirekt\Addressfactory\Model\OrderAnalysis;
 use PostDirekt\Addressfactory\Model\OrderUpdater;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class AutoProcess
- *
- * @author   Andreas Müller <andreas.mueller@netresearch.de>
- * @link     https://www.netresearch.de/
- */
 class AutoProcess
 {
     /**

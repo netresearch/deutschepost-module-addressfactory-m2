@@ -16,12 +16,6 @@ use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult\SearchResult;
 use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult\SearchResultFactory;
 use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult as AnalysisResultResource;
 
-/**
- * AnalysisResult Repository
- *
- * @author  Sebastian Ertner <sebastian.ertner@netresearch.de>
- * @link    https://www.netresearch.de/
- */
 class AnalysisResultRepository
 {
     /**

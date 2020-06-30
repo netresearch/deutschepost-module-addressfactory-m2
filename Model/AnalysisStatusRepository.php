@@ -10,12 +10,6 @@ use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisStatus as AnalysisStatusResource;
 
-/**
- * Class AnalysisStatusRepository
- *
- * @author   Andreas Müller <andreas.mueller@netresearch.de>
- * @link     https://www.netresearch.de/
- */
 class AnalysisStatusRepository
 {
     /**

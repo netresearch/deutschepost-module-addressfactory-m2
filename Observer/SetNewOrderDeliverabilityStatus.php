@@ -18,9 +18,6 @@ use Psr\Log\LoggerInterface;
 /**
  * Class SetNewOrderDeliverabilityStatus
  *
- * @author   Andreas Müller <andreas.mueller@netresearch.de>
- * @link     https://www.netresearch.de/
- *
  * @event sales_order_save_after
  */
 class SetNewOrderDeliverabilityStatus implements ObserverInterface

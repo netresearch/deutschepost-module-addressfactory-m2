@@ -9,12 +9,6 @@ namespace PostDirekt\Addressfactory\Component\Listing\Column;
 use Magento\Framework\Data\OptionSourceInterface;
 use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 
-/**
- * Class AnalysisStatusOptions
- *
- * @author   Andreas Müller <andreas.mueller@netresearch.de>
- * @link     https://www.netresearch.de/
- */
 class AnalysisStatusOptions implements OptionSourceInterface
 {
     /**

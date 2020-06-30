@@ -9,12 +9,6 @@ namespace PostDirekt\Addressfactory\Api\Data\AnalysisResult;
 use Magento\Framework\Api\SearchResultsInterface;
 use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 
-/**
- * AnalysisSearchResultInterface
- *
- * @author  Sebastian Ertner <sebastian.ertner@netresearch.de>
- * @link    https://www.netresearch.de/
- */
 interface SearchResultInterface extends SearchResultsInterface
 {
     /**

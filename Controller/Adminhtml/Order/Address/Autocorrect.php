@@ -15,12 +15,6 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use PostDirekt\Addressfactory\Model\OrderAnalysis;
 
-/**
- * Class Autocorrect
- *
- * @author   Andreas Müller <andreas.mueller@netresearch.de>
- * @link     https://www.netresearch.de/
- */
 class Autocorrect extends Action
 {
     /**

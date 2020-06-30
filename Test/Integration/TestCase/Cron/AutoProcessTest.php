@@ -31,9 +31,6 @@ use PostDirekt\Sdk\AddressfactoryDirect\Service\AddressVerificationService\Recor
 /**
  * Class AutoProcessTest
  *
- * @author Christoph Aßmann <christoph.assmann@netresearch.de>
- * @link   https://www.netresearch.de/
- *
  * @magentoAppArea crontab
  * @magentoAppIsolation enabled
  * @magentoDbIsolation enabled

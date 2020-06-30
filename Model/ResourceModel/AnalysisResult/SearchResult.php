@@ -13,12 +13,6 @@ use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 use PostDirekt\Addressfactory\Model\AnalysisResult;
 use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult as AnalysisResultResource;
 
-/**
- * AnalysisSearchResult
- *
- * @author  Sebastian Ertner <sebastian.ertner@netresearch.de>
- * @link    https://www.netresearch.de/
- */
 class SearchResult extends AbstractCollection implements SearchResultInterface
 {
     /**

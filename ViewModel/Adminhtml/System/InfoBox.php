@@ -9,12 +9,6 @@ namespace PostDirekt\Addressfactory\ViewModel\Adminhtml\System;
 use PostDirekt\Addressfactory\Model\Config;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 
-/**
- * Class InfoBox
- *
- * @author  Gurjit Singh <gurjit.singh@netresearch.de>
- * @link    https://www.netresearch.de/
- */
 class InfoBox implements ArgumentInterface
 {
     /**

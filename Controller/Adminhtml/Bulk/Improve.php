@@ -15,12 +15,6 @@ use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 use Magento\Ui\Component\MassAction\Filter;
 use PostDirekt\Addressfactory\Model\OrderAnalysis;
 
-/**
- * Bulk Improve Address
- *
- * @author  Sebastian Ertner <sebastian.ertner@netresearch.de>
- * @link    https://www.netresearch.de/
- */
 class Improve extends Action
 {
     /**

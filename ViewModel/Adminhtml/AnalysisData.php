@@ -23,12 +23,6 @@ use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 use PostDirekt\Addressfactory\Model\DeliverabilityCodes;
 use PostDirekt\Addressfactory\Model\AddressUpdater;
 
-/**
- * Class AnalysisData
- *
- * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
- * @link     https://www.netresearch.de/
- */
 class AnalysisData implements ArgumentInterface
 {
     /**

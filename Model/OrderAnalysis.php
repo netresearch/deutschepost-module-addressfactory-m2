@@ -11,12 +11,6 @@ use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Model\Order;
 use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 
-/**
- * OrderAnalysis
- *
- * @author  Sebastian Ertner <sebastian.ertner@netresearch.de>
- * @link    https://www.netresearch.de/
- */
 class OrderAnalysis
 {
     /**
