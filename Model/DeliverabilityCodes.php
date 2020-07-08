@@ -85,6 +85,10 @@ class DeliverabilityCodes
             return self::UNDELIVERABLE;
         }
 
+        if (\in_array(self::PERSON_NOT_DELIVERABLE, $codes, true)) {
+            return self::UNDELIVERABLE;
+        }
+
         return self::POSSIBLY_DELIVERABLE;
     }
 
