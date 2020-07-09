@@ -57,12 +57,6 @@
     </virtualType>
 
     <!-- # argument di overrides -->
-    <type name="PostDirekt\Addressfactory\Model\AnalysisStatusUpdater">
-        <arguments>
-            <argument name="orderGrid" xsi:type="object">Magento\Sales\Model\ResourceModel\Order\Grid</argument>
-            <argument name="logger" xsi:type="object">PostDirekt\Addressfactory\Model\Logger\Virtual</argument>
-        </arguments>
-    </type>
     <type name="PostDirekt\Addressfactory\Cron\AutoProcess">
         <arguments>
             <argument name="orderRepository" xsi:type="object">PostDirekt\Addressfactory\Cron\OrderRepository\Virtual</argument>
@@ -74,9 +68,20 @@
             <argument name="logger" xsi:type="object">PostDirekt\Addressfactory\Model\Logger\Virtual</argument>
         </arguments>
     </type>
-    <type name="PostDirekt\Addressfactory\Observer\SetNewOrderDeliverabilityStatus">
+    <type name="PostDirekt\Addressfactory\Model\AnalysisStatusUpdater">
         <arguments>
+            <argument name="orderGrid" xsi:type="object">Magento\Sales\Model\ResourceModel\Order\Grid</argument>
             <argument name="logger" xsi:type="object">PostDirekt\Addressfactory\Model\Logger\Virtual</argument>
+        </arguments>
+    </type>
+    <type name="PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult">
+        <arguments>
+            <argument name="connectionName" xsi:type="string">sales</argument>
+        </arguments>
+    </type>
+    <type name="PostDirekt\Addressfactory\Model\ResourceModel\AnalysisStatus">
+        <arguments>
+            <argument name="connectionName" xsi:type="string">sales</argument>
         </arguments>
     </type>
     <type name="PostDirekt\Addressfactory\Model\ResourceModel\Provider\UpdatedStatusIdListProvider">
@@ -84,13 +89,16 @@
             <argument name="logger" xsi:type="object">PostDirekt\Addressfactory\Model\Logger\Virtual</argument>
         </arguments>
     </type>
+    <type name="PostDirekt\Addressfactory\Observer\SetNewOrderDeliverabilityStatus">
+        <arguments>
+            <argument name="logger" xsi:type="object">PostDirekt\Addressfactory\Model\Logger\Virtual</argument>
+        </arguments>
+    </type>
 
     <!-- # interceptor plugins -->
     <type name="Magento\Sales\Api\OrderRepositoryInterface">
-        <plugin name="postdirekt_addressfactory_manifest_order_deliverability_status" type="PostDirekt\Addressfactory\Plugin\Sales\OrderRepositoryPlugin" sortOrder="100"/>
-    </type>
-    <type name="Magento\Sales\Api\OrderRepositoryInterface">
         <plugin name="postdirekt_addressfactory_manifest_order_address" type="PostDirekt\Addressfactory\Plugin\AddAnalysisToAddress"/>
+        <plugin name="postdirekt_addressfactory_manifest_order_deliverability_status" type="PostDirekt\Addressfactory\Plugin\Sales\OrderRepositoryPlugin" sortOrder="100"/>
     </type>
     <type name="Magento\Sales\Model\ResourceModel\Order\Address\Collection">
         <plugin name="postdirekt_addressfactory_add_analysis_to_order_address" type="PostDirekt\Addressfactory\Plugin\AddAnalysisToAddressCollection"/>
