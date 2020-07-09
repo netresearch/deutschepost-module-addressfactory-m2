@@ -22,6 +22,7 @@ class DeliverabilityCodes
     private const HOUSEHOLD_NOT_MATCHED = 'PDC040500';
     private const BUILDING_UNDELIVERABLE = 'PDC030106';
     private const NOT_CORRECTABLE = 'BAC000111';
+    private const HOUSE_NUMBER_NOT_FILLED = 'FNC030501';
 
     private const STATUS_CODES_SIGNIFICANTLY_CORRECTED = ['103', '108'];
 
@@ -41,6 +42,10 @@ class DeliverabilityCodes
                     return self::CORRECTION_REQUIRED;
                 }
             }
+        }
+
+        if (\in_array(self::HOUSE_NUMBER_NOT_FILLED, $codes, true)) {
+            return self::UNDELIVERABLE;
         }
 
         if (\in_array(self::NOT_CORRECTABLE, $codes, true)) {
