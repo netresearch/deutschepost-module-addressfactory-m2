@@ -242,8 +242,18 @@ class DeliverabilityCodes
          * BAC010103, BAC010104, BAC010500 - These are always explained in more detail by another code.
          * FNC201103 - Street number addition corrected: This is a false positive in connection with BAC201110
          */
-        $removals = ['BAC201110', 'BAC010103', 'BAC010500', 'BAC010104', 'FNC201103'];
-        return array_diff($codes, $removals);
+        $inapplicable = ['BAC201110', 'BAC010103', 'BAC010500', 'BAC010104', 'FNC201103'];
+        $codes = array_diff($codes, $inapplicable);
+        if (\in_array(self::NOT_CORRECTABLE, $codes, true)) {
+            /**
+             * If BAC000111 (not correctable) is set, all other analysis modules become irrelevant
+             */
+            $codes = array_filter($codes, static function ($key) {
+                return strpos($key, 'BAC') !== false;
+            });
+        }
+
+        return $codes;
     }
 
     private function mapToIcon(string $fieldCode): string
