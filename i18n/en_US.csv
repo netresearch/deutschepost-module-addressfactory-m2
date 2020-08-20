@@ -16,6 +16,9 @@
 "Automatically Cancel","Automatically Cancel"
 "Automatically Put on Hold","Automatically Put on Hold"
 "Automatically Update Shipping Address","Automatically Update Shipping Address"
+"Automatically cancel undeliverable orders.","Automatically cancel undeliverable orders."
+"Automatically put on hold orders that are undeliverable, possibly deliverable, or that failed analysis.","Automatically put on hold orders that are undeliverable, possibly deliverable, or that failed analysis."
+"Automatically update order shipping addresses with ADDRESSFACTORY suggestions.","Automatically update order shipping addresses with ADDRESSFACTORY suggestions."
 "Basis for this check is the postal reference file from Deutsche Post Direkt.","Basis for this check is the postal reference file from Deutsche Post Direkt."
 "Bulk receiver name","Bulk receiver name"
 "Bulk recipient address","Bulk recipient address"
@@ -33,13 +36,14 @@ City,City
 Country,Country
 Deliverable,Deliverable
 Enabled,Enabled
+"Enter the name of the desired synchronization configuration that you have received from Deutsche Post Direkt.","Enter the name of the desired synchronization configuration that you have received from Deutsche Post Direkt."
 Errors,Errors
 Everything,Everything
 "House address","House address"
 "House number","House number"
 Household,Household
 "If you do not have an account yet or your account is not enabled for ADDRESSFACTORY DIRECT, please use the %1Deutsche Post Direkt website%2 to use our address solutions.","If you do not have an account yet or your account is not enabled for ADDRESSFACTORY DIRECT, please use the %1Deutsche Post Direkt website%2 to use our address solutions."
-"Improveable Orders","Improveable Orders"
+"If you want to assign the API requests of this module to a specific client, enter the username of the client here.","If you want to assign the API requests of this module to a specific client, enter the username of the client here."
 "Log Level","Log Level"
 Logging,Logging
 "Mandate Name","Mandate Name"
@@ -48,9 +52,9 @@ Logging,Logging
 "No Automatic Analysis","No Automatic Analysis"
 "Non-deliverable Order put on hold","Non-deliverable Order put on hold"
 "Non-deliverable Order(s) %1 were put on hold.","Non-deliverable Order(s) %1 were put on hold."
-"Non-deliverable Orders","Non-deliverable Orders"
 "Not checked","Not checked"
 "Not found in reference","Not found in reference"
+"Only use the option ""Analysis on order placement"" if problems occur in connection with ""Analysis via Cron"".","Only use the option ""Analysis on order placement"" if problems occur in connection with ""Analysis via Cron""."
 "Order address updated with ADDRESSFACTORY DIRECT suggestion","Order address updated with ADDRESSFACTORY DIRECT suggestion"
 "Order(s) %1 could not be analysed with ADDRESSFACTORY DIRECT.","Order(s) %1 could not be analysed with ADDRESSFACTORY DIRECT."
 "Order(s) %1 could not be updated.","Order(s) %1 could not be updated."
@@ -80,9 +84,8 @@ Street,Street
 Undeliverable,Undeliverable
 "Undeliverable Order canceled","Undeliverable Order canceled"
 "Undeliverable Order(s) %1 were canceled.","Undeliverable Order(s) %1 were canceled."
-"Undeliverable Orders","Undeliverable Orders"
 "Unhold Order","Unhold Order"
-"You must also have Magento general logging enabled.","You must also have Magento general logging enabled."
+"You must also have Magento general logging enabled. Attention: Logs can contain sensitive customer data! Logging should only be activated for troubleshooting purposes. The logs should be deleted regularly.","You must also have Magento general logging enabled. Attention: Logs can contain sensitive customer data! Logging should only be activated for troubleshooting purposes. The logs should be deleted regularly."
 "You need a valid Deutsche Post Direkt account.","You need a valid Deutsche Post Direkt account."
 "address type changed","address type changed"
 ambigouus,ambigouus

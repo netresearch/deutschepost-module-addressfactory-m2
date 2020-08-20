@@ -16,6 +16,9 @@
 "Automatically Cancel","Automatisch stornieren"
 "Automatically Put on Hold","Automatisch zurückstellen"
 "Automatically Update Shipping Address","Versandadresse automatisch aktualisieren"
+"Automatically cancel undeliverable orders.","Unzustellbare Bestellungen automatisch stornieren"
+"Automatically put on hold orders that are undeliverable, possibly deliverable, or that failed analysis.","Bestellungen automatisch zurückstellen, die unzustellbar oder eventuell zustellbar sind oder deren Analyse fehlgeschlagen ist."
+"Automatically update order shipping addresses with ADDRESSFACTORY suggestions.","Versandadressen automatisch mit ADDRESSFACTORY-Vorschlägen aktualisieren."
 "Basis for this check is the postal reference file from Deutsche Post Direkt.","Grundlage dieser Prüfung ist die Postreferenz-Datenbank von Deutsche Post Direkt."
 "Bulk receiver name",Großempfängername
 "Bulk recipient address",Großempfänder-Adresse
@@ -33,13 +36,14 @@ City,Ort
 Country,Land
 Deliverable,Zustellbar
 Enabled,Aktiviert
+"Enter the name of the desired synchronization configuration that you have received from Deutsche Post Direkt.","Tragen Sie hier den Name der gewünschten Abgleich-Konfiguration ein, den sie von Deutsche Post Direkt erhalten haben."
 Errors,Fehler
 Everything,Alles
 "House address",Hausanschrift
 "House number",Hausnummer
 Household,Haushalt
 "If you do not have an account yet or your account is not enabled for ADDRESSFACTORY DIRECT, please use the %1Deutsche Post Direkt website%2 to use our address solutions.","Wenn Sie noch keinen gültigen oder aktivierten Account haben, kontaktieren Sie bitte die %1Deutsche Post Direkt%2 um von unseren Adresslösungen zu profitieren."
-"Improveable Orders","Korrigierbare Bestellungen"
+"If you want to assign the API requests of this module to a specific client, enter the username of the client here.","Falls Sie die API-Anfragen dieses Moduls einem bestimmten Mandanten zuordnen möchten, tragen Sie hier den Benutzer des Mandanten ein."
 "Log Level",Logging-Stufe
 Logging,Logging
 "Mandate Name",Mandanten-Name
@@ -48,9 +52,9 @@ Logging,Logging
 "No Automatic Analysis","Keine automatische Analyse"
 "Non-deliverable Order put on hold","Nicht-zustellbare Bestellung zurückgestellt"
 "Non-deliverable Order(s) %1 were put on hold.","Nicht-zustellbare Bestellung(en) %1 zurückgestellt"
-"Non-deliverable Orders","Nicht zustellbare Bestellungen"
 "Not checked","Nicht geprüft"
 "Not found in reference","Nicht in Referenz gefunden"
+"Only use the option ""Analysis on order placement"" if problems occur in connection with ""Analysis via Cron"".","Nutzen Sie die Option ""Analyse bei Bestellungsabschluss"" nur, falls im Zusammenhang mit ""Analyse via Cron"" Probleme auftreten."
 "Order address updated with ADDRESSFACTORY DIRECT suggestion","Bestelladdresse mit ADDRESSFACTORY DIRECT-Vorschlag aktualisiert"
 "Order(s) %1 could not be analysed with ADDRESSFACTORY DIRECT.","Bestellung(en) %1 konnten nicht mit ADDRESSFACTORY DIRECT analysiert werden"
 "Order(s) %1 could not be updated.","Bestellung(en) %1 konnten nicht aktualisiert werden"
@@ -80,9 +84,8 @@ Street,Straße
 Undeliverable,Unzustellbar
 "Undeliverable Order canceled","Unzustellbare Bestellung storniert"
 "Undeliverable Order(s) %1 were canceled.","Unzustellbare Bestellung(en) %1 storniert"
-"Undeliverable Orders","Unzustellbare Bestellungen"
 "Unhold Order","Bestellung freigeben"
-"You must also have Magento general logging enabled.","Das allgemeine Magento-Logging muss ebenfalls aktiviert sein."
+"You must also have Magento general logging enabled. Attention: Logs can contain sensitive customer data! Logging should only be activated for troubleshooting purposes. The logs should be deleted regularly.","Das allgemeine Magento-Logging muss ebenfalls aktiviert sein. Achtung: Logs können sensible Kundendaten enthalten! Die Protokollierung sollte nur zur Fehlerbehebung aktiviert werden. Anfallende Logs sollten regelmäßig gelöscht werden."
 "You need a valid Deutsche Post Direkt account.","Sie benötigen einen gültigen Account der Deutsche Post Direkt."
 "address type changed","Anschriftentyp geändert"
 ambigouus,mehrdeutig
