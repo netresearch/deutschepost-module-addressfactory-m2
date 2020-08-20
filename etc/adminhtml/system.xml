@@ -21,7 +21,7 @@
                        translate="label comment button_label" type="Netresearch\ConfigFields\Model\Type\Checkbox">
                     <label>Logging</label>
                     <button_label>Enabled</button_label>
-                    <comment>You must also have Magento general logging enabled.</comment>
+                    <comment>You must also have Magento general logging enabled. Attention: Logs can contain sensitive customer data! Logging should only be activated for troubleshooting purposes. The logs should be deleted regularly.</comment>
                 </field>
                 <field id="log_level" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="20"
                        translate="label" type="Netresearch\ConfigFields\Model\Type\Radioset">
@@ -31,27 +31,30 @@
                     </depends>
                     <source_model>PostDirekt\Addressfactory\Model\Config\Source\LogLevel</source_model>
                  </field>
-                <field id="configuration_name" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="configuration_name" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Configuration Name</label>
+                    <comment>Enter the name of the desired synchronization configuration that you have received from Deutsche Post Direkt.</comment>
                 </field>
-                <field id="mandate_name" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" translate="label" type="text">
+                <field id="mandate_name" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" translate="label comment" type="text">
                     <label>Mandate Name</label>
+                    <comment>If you want to assign the API requests of this module to a specific client, enter the username of the client here.</comment>
                 </field>
                 <field id="hold_non_deliverable_orders" translate="label button_label" type="Netresearch\ConfigFields\Model\Type\Checkbox" sortOrder="70" showInDefault="1" showInWebsite="1"   showInStore="0">
-                    <label>Non-deliverable Orders</label>
-                    <button_label>Automatically Put on Hold</button_label>
+                    <label>Automatically Put on Hold</label>
+                    <button_label>Automatically put on hold orders that are undeliverable, possibly deliverable, or that failed analysis.</button_label>
                 </field>
                 <field id="auto_cancel_orders" translate="label button_label" type="Netresearch\ConfigFields\Model\Type\Checkbox" sortOrder="70" showInDefault="1" showInWebsite="1"   showInStore="0">
-                    <label>Undeliverable Orders</label>
-                    <button_label>Automatically Cancel</button_label>
+                    <label>Automatically Cancel</label>
+                    <button_label>Automatically cancel undeliverable orders.</button_label>
                 </field>
                 <field id="auto_update_shipping_address" translate="label button_label" type="Netresearch\ConfigFields\Model\Type\Checkbox" sortOrder="80" showInDefault="1" showInWebsite="1"   showInStore="0">
-                    <label>Improveable Orders</label>
-                    <button_label>Automatically Update Shipping Address</button_label>
+                    <label>Automatically Update Shipping Address</label>
+                    <button_label>Automatically update order shipping addresses with ADDRESSFACTORY suggestions.</button_label>
                 </field>
-                <field id="automatic_address_analysis" translate="label" type="Netresearch\ConfigFields\Model\Type\Radioset" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="90">
+                <field id="automatic_address_analysis" translate="label comment" type="Netresearch\ConfigFields\Model\Type\Radioset" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="90">
                     <label>Automatic Address Analysis</label>
                     <source_model>PostDirekt\Addressfactory\Model\Config\Source\AutomaticOptions</source_model>
+                    <comment>Only use the option "Analysis on order placement" if problems occur in connection with "Analysis via Cron".</comment>
                 </field>
             </group>
         </section>
