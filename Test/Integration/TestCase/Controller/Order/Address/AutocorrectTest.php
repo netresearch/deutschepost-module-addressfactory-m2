@@ -17,7 +17,8 @@ use Magento\TestFramework\TestCase\AbstractBackendController;
 use PHPUnit\Framework\MockObject\MockObject;
 use PostDirekt\Addressfactory\Model\AddressAnalysis;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\AnalysisFixture;
+use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
+use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderBuilder;
 use PostDirekt\Sdk\AddressfactoryDirect\Service\ServiceFactory;
 
 /**
@@ -49,7 +50,10 @@ class AutocorrectTest extends AbstractBackendController
      */
     public static function createAnalysisResults(): void
     {
-        self::$order = AnalysisFixture::createDeliverableAnalyzedOrder();
+        self::$order = OrderBuilder::anOrder()
+            ->withAnalysisStatus(AnalysisStatusUpdater::DELIVERABLE)
+            ->withShippingMethod('flatrate_flatrate')
+            ->build();
     }
 
     /**
@@ -60,7 +64,7 @@ class AutocorrectTest extends AbstractBackendController
      * @throws InputException
      * @throws NoSuchEntityException
      */
-    public function autocorrectAddressSuccess()
+    public function autocorrectAddressSuccess(): void
     {
         /** @var ServiceFactory|MockObject $mockServiceFactory */
         $mockServiceFactory = $this->getMockBuilder(ServiceFactory::class)
@@ -85,7 +89,6 @@ class AutocorrectTest extends AbstractBackendController
 
         /** @var OrderRepository $orderRepository */
         $orderRepository = Bootstrap::getObjectManager()->create(OrderRepository::class);
-        /** @var OrderInterface $order */
         $order = $orderRepository->get((int) self::$order->getId());
         /** @var OrderAddressInterface $shippingAddress */
         $shippingAddress = $order->getShippingAddress();
@@ -96,7 +99,6 @@ class AutocorrectTest extends AbstractBackendController
 
         self::assertEquals($analysisResult->getPostalCode(), $shippingAddress->getPostcode());
         self::assertEquals($analysisResult->getCity(), $shippingAddress->getCity());
-        self::assertContains($analysisResult->getStreetNumber(), $analysisResult->getStreetNumber());
     }
 
     /**

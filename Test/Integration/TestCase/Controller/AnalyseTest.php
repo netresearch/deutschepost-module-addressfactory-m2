@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Test\Integration\TestCase\Controller;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
@@ -15,7 +16,8 @@ use Magento\TestFramework\TestCase\AbstractBackendController;
 use PHPUnit\Framework\MockObject\MockObject;
 use PostDirekt\Addressfactory\Model\AddressAnalysis;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\AnalysisFixture;
+use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
+use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderBuilder;
 use PostDirekt\Sdk\AddressfactoryDirect\Service\ServiceFactory;
 
 /**
@@ -40,26 +42,49 @@ class AnalyseTest extends AbstractBackendController
     /**
      * @var Order
      */
-    private static $order;
+    private static $deliverableOrder;
 
-    public static function createAnalysisResults(): void
-    {
-        self::$order = AnalysisFixture::createDeliverableAnalyzedOrder();
-    }
+    /**
+     * @var Order
+     */
+    private static $undeliverableOrder;
 
-    public static function createUndeliverableAnalysisResults(): void
+    /**
+     * @var Order
+     */
+    private static $orderWithFailedAnalysis;
+
+    /**
+     * @throws \Exception
+     */
+    public static function createOrders(): void
     {
-        self::$order = AnalysisFixture::createUndeliverableAnalyzedOrder();
+        self::$deliverableOrder = OrderBuilder::anOrder()
+            ->withAnalysisStatus(AnalysisStatusUpdater::DELIVERABLE)
+            ->withShippingMethod('flatrate_flatrate')
+            ->build();
+
+        self::$undeliverableOrder = OrderBuilder::anOrder()
+            ->withAnalysisStatus(AnalysisStatusUpdater::UNDELIVERABLE)
+            ->withShippingMethod('flatrate_flatrate')
+            ->build();
+
+        self::$orderWithFailedAnalysis = OrderBuilder::anOrder()
+            ->withAnalysisStatus(AnalysisStatusUpdater::ANALYSIS_FAILED)
+            ->withShippingMethod('flatrate_flatrate')
+            ->build();
     }
 
     /**
-     * Test covers case where all orders that are undeliverable are canceled.
+     * Test covers case where status is updated for undeliverable orders (according to configuration).
      *
-     * assert that order is canceled.
+     * - Assert that order is put on hold.
      *
      * @test
-     * @magentoDataFixture createUndeliverableAnalysisResults
+     * @magentoDataFixture createOrders
      * @magentoConfigFixture default_store postdirekt/addressfactory/hold_non_deliverable_orders 1
+     *
+     * @throws LocalizedException
      */
     public function holdNonDeliverableOrderSuccess(): void
     {
@@ -80,26 +105,28 @@ class AnalyseTest extends AbstractBackendController
         );
 
         Bootstrap::getObjectManager()->addSharedInstance($addressAnalysis, AddressAnalysis::class);
-        $this->getRequest()->setParam('order_id', self::$order->getId());
+        $this->getRequest()->setParam('order_id', self::$undeliverableOrder->getId());
 
         $this->dispatch($this->uri);
 
         /** @var OrderRepository $orderRepository */
         $orderRepository = Bootstrap::getObjectManager()->create(OrderRepository::class);
         // this is needed because Magento explicitly loads and saves the order
-        $order = $orderRepository->get((int) self::$order->getId());
+        $order = $orderRepository->get((int) self::$undeliverableOrder->getId());
         self::assertFalse($order->canHold());
         self::assertEquals(Order::STATE_HOLDED, $order->getState());
     }
 
     /**
-     * Test covers case where all orders that are undeliverable are not on hold.
+     * Test covers case where status is not updated for undeliverable orders (according to configuration).
      *
-     * assert that order is not on hold.
+     * - Assert that order is not on hold.
      *
      * @test
-     * @magentoDataFixture createUndeliverableAnalysisResults
+     * @magentoDataFixture createOrders
      * @magentoConfigFixture default_store postdirekt/addressfactory/hold_non_deliverable_orders 0
+     *
+     * @throws LocalizedException
      */
     public function holdNonDeliverableOrderWithDisabledConfig(): void
     {
@@ -120,28 +147,28 @@ class AnalyseTest extends AbstractBackendController
         );
 
         Bootstrap::getObjectManager()->addSharedInstance($addressAnalysis, AddressAnalysis::class);
-        $this->getRequest()->setParam('order_id', self::$order->getId());
+        $this->getRequest()->setParam('order_id', self::$undeliverableOrder->getId());
 
         $this->dispatch($this->uri);
 
         /** @var OrderRepository $orderRepository */
         $orderRepository = Bootstrap::getObjectManager()->create(OrderRepository::class);
         // this is needed because Magento explicitly loads and saves the order
-        $order = $orderRepository->get((int) self::$order->getId());
+        $order = $orderRepository->get((int) self::$undeliverableOrder->getId());
         self::assertTrue($order->canHold());
         self::assertEquals(Order::STATE_NEW, $order->getState());
     }
 
     /**
-     * Test covers case where all orders that are undeliverable are canceled.
-     *
-     * assert that order is canceled.
+     * Test covers case where all orders that are undeliverable are cancelled (according to configuration).
      *
      * @test
-     * @magentoDataFixture createUndeliverableAnalysisResults
+     * @magentoDataFixture createOrders
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_cancel_orders 1
+     *
+     * @throws LocalizedException
      */
-    public function autoCancelNonDeliverableOrdersSuccess()
+    public function autoCancelNonDeliverableOrdersSuccess(): void
     {
         /** @var ServiceFactory|MockObject $mockServiceFactory */
         $mockServiceFactory = $this->getMockBuilder(ServiceFactory::class)
@@ -160,29 +187,28 @@ class AnalyseTest extends AbstractBackendController
         );
 
         Bootstrap::getObjectManager()->addSharedInstance($addressAnalysis, AddressAnalysis::class);
-        $this->getRequest()->setParam('order_id', self::$order->getId());
+        $this->getRequest()->setParam('order_id', self::$undeliverableOrder->getId());
 
         $this->dispatch($this->uri);
 
         /** @var OrderRepository $orderRepository */
         $orderRepository = Bootstrap::getObjectManager()->create(OrderRepository::class);
         // this is needed because Magento explicitly loads and saves the order
-        /** @var OrderInterface $order */
-        $order = $orderRepository->get((int) self::$order->getId());
+        $order = $orderRepository->get((int) self::$undeliverableOrder->getId());
         self::assertFalse($order->canCancel());
         self::assertEquals(Order::STATE_CANCELED, $order->getState());
     }
 
     /**
-     * Test covers case where all orders that are undeliverable are not canceled.
-     *
-     * assert that order is not canceled.
+     * Test covers case where all orders that are undeliverable are not cancelled (according to configuration).
      *
      * @test
-     * @magentoDataFixture createUndeliverableAnalysisResults
+     * @magentoDataFixture createOrders
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_cancel_orders 0
+     *
+     * @throws LocalizedException
      */
-    public function autoCancelNonDeliverableOrdersWithDisabledConfig()
+    public function autoCancelNonDeliverableOrdersWithDisabledConfig(): void
     {
         /** @var ServiceFactory|MockObject $mockServiceFactory */
         $mockServiceFactory = $this->getMockBuilder(ServiceFactory::class)
@@ -201,15 +227,14 @@ class AnalyseTest extends AbstractBackendController
         );
 
         Bootstrap::getObjectManager()->addSharedInstance($addressAnalysis, AddressAnalysis::class);
-        $this->getRequest()->setParam('order_id', self::$order->getId());
+        $this->getRequest()->setParam('order_id', self::$undeliverableOrder->getId());
 
         $this->dispatch($this->uri);
 
         /** @var OrderRepository $orderRepository */
         $orderRepository = Bootstrap::getObjectManager()->create(OrderRepository::class);
         // this is needed because Magento explicitly loads and saves the order
-        /** @var OrderInterface $order */
-        $order = $orderRepository->get((int) self::$order->getId());
+        $order = $orderRepository->get((int) self::$undeliverableOrder->getId());
         self::assertTrue($order->canCancel());
         self::assertEquals(Order::STATE_NEW, $order->getState());
     }
@@ -217,11 +242,13 @@ class AnalyseTest extends AbstractBackendController
     /**
      * Test covers case where the order shipping address is updated.
      *
-     * assert that order address is updated with analyse result address data.
+     * - Assert that order address is updated with analysis result address data.
      *
      * @test
-     * @magentoDataFixture createAnalysisResults
+     * @magentoDataFixture createOrders
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_update_shipping_address 1
+     *
+     * @throws LocalizedException
      */
     public function autoUpdateShippingAddressSuccess(): void
     {
@@ -242,16 +269,14 @@ class AnalyseTest extends AbstractBackendController
         );
 
         Bootstrap::getObjectManager()->addSharedInstance($addressAnalysis, AddressAnalysis::class);
-        $this->getRequest()->setParam('order_id', self::$order->getId());
+        $this->getRequest()->setParam('order_id', self::$deliverableOrder->getId());
 
         $this->dispatch($this->uri);
 
         /** @var OrderRepository $orderRepository */
         $orderRepository = Bootstrap::getObjectManager()->create(OrderRepository::class);
         // this is needed because Magento explicitly loads and saves the order
-        /** @var OrderInterface $order */
-        $order = $orderRepository->get((int) self::$order->getId());
-        /** @var OrderAddressInterface $shippingAddress */
+        $order = $orderRepository->get((int) self::$deliverableOrder->getId());
         $shippingAddress = $order->getShippingAddress();
 
         /** @var AnalysisResultRepository $resultRepo */
@@ -260,17 +285,18 @@ class AnalyseTest extends AbstractBackendController
 
         self::assertEquals($analysisResult->getPostalCode(), $shippingAddress->getPostcode());
         self::assertEquals($analysisResult->getCity(), $shippingAddress->getCity());
-        self::assertContains($analysisResult->getStreetNumber(), $analysisResult->getStreetNumber());
     }
 
     /**
      * Test covers case where the order shipping address is not updated.
      *
-     * assert that order address is not updated with analyse result address data.
+     * - Assert that order address is not updated with analysis result address data.
      *
      * @test
-     * @magentoDataFixture createAnalysisResults
+     * @magentoDataFixture createOrders
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_update_shipping_address 0
+     *
+     * @throws LocalizedException
      */
     public function autoUpdateShippingAddressWithDisabledConfig(): void
     {
@@ -291,22 +317,19 @@ class AnalyseTest extends AbstractBackendController
         );
 
         Bootstrap::getObjectManager()->addSharedInstance($addressAnalysis, AddressAnalysis::class);
-        $this->getRequest()->setParam('order_id', self::$order->getId());
+        $this->getRequest()->setParam('order_id', self::$deliverableOrder->getId());
 
         $this->dispatch($this->uri);
 
         /** @var OrderRepository $orderRepository */
         $orderRepository = Bootstrap::getObjectManager()->create(OrderRepository::class);
         // this is needed because Magento explicitly loads and saves the order
-        /** @var OrderInterface $order */
-        $order = $orderRepository->get((int) self::$order->getId());
-        /** @var OrderAddressInterface $shippingAddress */
+        $order = $orderRepository->get((int) self::$deliverableOrder->getId());
         $shippingAddress = $order->getShippingAddress();
 
         /** @var AnalysisResultRepository $resultRepo */
         $resultRepo = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
         $analysisResult = $resultRepo->getByAddressId((int) $shippingAddress->getEntityId());
-
 
         self::assertNotEquals($analysisResult->getPostalCode(), $shippingAddress->getPostcode());
         self::assertNotEquals($analysisResult->getCity(), $shippingAddress->getCity());
@@ -315,11 +338,11 @@ class AnalyseTest extends AbstractBackendController
 
 
     /**
-     * @magentoDataFixture createAnalysisResults
+     * @magentoDataFixture createOrders
      */
     public function testAclHasAccess()
     {
-        $this->getRequest()->setParam('order_id', self::$order->getId());
+        $this->getRequest()->setParam('order_id', self::$deliverableOrder->getId());
         parent::testAclHasAccess();
     }
 }

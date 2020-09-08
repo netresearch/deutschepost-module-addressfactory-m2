@@ -22,7 +22,7 @@ class ConfigTest extends TestCase
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_update_shipping_address 1
      * @magentoConfigFixture default_store postdirekt/addressfactory/automatic_address_analysis 2
      */
-    public function testGetters()
+    public function testGetters(): void
     {
         /** @var Config $subject */
         $subject = Bootstrap::getObjectManager()->create(Config::class);
@@ -41,7 +41,7 @@ class ConfigTest extends TestCase
         self::assertFalse($subject->isAnalysisOnOrderPlace($store->getCode()));
     }
 
-    public function testDefaults()
+    public function testDefaults(): void
     {
         /** @var Config $subject */
         $subject = Bootstrap::getObjectManager()->create(Config::class);

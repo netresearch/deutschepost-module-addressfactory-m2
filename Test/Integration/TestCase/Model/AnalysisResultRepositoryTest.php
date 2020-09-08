@@ -13,13 +13,14 @@ use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\AddressDe;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\SimpleProduct;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderFixture;
+use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderBuilder;
 
 class AnalysisResultRepositoryTest extends TestCase
 {
-    protected static $order;
+    /**
+     * @var Order
+     */
+    private static $order;
 
     /**
      * Create order fixture for DE recipient address.
@@ -28,12 +29,7 @@ class AnalysisResultRepositoryTest extends TestCase
      */
     public static function createOrder(): void
     {
-        $shippingMethod = 'flatrate_flatrate';
-        self::$order = OrderFixture::createOrder(
-            new AddressDe(),
-            [new SimpleProduct()],
-            $shippingMethod
-        );
+        self::$order = OrderBuilder::anOrder()->withShippingMethod('flatrate_flatrate')->build();
     }
 
     /**
@@ -45,11 +41,9 @@ class AnalysisResultRepositoryTest extends TestCase
      */
     public function saveAnalysisResultAndGetByAddressIdSuccess(): void
     {
-        /** @var Order $order */
-        $order = self::$order;
-
-        $data = ['data' => [
-                AnalysisResultInterface::ORDER_ADDRESS_ID => (int) $order->getAddresses()[0]->getEntityId(),
+        $data = [
+            'data' => [
+                AnalysisResultInterface::ORDER_ADDRESS_ID => (int) self::$order->getAddresses()[0]->getEntityId(),
                 AnalysisResultInterface::FIRST_NAME => 'Hans',
                 AnalysisResultInterface::LAST_NAME => 'Muster',
                 AnalysisResultInterface::CITY => 'Bonn',
@@ -65,9 +59,9 @@ class AnalysisResultRepositoryTest extends TestCase
         /** @var AnalysisResultRepository $repository */
         $repository = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
         $repository->save($analysisResult);
-        static::assertEquals($order->getAddresses()[0]->getEntityId(), $analysisResult->getOrderAddressId());
+        static::assertEquals(self::$order->getAddresses()[0]->getEntityId(), $analysisResult->getOrderAddressId());
 
-        $result =  $repository->getByAddressId((int) $order->getAddresses()[0]->getEntityId());
+        $result =  $repository->getByAddressId((int) self::$order->getAddresses()[0]->getEntityId());
         static::assertEquals($result->getStreet(), $analysisResult->getStreet());
     }
 }

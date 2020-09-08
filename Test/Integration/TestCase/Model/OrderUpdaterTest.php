@@ -9,128 +9,109 @@ use Magento\Sales\Model\Order;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
+use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 use PostDirekt\Addressfactory\Model\OrderUpdater;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\AnalysisFixture;
+use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderBuilder;
 
 class OrderUpdaterTest extends TestCase
 {
     /**
      * @var Order[]
      */
-    private static $orders = [];
-
-    public static function createAnalysisResultsWithUndeliverableStatus(): void
-    {
-        self::$orders = [
-            AnalysisFixture::createUndeliverableAnalyzedOrder(),
-            AnalysisFixture::createUndeliverableAnalyzedOrder(),
-        ];
-    }
-
-    public static function createAnalysisResultsWithDeliverableStatus(): void
-    {
-        self::$orders = [
-            AnalysisFixture::createDeliverableAnalyzedOrder(),
-            AnalysisFixture::createDeliverableAnalyzedOrder(),
-        ];
-    }
+    private static $deliverableOrders;
 
     /**
-     * Test covers case where analyse status code for order is not deliverable.
-     *
-     * assert that order status is on hold
-     *
-     * @test
-     * @magentoDataFixture createAnalysisResultsWithUndeliverableStatus
+     * @var Order[]
      */
-    public function holdNonDeliverableSuccess(): void
-    {
-        /** @var OrderUpdater $orderUpdater */
-        $orderUpdater = Bootstrap::getObjectManager()->create(OrderUpdater::class);
-        /** @var AnalysisResultRepository $resultRepo */
-        $resultRepo = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
+    private static $undeliverableOrders;
 
-        foreach (self::$orders as $order) {
-            $wasHeld = $orderUpdater->holdIfNonDeliverable(
-                $order,
-                $resultRepo->getByAddressId((int) $order->getShippingAddressId())
-            );
-            self::assertTrue($wasHeld);
-            self::assertEquals(Order::STATE_HOLDED, $order->getState());
+    /**
+     * @throws \Exception
+     */
+    public static function createOrders(): void
+    {
+        // reset previously created orders
+        self::$deliverableOrders = [];
+        self::$undeliverableOrders = [];
+
+        // create two orders per type
+        for ($i = 0; $i < 2; $i++) {
+            $deliverableOrder = OrderBuilder::anOrder()
+                ->withAnalysisStatus(AnalysisStatusUpdater::DELIVERABLE)
+                ->withShippingMethod('flatrate_flatrate')
+                ->build();
+
+            $undeliverableOrder = OrderBuilder::anOrder()
+                ->withAnalysisStatus(AnalysisStatusUpdater::UNDELIVERABLE)
+                ->withShippingMethod('flatrate_flatrate')
+                ->build();
+
+            self::$deliverableOrders[$deliverableOrder->getEntityId()] = $deliverableOrder;
+            self::$undeliverableOrders[$undeliverableOrder->getEntityId()] = $undeliverableOrder;
         }
     }
 
     /**
-     * Test covers case where analyse status code for order is deliverable.
+     * Change order status to "on hold" if applicable.
      *
-     * assert that order status is NOT on hold
+     * - assert that order status is changed for undeliverable addresses
+     * - assert that order status remains the same for deliverable addresses
      *
      * @test
-     * @magentoDataFixture createAnalysisResultsWithDeliverableStatus
+     * @magentoDataFixture createOrders
      */
-    public function holdNonDeliverableNotApplicable(): void
+    public function updateStatus(): void
     {
         /** @var OrderUpdater $orderUpdater */
         $orderUpdater = Bootstrap::getObjectManager()->create(OrderUpdater::class);
         /** @var AnalysisResultRepository $resultRepo */
-        $resultRepo = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
+        $resultRepository = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
 
-        foreach (self::$orders as $order) {
-            $wasHeld = $orderUpdater->holdIfNonDeliverable(
-                $order,
-                $resultRepo->getByAddressId((int) $order->getShippingAddressId())
-            );
-            self::assertFalse($wasHeld);
-            self::assertNotEquals(Order::STATE_HOLDED, $order->getState());
+        $orders = self::$deliverableOrders + self::$undeliverableOrders;
+        foreach ($orders as $orderId => $order) {
+            $orderState = $order->getState();
+
+            $analysisResult = $resultRepository->getByAddressId((int) $order->getData('shipping_address_id'));
+            $isUpdated = $orderUpdater->holdIfNonDeliverable($order, $analysisResult);
+
+            if (isset(self::$undeliverableOrders[$orderId])) {
+                self::assertTrue($isUpdated);
+                self::assertEquals(Order::STATE_HOLDED, $order->getState());
+            } else {
+                self::assertFalse($isUpdated);
+                self::assertEquals($orderState, $order->getState());
+            }
         }
     }
 
     /**
-     * Test covers case where analyse status code for order is not deliverable and order is canceled.
+     * Cancel order if applicable.
      *
-     * assert that order is canceled
+     * - assert that order with undeliverable address is cancelled
+     * - assert that order deliverable address remains open
      *
      * @test
-     * @magentoDataFixture createAnalysisResultsWithUndeliverableStatus
+     * @magentoDataFixture createOrders
      */
-    public function cancelUndeliverableSucccess(): void
+    public function cancelOrder(): void
     {
         /** @var OrderUpdater $orderUpdater */
         $orderUpdater = Bootstrap::getObjectManager()->create(OrderUpdater::class);
         /** @var AnalysisResultRepository $resultRepo */
-        $resultRepo = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
+        $resultRepository = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
 
-        foreach (self::$orders as $order) {
-            $analysisResult = $resultRepo->getByAddressId((int) $order->getData('shipping_address_id'));
+        $orders = self::$deliverableOrders + self::$undeliverableOrders;
+        foreach ($orders as $orderId => $order) {
+            $analysisResult = $resultRepository->getByAddressId((int) $order->getData('shipping_address_id'));
             $wasCancelled = $orderUpdater->cancelIfUndeliverable($order, $analysisResult);
 
-            self::assertTrue($wasCancelled);
-            self::assertTrue($order->isCanceled());
-        }
-    }
-
-    /**
-     * Test covers case where analyse status code for order is not deliverable and order is canceled.
-     *
-     * assert that order is NOT canceled
-     *
-     * @test
-     * @magentoDataFixture createAnalysisResultsWithDeliverableStatus
-     */
-    public function cancelUndeliverableNotApplicable(): void
-    {
-        /** @var OrderUpdater $orderUpdater */
-        $orderUpdater = Bootstrap::getObjectManager()->create(OrderUpdater::class);
-        /** @var AnalysisResultRepository $resultRepo */
-        $resultRepo = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
-
-        foreach (self::$orders as $order) {
-            $wasCancelled = $orderUpdater->cancelIfUndeliverable(
-                $order,
-                $resultRepo->getByAddressId((int) $order->getShippingAddressId())
-            );
-            self::assertFalse($wasCancelled);
-            self::assertFalse($order->isCanceled());
+            if (isset(self::$undeliverableOrders[$orderId])) {
+                self::assertTrue($wasCancelled);
+                self::assertTrue($order->isCanceled());
+            } else {
+                self::assertFalse($wasCancelled);
+                self::assertFalse($order->isCanceled());
+            }
         }
     }
 }
