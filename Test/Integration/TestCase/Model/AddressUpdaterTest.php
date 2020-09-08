@@ -13,7 +13,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PostDirekt\Addressfactory\Model\AddressUpdater;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\AnalysisFixture;
+use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
+use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderBuilder;
 use PostDirekt\Sdk\AddressfactoryDirect\Service\ServiceFactory;
 
 class AddressUpdaterTest extends TestCase
@@ -28,10 +29,17 @@ class AddressUpdaterTest extends TestCase
      */
     public static function createAnalysisResults(): void
     {
-        self::$orders = [
-            AnalysisFixture::createDeliverableAnalyzedOrder(),
-            AnalysisFixture::createUndeliverableAnalyzedOrder()
-        ];
+        $deliverableOrder = OrderBuilder::anOrder()
+            ->withAnalysisStatus(AnalysisStatusUpdater::DELIVERABLE)
+            ->withShippingMethod('flatrate_flatrate')
+            ->build();
+
+        $undeliverableOrder = OrderBuilder::anOrder()
+            ->withAnalysisStatus(AnalysisStatusUpdater::UNDELIVERABLE)
+            ->withShippingMethod('flatrate_flatrate')
+            ->build();
+
+        self::$orders = [$deliverableOrder, $undeliverableOrder];
     }
 
     /**
@@ -45,7 +53,6 @@ class AddressUpdaterTest extends TestCase
      */
     public function updateSuccess(): void
     {
-
         /** @var ServiceFactory|MockObject $mockServiceFactory */
         $mockServiceFactory = $this->getMockBuilder(ServiceFactory::class)
             ->disableOriginalConstructor()
@@ -76,5 +83,4 @@ class AddressUpdaterTest extends TestCase
             self::assertEquals($savedOrder->getPostcode(), $analysisResult->getPostalCode());
         }
     }
-
 }

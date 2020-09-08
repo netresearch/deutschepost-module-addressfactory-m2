@@ -85,50 +85,54 @@ wiki2pdf:
             - ./*.pdf
 
 # Crucial tests (lowest Mage+PHP + highest Mage+PHP)
-phpunit-7.1-ce2.3:
-    variables:
-        PHP_VERSION: "7.1"
-        MAGENTO_TAG_VERSION: "2.3"
-        MAGENTO_EDITION: "ce"
+phpunit-essential-2.3:
+    stage: test
     extends: .phpunit
     only:
         - develop
         - master
         - /^(release|hotfix)-.*$/
         - merge_requests
+    variables:
+        PHP_VERSION: "7.1"
+        MAGENTO_TAG_VERSION: "2.3"
+        MAGENTO_EDITION: "ce"
+
+phpunit-essential-2.4:
+    stage: test
+    extends: .phpunit
+    only:
+        - develop
+        - master
+        - /^(release|hotfix)-.*$/
+        - merge_requests
+    parallel:
+        matrix:
+            - PHP_VERSION: "7.4"
+              MAGENTO_TAG_VERSION: "2.4"
+              MAGENTO_EDITION: [ "ee", "ce" ]
+
 
 # Additional tests (in between versions of Magento or PHP)
-phpunit-7.2-ce2.3:
-    variables:
-        PHP_VERSION: "7.2"
-        MAGENTO_TAG_VERSION: "2.3"
-        MAGENTO_EDITION: "ce"
-    extends: .phpunit
+phpunit-additional-2.3:
     stage: test-additional
+    extends: .phpunit
+    parallel:
+        matrix:
+            - PHP_VERSION: ["7.2", "7.3"]
+              MAGENTO_TAG_VERSION: "2.3"
+              MAGENTO_EDITION: ["ee", "ce"]
 
-phpunit-7.2-ee2.3:
-    variables:
-        PHP_VERSION: "7.2"
-        MAGENTO_TAG_VERSION: "2.3"
-        MAGENTO_EDITION: "ee"
-    extends: .phpunit
-    stage: test-additional
 
-phpunit-7.3-ce2.3:
-    variables:
-        PHP_VERSION: "7.3"
-        MAGENTO_TAG_VERSION: "2.3"
-        MAGENTO_EDITION: "ce"
-    extends: .phpunit
+phpunit-additional-2.4:
     stage: test-additional
+    extends: .phpunit
+    parallel:
+        matrix:
+            - PHP_VERSION: "7.3"
+              MAGENTO_TAG_VERSION: "2.4"
+              MAGENTO_EDITION: ["ee", "ce"]
 
-phpunit-7.3-ee2.3:
-    variables:
-        PHP_VERSION: "7.3"
-        MAGENTO_TAG_VERSION: "2.3"
-        MAGENTO_EDITION: "ee"
-    extends: .phpunit
-    stage: test-additional
 
 # MFTF tests
 #mftf-2.3.0:
@@ -166,6 +170,10 @@ phpunit-7.3-ee2.3:
 .phpunit:
     extends: .installationcheck
     stage: test
+    only:
+        - develop
+        - master
+        - /^(release|hotfix)-.*$/
     script:
         - ci-install
         - ci-phpunit-docker Test/Integration/phpunit.xml

@@ -7,13 +7,15 @@ declare(strict_types=1);
 namespace PostDirekt\Addressfactory\Test\Integration\TestCase\Model;
 
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Model\Order;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PostDirekt\Addressfactory\Model\AddressAnalysis;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\AnalysisFixture;
+use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
+use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderBuilder;
 use PostDirekt\Addressfactory\Test\Integration\TestDouble\AddressVerificationServiceStub;
 use PostDirekt\Sdk\AddressfactoryDirect\Service\AddressVerificationService\Address;
 use PostDirekt\Sdk\AddressfactoryDirect\Service\AddressVerificationService\Person;
@@ -23,27 +25,39 @@ use PostDirekt\Sdk\AddressfactoryDirect\Service\ServiceFactory;
 class AddressAnalysisTest extends TestCase
 {
     /**
-     * @var Order[]
+     * @var Order
      */
-    private static $orders = [];
+    private static $deliverableOrder;
+
+    /**
+     * @var Order
+     */
+    private static $undeliverableOrder;
+
+    /**
+     * @var Order
+     */
+    private static $orderWithFailedAnalysis;
 
     /**
      * @throws \Exception
      */
-    public static function createAnalysisResults(): void
+    public static function createOrders(): void
     {
-        self::$orders = [
-            AnalysisFixture::createDeliverableAnalyzedOrder(),
-            AnalysisFixture::createUndeliverableAnalyzedOrder(),
-        ];
-    }
+        self::$deliverableOrder = OrderBuilder::anOrder()
+            ->withAnalysisStatus(AnalysisStatusUpdater::DELIVERABLE)
+            ->withShippingMethod('flatrate_flatrate')
+            ->build();
 
-    /**
-     * @throws \Exception
-     */
-    public static function createPartialAnalysisResult(): void
-    {
-        self::$orders = AnalysisFixture::createMixedAnalyzedOrders();
+        self::$undeliverableOrder = OrderBuilder::anOrder()
+            ->withAnalysisStatus(AnalysisStatusUpdater::UNDELIVERABLE)
+            ->withShippingMethod('flatrate_flatrate')
+            ->build();
+
+        self::$orderWithFailedAnalysis = OrderBuilder::anOrder()
+            ->withAnalysisStatus(AnalysisStatusUpdater::ANALYSIS_FAILED)
+            ->withShippingMethod('flatrate_flatrate')
+            ->build();
     }
 
     /**
@@ -53,102 +67,105 @@ class AddressAnalysisTest extends TestCase
      * assert that webservice is not invoked.
      *
      * @test
-     * @magentoDataFixture createAnalysisResults
+     * @magentoDataFixture createOrders
      * @throws LocalizedException
      */
-    public function allAddressesAreAnalyzed(): void
+    public function analysisResultFromDb(): void
     {
-        /** @var Order\Address[] $addresses */
-        $addresses = [];
-        foreach (self::$orders as $order) {
-            $addresses[] = $order->getShippingAddress();
-        }
+        $orders = [self::$deliverableOrder, self::$undeliverableOrder];
+
+        /** @var OrderAddressInterface[] $addresses */
+        $addresses = array_map(
+            function (Order $order) {
+                return $order->getShippingAddress();
+            },
+            $orders
+        );
 
         /** @var ServiceFactory|MockObject $mockServiceFactory */
-        $mockServiceFactory = $this->getMockBuilder(ServiceFactory::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $mockServiceFactory
-            ->expects(static::never())
-            ->method('createAddressVerificationService');
+        $mockServiceFactory = $this->getMockBuilder(ServiceFactory::class)->disableOriginalConstructor()->getMock();
+        $mockServiceFactory->expects(static::never())->method('createAddressVerificationService');
 
         /** @var AddressAnalysis $addressAnalysis */
         $addressAnalysis = Bootstrap::getObjectManager()->create(
             AddressAnalysis::class,
-            [
-                'serviceFactory' => $mockServiceFactory
-            ]
+            ['serviceFactory' => $mockServiceFactory]
         );
+
         $result = $addressAnalysis->analyse($addresses);
 
-        self::assertCount(2, $result);
+        self::assertCount(count($addresses), $result, 'Number of analysis results does not match requested addresses');
 
-        /** @var AnalysisResultRepository $resultRepo */
-        $resultRepo = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
+        /** @var AnalysisResultRepository $resultRepository */
+        $resultRepository = Bootstrap::getObjectManager()->create(AnalysisResultRepository::class);
         foreach ($addresses as $address) {
-            $analysisResult = $resultRepo->getByAddressId((int) $address->getEntityId());
-            self::assertEquals(
-                $analysisResult->getCity(),
-                $result[$address->getEntityId()]->getCity()
-            );
+            $analysisResult = $resultRepository->getByAddressId((int) $address->getEntityId());
+            self::assertEquals($analysisResult->getCity(), $result[$address->getEntityId()]->getCity());
         }
     }
 
     /**
      * Test covers case where some addresses are already analyzed and some need be analyzed from webservice.
      *
-     * assert that returned analysisResult includes fixtures
-     * assert that returned analysisResult includes record response from webservice
+     * - Assert that returned analysis result includes fixture from db.
+     * - Assert that returned analysis result includes record response from web service.
      *
      * @test
-     * @magentoDataFixture createPartialAnalysisResult
+     * @magentoDataFixture createOrders
+     *
      * @throws LocalizedException
      */
-    public function someAddressesAreAnalyzed(): void
+    public function analysisResultFromDbAndWs(): void
     {
-        $addresses = [];
-        foreach (self::$orders as $order) {
-            $addresses[] = $order->getShippingAddress();
-        }
+        $orders = [self::$deliverableOrder, self::$orderWithFailedAnalysis];
 
-        $person = new Person(
-            'Herr',
-            'Hans',
-            'Muller',
-            ['testCompany'],
-            'testPrefix',
-            'testSufix',
-            'testAcademicTitle',
-            'testTitleOfNobility',
-            'M',
-            'testPostNumber'
+        $wsRecord = new Record(
+            (int) self::$orderWithFailedAnalysis->getData('shipping_address_id'),
+            new Person(
+                'Herr',
+                'Hans',
+                'Muller',
+                ['testCompany'],
+                'testPrefix',
+                'testSuffix',
+                'testAcademicTitle',
+                'testTitleOfNobility',
+                'M',
+                'testPostNumber'
+            ),
+            new Address(
+                'Deutschland',
+                '53114',
+                'NRW',
+                'testRegion',
+                'testDistrict',
+                'testMunicipality',
+                'Bonn',
+                'testCityAddition',
+                'testUrbanDistrict',
+                'Sträßchenweg',
+                '10',
+                'A',
+                'testAddressAddition',
+                'testDeliveryInstruction'
+            )
         );
 
-        $address = new Address(
-            'Deutschland',
-            '53114',
-            'NRW',
-            'testRegion',
-            'testDistrict',
-            'testMunicipality',
-            'Bonn',
-            'testCityAddition',
-            'testUrbanDistrict',
-            'Sträßchenweg',
-            '10',
-            'A',
-            'testAddressAddition',
-            'testDeliveryInstruction'
+        /** @var OrderAddressInterface[] $addresses */
+        $addresses = array_map(
+            function (Order $order) {
+                return $order->getShippingAddress();
+            },
+            $orders
         );
 
-        $testRecord = new Record((int) $addresses[0]->getEntityId(), $person, $address);
         $addressVerificationServiceStub = new AddressVerificationServiceStub();
-        $addressVerificationServiceStub->records = [$testRecord];
+        $addressVerificationServiceStub->records = [$wsRecord];
 
         /** @var ServiceFactory|MockObject $mockServiceFactory */
         $mockServiceFactory = $this->getMockBuilder(ServiceFactory::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+                                   ->disableOriginalConstructor()
+                                   ->getMock();
         $mockServiceFactory
             ->expects(static::once())
             ->method('createAddressVerificationService')
@@ -157,46 +174,54 @@ class AddressAnalysisTest extends TestCase
         /** @var AddressAnalysis $addressAnalysis */
         $addressAnalysis = Bootstrap::getObjectManager()->create(
             AddressAnalysis::class,
-            [
-                'serviceFactory' => $mockServiceFactory
-            ]
+            ['serviceFactory' => $mockServiceFactory]
         );
 
-        $results = $addressAnalysis->analyse($addresses);
+        $result = $addressAnalysis->analyse($addresses);
 
-        // assert one out of thee records was retrieved from web service
-        self::assertSame(1, $addressVerificationServiceStub->getRequestedRecordsCount());
+        $requestedRecordsCount = $addressVerificationServiceStub->getRequestedRecordsCount();
+        self::assertSame(1, $requestedRecordsCount, 'Number of results retrieved from web service does not match.');
+        self::assertCount(count($addresses), $result, 'Total number of results does not match requested addresses');
 
-        self::assertArrayHasKey($testRecord->getRecordId(), $results, 'AnalysisResult from the API is missing from results');
-        self::assertArrayHasKey($addresses[0]->getEntityId(), $results, 'AnalysisResult from the DB is missing from results');
-        self::assertCount(3, $results);
+        foreach ($addresses as $address) {
+            self::assertArrayHasKey($address->getEntityId(), $result);
+            $addressResult = $result[$address->getEntityId()];
 
-        $resultOne = $results[$testRecord->getRecordId()];
-        $resultTwo = $results[$addresses[0]->getEntityId()];
-
-        self::assertEquals($testRecord->getRecordId(), $resultOne->getOrderAddressId());
-        self::assertEquals($testRecord->getAddress()->getCity(), $resultOne->getCity());
-
-        self::assertEquals($addresses[0]->getEntityId(), $resultTwo->getOrderAddressId());
-        self::assertEquals($addresses[0]->getCity(), $resultTwo->getCity());
+            if ((int) $address->getEntityId() === $wsRecord->getRecordId()) {
+                // compare result with ws data if analyzed just now
+                self::assertEquals($addressResult->getOrderAddressId(), $wsRecord->getRecordId());
+                self::assertEquals($addressResult->getCity(), $wsRecord->getAddress()->getCity());
+            } else {
+                // compare result with fixture address if already analyzed before
+                self::assertEquals($addressResult->getOrderAddressId(), $address->getEntityId());
+            }
+        }
     }
 
     /**
-     * Test covers case where some addresses are already analyzed and some need be analyzed from webservice,
-     * but webservice returns an error response.
+     * Test web service failure.
      *
-     * assert that only the analysis result from our table is in the result.
+     * Test covers case where some addresses are already analyzed
+     * and some need be analyzed from webservice, but webservice
+     * returns an error response.
      *
      * @test
-     * @magentoDataFixture createPartialAnalysisResult
-     * @throws LocalizedException
+     * @magentoDataFixture createOrders
      */
     public function analyzeRequestFails(): void
     {
-        $addresses = [];
-        foreach (self::$orders as $order) {
-            $addresses[] = $order->getShippingAddress();
-        }
+        $this->expectException(LocalizedException::class);
+        $this->expectExceptionMessage(__('Service exception: %1', 'no records')->render());
+
+        $orders = [self::$deliverableOrder, self::$undeliverableOrder, self::$orderWithFailedAnalysis];
+
+        /** @var OrderAddressInterface[] $addresses */
+        $addresses = array_map(
+            function (Order $order) {
+                return $order->getShippingAddress();
+            },
+            $orders
+        );
 
         $addressVerificationServiceStub = new AddressVerificationServiceStub();
         $addressVerificationServiceStub->records = [];
@@ -213,13 +238,8 @@ class AddressAnalysisTest extends TestCase
         /** @var AddressAnalysis $addressAnalysis */
         $addressAnalysis = Bootstrap::getObjectManager()->create(
             AddressAnalysis::class,
-            [
-                'serviceFactory' => $mockServiceFactory
-            ]
+            ['serviceFactory' => $mockServiceFactory]
         );
-
-        $this->expectException(LocalizedException::class);
-        $this->expectExceptionMessage(__('Service exception: %1', 'no records')->render());
 
         $addressAnalysis->analyse($addresses);
     }

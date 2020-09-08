@@ -31,7 +31,6 @@ class AddressVerificationServiceStub implements AddressVerificationServiceInterf
 
     public function closeSession(string $sessionId): void
     {
-        return;
     }
 
     public function getRecordByAddress(

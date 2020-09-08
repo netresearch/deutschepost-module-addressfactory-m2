@@ -13,13 +13,14 @@ use PHPUnit\Framework\TestCase;
 use Magento\TestFramework\Helper\Bootstrap;
 use PostDirekt\Addressfactory\Model\AnalysisStatus;
 use PostDirekt\Addressfactory\Model\AnalysisStatusRepository;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\AddressDe;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\Data\SimpleProduct;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderFixture;
+use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderBuilder;
 
 class AnalysisStatusRepositoryTest extends TestCase
 {
-    protected static $order;
+    /**
+     * @var Order
+     */
+    private static $order;
 
     /**
      * Create order fixture for DE recipient address.
@@ -28,12 +29,7 @@ class AnalysisStatusRepositoryTest extends TestCase
      */
     public static function createOrder(): void
     {
-        $shippingMethod = 'flatrate_flatrate';
-        self::$order = OrderFixture::createOrder(
-            new AddressDe(),
-            [new SimpleProduct()],
-            $shippingMethod
-        );
+        self::$order = OrderBuilder::anOrder()->withShippingMethod('flatrate_flatrate')->build();
     }
 
     /**
@@ -45,11 +41,8 @@ class AnalysisStatusRepositoryTest extends TestCase
      */
     public function saveAnalysisStatusAndGetByOrderId(): void
     {
-        /** @var Order $order */
-        $order = self::$order;
-
         $data = ['data' => [
-            AnalysisStatus::ORDER_ID => $order->getEntityId(),
+            AnalysisStatus::ORDER_ID => self::$order->getEntityId(),
             AnalysisStatus::STATUS => 'anyStatus'
         ]];
 
@@ -58,8 +51,8 @@ class AnalysisStatusRepositoryTest extends TestCase
         /** @var AnalysisStatusRepository $repository */
         $repository = Bootstrap::getObjectManager()->create(AnalysisStatusRepository::class);
         $repository->save($analysisStatus);
-        static::assertEquals($order->getEntityId(), $analysisStatus->getOrderId());
-        $result = $repository->getByOrderId((int) $order->getEntityId());
+        static::assertEquals(self::$order->getEntityId(), $analysisStatus->getOrderId());
+        $result = $repository->getByOrderId((int) self::$order->getEntityId());
         static::assertEquals($result->getOrderId(), $analysisStatus->getOrderId());
     }
 }

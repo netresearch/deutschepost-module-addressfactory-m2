@@ -18,7 +18,7 @@ use PostDirekt\Addressfactory\Cron\AutoProcess;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
 use PostDirekt\Addressfactory\Model\AnalysisStatusRepository;
 use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
-use PostDirekt\Addressfactory\Test\Integration\Fixture\AnalysisFixture;
+use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderBuilder;
 use PostDirekt\Addressfactory\Test\Integration\TestDouble\AddressVerificationServiceFactory;
 use PostDirekt\Addressfactory\Test\Integration\TestDouble\AddressVerificationServiceStub;
 use PostDirekt\Sdk\AddressfactoryDirect\Api\AddressVerificationServiceInterface;
@@ -29,8 +29,6 @@ use PostDirekt\Sdk\AddressfactoryDirect\Service\AddressVerificationService\Perso
 use PostDirekt\Sdk\AddressfactoryDirect\Service\AddressVerificationService\Record;
 
 /**
- * Class AutoProcessTest
- *
  * @magentoAppArea crontab
  * @magentoAppIsolation enabled
  * @magentoDbIsolation enabled
@@ -50,7 +48,7 @@ class AutoProcessTest extends TestCase
     /**
      * Replace SDK service by stub implementation
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         Bootstrap::getObjectManager()->configure(
             [
@@ -69,7 +67,13 @@ class AutoProcessTest extends TestCase
      */
     public static function createPendingOrders(): void
     {
-        self::$pendingOrders = AnalysisFixture::createPendingOrders();
+        // create three pending orders
+        $orders = [];
+        for ($i = 0; $i < 3; $i++) {
+            $orders[] = OrderBuilder::anOrder()->withShippingMethod('flatrate_flatrate')->build();
+        }
+
+        self::$pendingOrders = $orders;
     }
 
     /**
@@ -77,7 +81,21 @@ class AutoProcessTest extends TestCase
      */
     public static function createAnalyzedOrders(): void
     {
-        self::$analyzedOrders = AnalysisFixture::createMixedAnalyzedOrders();
+        $analysisStatus = [
+            AnalysisStatusUpdater::DELIVERABLE,
+            AnalysisStatusUpdater::UNDELIVERABLE,
+            AnalysisStatusUpdater::ANALYSIS_FAILED
+        ];
+
+        self::$analyzedOrders = array_map(
+            function (string $analysisStatus) {
+                OrderBuilder::anOrder()
+                    ->withAnalysisStatus($analysisStatus)
+                    ->withShippingMethod('flatrate_flatrate')
+                    ->build();
+            },
+            $analysisStatus
+        );
     }
 
     /**
