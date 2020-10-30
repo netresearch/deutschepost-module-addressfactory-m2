@@ -61,7 +61,7 @@ Logging,Logging
 "Order(s) %1 were successfully updated.","Bestellung(en) %1 wurden erfolgreich aktualisiert"
 "Other Actions","Weitere Aktionen"
 Pending,Ausstehend
-"Perform Shipping Address Check","Versandadressen-Prüfung durchführen"
+"Perform Shipping Address Check","Versandadresse prüfen"
 Person,Person
 "Possibly deliverable","Möglicherweise zustellbar"
 "Postal code",PLZ
