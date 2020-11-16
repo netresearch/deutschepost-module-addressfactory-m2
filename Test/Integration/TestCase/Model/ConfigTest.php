@@ -48,7 +48,6 @@ class ConfigTest extends TestCase
         /** @var StoreInterface $store */
         $store = Bootstrap::getObjectManager()->create(StoreInterface::class);
 
-        self::assertSame('1.0.0', $subject->getModuleVersion());
         self::assertSame('', $subject->getMandateName($store->getCode()));
         self::assertSame('400', $subject->getLogLevel($store->getCode()));
         self::assertSame('', $subject->getConfigurationName($store->getCode()));

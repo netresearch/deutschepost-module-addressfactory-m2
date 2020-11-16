@@ -8,7 +8,7 @@
     <default>
         <postdirekt>
             <addressfactory>
-                <version>1.0.0</version>
+                <version>1.1.0</version>
                 <log_level>400</log_level>
                 <automatic_address_analysis>1</automatic_address_analysis>
             </addressfactory>
