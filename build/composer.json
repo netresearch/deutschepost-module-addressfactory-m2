@@ -1,7 +1,7 @@
 {
     "name": "postdirekt/module-addressfactory-m2-meta",
     "description": "Metapackage for testing the postdirekt addressfactory module",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "type": "metapackage",
     "require": {
         "tddwizard/magento2-fixtures": "^0.11.0"
