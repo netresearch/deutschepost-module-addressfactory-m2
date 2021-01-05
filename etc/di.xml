@@ -103,4 +103,7 @@
     <type name="Magento\Sales\Model\ResourceModel\Order\Address\Collection">
         <plugin name="postdirekt_addressfactory_add_analysis_to_order_address" type="PostDirekt\Addressfactory\Plugin\AddAnalysisToAddressCollection"/>
     </type>
+    <type name="Magento\Sales\Model\ResourceModel\Order\Collection">
+        <plugin name="postdirekt_addressfactory_add_filter_mapping_to_order_collection" type="PostDirekt\Addressfactory\Plugin\Sales\OrderCollectionPlugin"/>
+    </type>
 </config>
