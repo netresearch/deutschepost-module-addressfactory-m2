@@ -88,7 +88,7 @@ Undeliverable,Undeliverable
 "You must also have Magento general logging enabled. Attention: Logs can contain sensitive customer data! Logging should only be activated for troubleshooting purposes. The logs should be deleted regularly.","You must also have Magento general logging enabled. Attention: Logs can contain sensitive customer data! Logging should only be activated for troubleshooting purposes. The logs should be deleted regularly."
 "You need a valid Deutsche Post Direkt account.","You need a valid Deutsche Post Direkt account."
 "address type changed","address type changed"
-ambigouus,ambigouus
+ambiguous,ambiguous
 "corrected marginally","corrected marginally"
 "corrected significantly","corrected significantly"
 different,different

@@ -184,7 +184,7 @@ class DeliverabilityCodes
             '141' => __('matched in fake-name list'),
             '500' => __('not found'), // "not matched"
             '501' => __('not filled'),
-            '503' => __('ambigouus'),
+            '503' => __('ambiguous'),
             '504' => __('is foreign address'),
             '505' => __('incorporated'),
             '506' => __('is company address'),
