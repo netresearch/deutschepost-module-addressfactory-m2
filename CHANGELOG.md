@@ -4,7 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## 1.1.0
+## 1.1.2
+
+### Fixed
+
+- Fix typo, contributed by [@sprankhub](https://github.com/sprankhub) via [PR #2](https://github.com/netresearch/deutschepost-module-addressfactory-m2/pull/2)
+
+## 1.1.1
 
 ### Fixed
 
