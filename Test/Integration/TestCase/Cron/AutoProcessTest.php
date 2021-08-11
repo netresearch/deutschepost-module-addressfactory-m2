@@ -126,6 +126,10 @@ class AutoProcessTest extends TestCase
                                 null,
                                 null,
                                 null,
+                                null,
+                                null,
+                                null,
+                                null,
                                 [],
                                 ['PDC050500', 'PDC040106']
                             );
@@ -135,6 +139,10 @@ class AutoProcessTest extends TestCase
                                 (int) $shippingAddress->getEntityId(),
                                 new Person('', 'Colin', 'Correct'),
                                 new Address('DE', '11111', '', '', '', '', 'Goodinborough', '', '', 'Gutenberg Ave.', '1'),
+                                null,
+                                null,
+                                null,
+                                null,
                                 null,
                                 null,
                                 null,

@@ -17,6 +17,7 @@ use PostDirekt\Sdk\AddressfactoryDirect\Api\Data\RecordInterface;
 use PostDirekt\Sdk\AddressfactoryDirect\Api\ServiceFactoryInterface;
 use PostDirekt\Sdk\AddressfactoryDirect\Exception\AuthenticationException;
 use PostDirekt\Sdk\AddressfactoryDirect\Exception\ServiceException;
+use PostDirekt\Addressfactory\Model\Analysis\ResponseMapper;
 use PostDirekt\Sdk\AddressfactoryDirect\Model\RequestType\InRecordWSType;
 use PostDirekt\Sdk\AddressfactoryDirect\RequestBuilder\RequestBuilder;
 use Psr\Log\LoggerInterface;
@@ -54,14 +55,9 @@ class AddressAnalysis
     private $logger;
 
     /**
-     * @var AnalysisResultInterfaceFactory
+     * @var ResponseMapper
      */
-    private $analysisResultFactory;
-
-    /**
-     * @var SearchCriteriaBuilder
-     */
-    private $searchCriteriaBuilder;
+    private $recordResponseMapper;
 
     public function __construct(
         AnalysisResultRepository $analysisResultRepository,
@@ -70,8 +66,7 @@ class AddressAnalysis
         CoreConfig $coreConfig,
         Config $moduleConfig,
         LoggerInterface $logger,
-        AnalysisResultInterfaceFactory $analysisResultFactory,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        ResponseMapper $recordResponseMapper
     ) {
         $this->analysisResultRepository = $analysisResultRepository;
         $this->serviceFactory = $serviceFactory;
@@ -79,8 +74,7 @@ class AddressAnalysis
         $this->coreConfig = $coreConfig;
         $this->moduleConfig = $moduleConfig;
         $this->logger = $logger;
-        $this->analysisResultFactory = $analysisResultFactory;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->recordResponseMapper = $recordResponseMapper;
     }
 
     /**
@@ -95,11 +89,7 @@ class AddressAnalysis
             $addressIds[] = $address->getEntityId();
         }
 
-        $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter(AnalysisResult::ORDER_ADDRESS_ID, $addressIds, 'in')
-            ->create();
-
-        $analysisResults = $this->analysisResultRepository->getList($searchCriteria)->getItems();
+        $analysisResults = $this->analysisResultRepository->getListByAddressIds($addressIds);
         /** @var InRecordWSType[] $recordRequests */
         $recordRequests = array_reduce(
             $addresses,
@@ -130,7 +120,7 @@ class AddressAnalysis
                 $this->moduleConfig->getConfigurationName(),
                 $this->moduleConfig->getMandateName()
             );
-            $newAnalysisResults = $this->mapRecordsResponse($records);
+            $newAnalysisResults = $this->recordResponseMapper->mapRecordsResponse($records);
             $this->analysisResultRepository->saveList($newAnalysisResults);
         } catch (AuthenticationException $exception) {
             throw new LocalizedException(__('Authentication error.', $exception->getMessage()), $exception);
@@ -146,39 +136,9 @@ class AddressAnalysis
         return $analysisResults;
     }
 
-    /**
-     * @param RecordInterface[] $records
-     * @return AnalysisResultInterface[]
-     */
-    private function mapRecordsResponse(array $records): array
-    {
-        $newAnalysisResults = [];
-        foreach ($records as $record) {
-            $data = [];
-            if ($record->getAddress()) {
-                $data[AnalysisResultInterface::POSTAL_CODE] = $record->getAddress()->getPostalCode();
-                $data[AnalysisResultInterface::CITY] = $record->getAddress()->getCity();
-                $data[AnalysisResultInterface::STREET] = $record->getAddress()->getStreetName();
-                $data[AnalysisResultInterface::STREET_NUMBER] = trim(implode(' ', [
-                    $record->getAddress()->getStreetNumber(),
-                    $record->getAddress()->getStreetNumberAddition()
-                ]));
-            }
-            $data[AnalysisResultInterface::FIRST_NAME] = $record->getPerson() ?
-                $record->getPerson()->getFirstName() : '';
-            $data[AnalysisResultInterface::LAST_NAME] = $record->getPerson() ? $record->getPerson()->getLastName() : '';
-            $data[AnalysisResultInterface::ORDER_ADDRESS_ID] = $record->getRecordId();
-            $data[AnalysisResultInterface::STATUS_CODE] = implode(',', $record->getStatusCodes());
-            $newAnalysisResult = $this->analysisResultFactory->create(['data' => $data]);
-            $newAnalysisResults[$newAnalysisResult->getOrderAddressId()] = $newAnalysisResult;
-        }
-
-        return $newAnalysisResults;
-    }
-
     private function buildRequest(OrderAddressInterface $address): InRecordWSType
     {
-        $this->requestBuilder->setMetadata((int)$address->getEntityId());
+        $this->requestBuilder->setMetadata((int) $address->getEntityId());
         $this->requestBuilder->setAddress(
             $address->getCountryId(),
             $address->getPostcode(),

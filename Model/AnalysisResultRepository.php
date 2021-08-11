@@ -8,6 +8,7 @@ namespace PostDirekt\Addressfactory\Model;
 
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -39,16 +40,23 @@ class AnalysisResultRepository
      */
     private $collectionProcessor;
 
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+
     public function __construct(
         AnalysisResultResource $resource,
         AnalysisResultInterfaceFactory $analysisResultFactory,
         SearchResultFactory $searchResultFactory,
-        CollectionProcessorInterface $collectionProcessor
+        CollectionProcessorInterface $collectionProcessor,
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->resource = $resource;
         $this->analysisResultFactory = $analysisResultFactory;
         $this->searchResultFactory = $searchResultFactory;
         $this->collectionProcessor = $collectionProcessor;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
     /**
@@ -66,6 +74,19 @@ class AnalysisResultRepository
         }
 
         return $analysisResult;
+    }
+
+    /**
+     * @param int[] $addressIds
+     * @return AnalysisResultInterface[]
+     */
+    public function getListByAddressIds(array $addressIds): array
+    {
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter(AnalysisResult::ORDER_ADDRESS_ID, $addressIds, 'in')
+            ->create();
+
+        return $this->getList($searchCriteria)->getItems();
     }
 
     /**

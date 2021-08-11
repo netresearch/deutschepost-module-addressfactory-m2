@@ -70,7 +70,7 @@ class UpdateOrderDeliverabilityStatus implements ObserverInterface
                 return;
             }
             $previousResult = $this->statusRepository->getByOrderId((int) $order->getId());
-            if ($this->statusUpdater->isStatusCorrectable($previousResult->getStatus())) {
+            if ($previousResult->getStatus()) {
                 $isManuallyEdited = $this->statusUpdater->setStatusManuallyEdited((int) $order->getId());
                 if ($isManuallyEdited) {
                     $analysisResult = $this->resultRepository->getByAddressId(
