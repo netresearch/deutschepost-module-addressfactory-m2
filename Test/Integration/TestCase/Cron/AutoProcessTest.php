@@ -131,7 +131,7 @@ class AutoProcessTest extends TestCase
                                 null,
                                 null,
                                 [],
-                                ['PDC050500', 'PDC040106']
+                                ['PDC050500', 'PDC040106', 'FNC040106']
                             );
                         } else {
                             // response with deliverable indicator

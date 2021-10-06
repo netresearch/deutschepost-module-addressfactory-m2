@@ -11,7 +11,6 @@ class ResponseMapper
     public const PARCELSTATION = 'Packstation';
     public const POSTSTATION = 'Postfiliale';
     public const POSTFACH = 'Postfach';
-    public const BULKRECEIVER = 'Großempfänger';
 
     /**
      * @var AnalysisResultInterfaceFactory
@@ -19,12 +18,22 @@ class ResponseMapper
     private $analysisResultFactory;
 
     /**
-     * @param AnalysisResultInterfaceFactory $analysisResultFactory
+     * @var AddressTypeCodeFilter
      */
-    public function __construct(AnalysisResultInterfaceFactory $analysisResultFactory)
-    {
+    private $addressTypeCodeFilter;
+
+    /**
+     * @param AnalysisResultInterfaceFactory $analysisResultFactory
+     * @param AddressTypeCodeFilter $addressTypeCodeFilter
+     */
+    public function __construct(
+        AnalysisResultInterfaceFactory $analysisResultFactory,
+        AddressTypeCodeFilter $addressTypeCodeFilter
+    ) {
         $this->analysisResultFactory = $analysisResultFactory;
+        $this->addressTypeCodeFilter = $addressTypeCodeFilter;
     }
+
 
     /**
      * @param RecordInterface[] $records
@@ -35,13 +44,13 @@ class ResponseMapper
         $newAnalysisResults = [];
         foreach ($records as $record) {
             $data = $this->mapAddressTypes($record);
-
-            $data[AnalysisResultInterface::FIRST_NAME] = $record->getPerson() ?
-                $record->getPerson()->getFirstName() : '';
+            $statusCodes = $this->addressTypeCodeFilter->filterCodes($record);
+            $data[AnalysisResultInterface::STATUS_CODE] = implode(',', $statusCodes);
+            $data[AnalysisResultInterface::FIRST_NAME] = $record->getPerson() ? $record->getPerson()->getFirstName() : '';
             $data[AnalysisResultInterface::LAST_NAME] = $record->getPerson() ? $record->getPerson()->getLastName() : '';
             $data[AnalysisResultInterface::ORDER_ADDRESS_ID] = $record->getRecordId();
-            $data[AnalysisResultInterface::STATUS_CODE] = implode(',', $record->getStatusCodes());
             $newAnalysisResult = $this->analysisResultFactory->create(['data' => $data]);
+
             $newAnalysisResults[$newAnalysisResult->getOrderAddressId()] = $newAnalysisResult;
         }
 
