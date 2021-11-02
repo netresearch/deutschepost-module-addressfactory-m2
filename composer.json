@@ -1,7 +1,7 @@
 {
     "name": "deutschepost/module-addressfactory-m2",
     "description": "Deutsche Post Direkt Addressfactory for Magento2",
-    "version": "1.1.2",
+    "version": "1.2.0",
     "type": "magento2-module",
     "license": "OSL-3.0",
     "authors": [
