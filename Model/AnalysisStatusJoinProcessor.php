@@ -20,7 +20,6 @@ class AnalysisStatusJoinProcessor implements CollectionProcessorInterface
      */
     private $analysisStatusResource;
 
-
     public function __construct(AnalysisStatusResource $analysisStatusResource)
     {
         $this->analysisStatusResource = $analysisStatusResource;

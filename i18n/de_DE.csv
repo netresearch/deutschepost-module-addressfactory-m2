@@ -19,6 +19,8 @@
 "Automatically cancel undeliverable orders.","Unzustellbare Bestellungen automatisch stornieren"
 "Automatically put on hold orders that are undeliverable, possibly deliverable, or that failed analysis.","Bestellungen automatisch zurückstellen, die unzustellbar oder eventuell zustellbar sind oder deren Analyse fehlgeschlagen ist."
 "Automatically update order shipping addresses with ADDRESSFACTORY suggestions.","Versandadressen automatisch mit ADDRESSFACTORY-Vorschlägen aktualisieren."
+"Automatic validation","Automatische Überprüfung"
+"Automatically validate manually edited addresses","Automatisches Überprüfen manuell bearbeiteter Adressen"
 "Basis for this check is the postal reference file from Deutsche Post Direkt.","Grundlage dieser Prüfung ist die Postreferenz-Datenbank von Deutsche Post Direkt."
 "Bulk receiver name",Großempfängername
 "Bulk recipient address",Großempfänder-Adresse
@@ -32,6 +34,7 @@ City,Ort
 "Correction recommended","Korrektur empfohlen"
 "Could not perform ADDRESSFACTORY DIRECT analysis for Order","ADDRESSFACTORY DIREKT-Analyse konnte nicht durchgeführt werden"
 "Could not save analysis result.","Analyse-Ergebnis konnte nicht gespeichert werden."
+"Could not delete analysis result for order address id: %1","Analyse für Bestelladresse mit Id: %1 konnte nicht gelöscht werden"
 "Could not update Order address with ADDRESSFACTORY DIRECT suggestion","Bestelladresse konnte nicht mit ADDRESSFACTORY DIRECT-Vorschlag aktualisiert werden"
 Country,Land
 Deliverable,Zustellbar
@@ -48,6 +51,7 @@ Household,Haushalt
 Logging,Logging
 "Mandate Name",Mandanten-Name
 "Manually Edit Address","Adresse manuell ändern"
+"Manually edited","Manuell geändert"
 "Module version:",Modulversion
 "No Automatic Analysis","Keine automatische Analyse"
 "Non-deliverable Order put on hold","Nicht-zustellbare Bestellung zurückgestellt"

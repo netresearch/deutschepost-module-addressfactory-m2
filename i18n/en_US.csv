@@ -19,6 +19,8 @@
 "Automatically cancel undeliverable orders.","Automatically cancel undeliverable orders."
 "Automatically put on hold orders that are undeliverable, possibly deliverable, or that failed analysis.","Automatically put on hold orders that are undeliverable, possibly deliverable, or that failed analysis."
 "Automatically update order shipping addresses with ADDRESSFACTORY suggestions.","Automatically update order shipping addresses with ADDRESSFACTORY suggestions."
+"Automatic validation","Automatic validation"
+"Automatically validate manually edited addresses","Automatically validate manually edited addresses"
 "Basis for this check is the postal reference file from Deutsche Post Direkt.","Basis for this check is the postal reference file from Deutsche Post Direkt."
 "Bulk receiver name","Bulk receiver name"
 "Bulk recipient address","Bulk recipient address"
@@ -32,6 +34,7 @@ City,City
 "Correction recommended","Correction recommended"
 "Could not perform ADDRESSFACTORY DIRECT analysis for Order","Could not perform ADDRESSFACTORY DIRECT analysis for Order"
 "Could not save analysis result.","Could not save analysis result."
+"Could not delete analysis result for order address id: %1","Could not delete analysis result for order address id: %1"
 "Could not update Order address with ADDRESSFACTORY DIRECT suggestion","Could not update Order address with ADDRESSFACTORY DIRECT suggestion"
 Country,Country
 Deliverable,Deliverable
@@ -48,6 +51,7 @@ Household,Household
 Logging,Logging
 "Mandate Name","Mandate Name"
 "Manually Edit Address","Manually Edit Address"
+"Manually edited","Manually edited"
 "Module version:","Module version:"
 "No Automatic Analysis","No Automatic Analysis"
 "Non-deliverable Order put on hold","Non-deliverable Order put on hold"

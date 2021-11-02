@@ -56,6 +56,10 @@
                     <source_model>PostDirekt\Addressfactory\Model\Config\Source\AutomaticOptions</source_model>
                     <comment>Only use the option "Analysis on order placement" if problems occur in connection with "Analysis via Cron".</comment>
                 </field>
+                <field id="auto_validate_manual_edited" translate="label button_label" type="Netresearch\ConfigFields\Model\Type\Checkbox" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Automatic validation</label>
+                    <button_label>Automatically validate manually edited addresses</button_label>
+                </field>
             </group>
         </section>
     </system>

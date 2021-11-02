@@ -94,6 +94,11 @@
             <argument name="logger" xsi:type="object">PostDirekt\Addressfactory\Model\Logger\Virtual</argument>
         </arguments>
     </type>
+    <type name="PostDirekt\Addressfactory\Observer\UpdateOrderDeliverabilityStatus">
+        <arguments>
+            <argument name="logger" xsi:type="object">PostDirekt\Addressfactory\Model\Logger\Virtual</argument>
+        </arguments>
+    </type>
 
     <!-- # interceptor plugins -->
     <type name="Magento\Sales\Api\OrderRepositoryInterface">

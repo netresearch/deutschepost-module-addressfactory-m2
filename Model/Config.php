@@ -23,6 +23,7 @@ class Config
 
     public const CONFIG_PATH_LOGGING = 'postdirekt/addressfactory/logging';
     public const CONFIG_PATH_LOGLEVEL = 'postdirekt/addressfactory/log_level';
+    public const CONFIG_PATH_AUTO_VALIDATE_MANUALLY_EDITED = 'postdirekt/addressfactory/auto_validate_manual_edited';
 
     /**
      * @var ScopeConfigInterface
@@ -168,5 +169,18 @@ class Config
     public function isAnalysisOnOrderPlace($store = null): bool
     {
         return AutomaticOptions::ON_ORDER_PLACE === $this->getAutoAddressAnalysis($store);
+    }
+
+    /**
+     * @param string|int|null $store
+     * @return bool
+     */
+    public function isAutoValidateManuallyEdited($store = null): bool
+    {
+        return (bool) $this->scopeConfig->getValue(
+            self::CONFIG_PATH_AUTO_VALIDATE_MANUALLY_EDITED,
+            ScopeInterface::SCOPE_STORE,
+            $store
+        );
     }
 }

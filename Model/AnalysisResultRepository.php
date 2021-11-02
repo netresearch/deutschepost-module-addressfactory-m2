@@ -8,6 +8,7 @@ namespace PostDirekt\Addressfactory\Model;
 
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
+use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
@@ -113,5 +114,21 @@ class AnalysisResultRepository
         }
 
         return $searchResult;
+    }
+
+    /**
+     * @param AnalysisResultInterface $analysisResult
+     * @throws CouldNotDeleteException
+     */
+    public function delete(AnalysisResultInterface $analysisResult)
+    {
+        try {
+            $this->resource->delete($analysisResult);
+        } catch (\Exception $exception) {
+            throw new CouldNotDeleteException(
+                __('Could not delete analysis result for order address id: %1', $analysisResult->getOrderAddressId()),
+                $exception
+            );
+        }
     }
 }

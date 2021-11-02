@@ -1,7 +1,9 @@
 <?php
+
 /**
  * See LICENSE.md for license details.
  */
+
 declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Model;
@@ -22,6 +24,7 @@ class AnalysisStatusUpdater
     public const DELIVERABLE = 'deliverable';
     public const ADDRESS_CORRECTED = 'address_corrected';
     public const ANALYSIS_FAILED = 'analysis_failed';
+    public const MANUALLY_EDITED = 'manually_edited';
 
     /**
      * @var AnalysisStatusRepository
@@ -114,7 +117,6 @@ class AnalysisStatusUpdater
         return $this->updateStatus($analysisStatus);
     }
 
-
     public function setStatusPossiblyDeliverable(int $orderId): bool
     {
         $analysisStatus = $this->statusFactory->create(['data' => [
@@ -155,6 +157,16 @@ class AnalysisStatusUpdater
         return $this->updateStatus($analysisStatus);
     }
 
+    public function setStatusManuallyEdited(int $orderId): bool
+    {
+        $analysisStatus = $this->statusFactory->create(['data' => [
+            AnalysisStatus::ORDER_ID => $orderId,
+            AnalysisStatus::STATUS => self::MANUALLY_EDITED
+        ]]);
+
+        return $this->updateStatus($analysisStatus);
+    }
+
     public function getStatus(int $orderId): string
     {
         try {
@@ -164,5 +176,19 @@ class AnalysisStatusUpdater
         }
 
         return $deliverabilityStatus->getStatus();
+    }
+
+    public function isStatusCorrectable(string $status): bool
+    {
+        $correctableStatuses = [
+            self::ANALYSIS_FAILED,
+            self::UNDELIVERABLE,
+            self::POSSIBLY_DELIVERABLE,
+            self::DELIVERABLE,
+            self::CORRECTION_REQUIRED,
+            self::MANUALLY_EDITED
+        ];
+
+        return \in_array($status, $correctableStatuses, true);
     }
 }

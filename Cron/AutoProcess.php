@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace PostDirekt\Addressfactory\Cron;
 
 use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\Search\FilterGroupBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Sales\Api\Data\OrderInterface;
@@ -43,6 +44,11 @@ class AutoProcess
     private $filterBuilder;
 
     /**
+     * @var FilterGroupBuilder
+     */
+    private $filterGroupBuilder;
+
+    /**
      * @var OrderRepositoryInterface
      */
     private $orderRepository;
@@ -62,6 +68,7 @@ class AutoProcess
         OrderAnalysis $orderAnalysisService,
         SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
         FilterBuilder $filterBuilder,
+        FilterGroupBuilder $filterGroupBuilder,
         OrderRepositoryInterface $orderRepository,
         OrderUpdater $orderUpdater,
         LoggerInterface $logger
@@ -70,20 +77,22 @@ class AutoProcess
         $this->orderAnalysisService = $orderAnalysisService;
         $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
         $this->filterBuilder = $filterBuilder;
+        $this->filterGroupBuilder = $filterGroupBuilder;
         $this->orderRepository = $orderRepository;
         $this->orderUpdater = $orderUpdater;
         $this->logger = $logger;
     }
 
     /**
-     * Executed via Cron to analyse and process all new Orders that have been put into analyisis status "pending"
+     * Executed via Cron to analyse and process all new Orders that have been put into analyisis status "pending" or
+     * optional status "manually_edited"
      */
     public function execute(): void
     {
         if (!$this->config->isAnalysisViaCron()) {
             return;
         }
-        $orders = $this->loadPendingOrders();
+        $orders = $this->loadPendingOrManuallyEditedOrders();
         $analysisResults = $this->orderAnalysisService->analyse($orders);
 
         foreach ($orders as $order) {
@@ -144,31 +153,32 @@ class AutoProcess
     }
 
     /**
-     * Fetch all orders with analysis status "pending" from the database.
+     * Fetch all orders with analysis status "pending" or
+     * "manually_edited" if config is set from the database.
      *
      * @return OrderInterface[]
      */
-    private function loadPendingOrders(): array
+    private function loadPendingOrManuallyEditedOrders(): array
     {
         $pendingFilter = $this->filterBuilder->setField('status_table.' . AnalysisStatus::STATUS)
             ->setValue(AnalysisStatusUpdater::PENDING)
             ->setConditionType('eq')
             ->create();
+        $this->filterGroupBuilder->addFilter($pendingFilter);
 
-        /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
+        if ($this->config->isAutoValidateManuallyEdited()) {
+            $manuallyEditedFilter = $this->filterBuilder->setField('status_table.' . AnalysisStatus::STATUS)
+                 ->setValue(AnalysisStatusUpdater::MANUALLY_EDITED)
+                 ->setConditionType('eq')
+                 ->create();
+            $this->filterGroupBuilder->addFilter($manuallyEditedFilter);
+        }
+
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
-        $searchCriteriaBuilder->addFilters([$pendingFilter]);
+        $searchCriteriaBuilder->setFilterGroups([$this->filterGroupBuilder->create()]);
         $searchCriteria = $searchCriteriaBuilder->create();
 
-        try {
-            $collection = $this->orderRepository->getList($searchCriteria);
-        } catch (\Zend_Db_Exception $exception) {
-            $this->logger->error(
-                'ADDRESSFACTORY DIRECT: Could not load Orders for auto processing.',
-                ['exception' => $exception]
-            );
-            return [];
-        }
+        $collection = $this->orderRepository->getList($searchCriteria);
 
         return $collection->getItems();
     }

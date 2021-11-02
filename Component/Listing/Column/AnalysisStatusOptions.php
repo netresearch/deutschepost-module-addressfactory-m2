@@ -50,6 +50,10 @@ class AnalysisStatusOptions implements OptionSourceInterface
             [
                 'value' => AnalysisStatusUpdater::CORRECTION_REQUIRED,
                 'label' => __('Correction recommended')
+            ],
+            [
+                'value' => AnalysisStatusUpdater::MANUALLY_EDITED,
+                'label' => __('Manually edited')
             ]
         ];
     }
