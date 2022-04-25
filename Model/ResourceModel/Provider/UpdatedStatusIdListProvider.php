@@ -1,11 +1,12 @@
 <?php
+
 /**
  * See LICENSE.md for license details.
  */
+
 declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Model\ResourceModel\Provider;
-
 
 use Magento\Sales\Model\ResourceModel\Provider\NotSyncedDataProviderInterface;
 use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisStatus;

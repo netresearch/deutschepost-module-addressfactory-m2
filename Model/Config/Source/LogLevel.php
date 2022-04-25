@@ -1,13 +1,15 @@
 <?php
+
 /**
  * See LICENSE.md for license details.
  */
+
 declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Model\Config\Source;
 
 use Magento\Framework\Data\OptionSourceInterface;
-use Magento\Framework\Logger\Monolog;
+use Monolog\Logger;
 
 class LogLevel implements OptionSourceInterface
 {
@@ -17,8 +19,8 @@ class LogLevel implements OptionSourceInterface
     public function toOptionArray(): array
     {
         return [
-            ['value' => (string) Monolog::INFO, 'label' => __('Everything')],
-            ['value' => (string) Monolog::ERROR, 'label' => __('Errors')],
+            ['value' => (string) Logger::INFO, 'label' => __('Everything')],
+            ['value' => (string) Logger::ERROR, 'label' => __('Errors')],
         ];
     }
 }

@@ -1,12 +1,15 @@
 <?php
+
 /**
  * See LICENSE.md for license details.
  */
+
 declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Controller\Adminhtml\Bulk;
 
 use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -40,15 +43,16 @@ class Improve extends Action
     private $orderAnalysisService;
 
     public function __construct(
+        Context $context,
         Filter $filter,
         CollectionFactory $collectionFactory,
-        OrderAnalysis $orderAnalysisService,
-        Action\Context $context
+        OrderAnalysis $orderAnalysisService
     ) {
-        parent::__construct($context);
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         $this->orderAnalysisService = $orderAnalysisService;
+
+        parent::__construct($context);
     }
 
     public function execute(): ResultInterface
@@ -86,11 +90,9 @@ class Improve extends Action
         $failedOrderIds = [];
         foreach ($orders as $order) {
             $analysisResult = $analysisResults[(int) $order->getEntityId()];
+
             /* Try to update the shipping address of each order */
-            $wasUpdated = $analysisResult
-                ? $this->orderAnalysisService->updateShippingAddress($order, $analysisResult)
-                : false;
-            if ($wasUpdated) {
+            if ($analysisResult && $this->orderAnalysisService->updateShippingAddress($order, $analysisResult)) {
                 $updatedOrderIds[] = $order->getIncrementId();
             } else {
                 $failedOrderIds[] = $order->getIncrementId();

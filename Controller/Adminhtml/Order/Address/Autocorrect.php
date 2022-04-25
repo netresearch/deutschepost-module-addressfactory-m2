@@ -1,7 +1,9 @@
 <?php
+
 /**
  * See LICENSE.md for license details.
  */
+
 declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Controller\Adminhtml\Order\Address;
@@ -35,13 +37,15 @@ class Autocorrect extends Action
     private $orderRepository;
 
     public function __construct(
+        Context $context,
         OrderAnalysis $orderAnalysis,
-        OrderRepositoryInterface $orderRepository,
-        Context $context
+        OrderRepositoryInterface $orderRepository
+
     ) {
-        parent::__construct($context);
         $this->orderAnalysis = $orderAnalysis;
         $this->orderRepository = $orderRepository;
+
+        parent::__construct($context);
     }
 
     public function execute(): ResultInterface

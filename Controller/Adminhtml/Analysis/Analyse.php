@@ -1,7 +1,9 @@
 <?php
+
 /**
  * See LICENSE.md for license details.
  */
+
 declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Controller\Adminhtml\Analysis;
@@ -47,17 +49,18 @@ class Analyse extends Action
     private $orderUpdater;
 
     public function __construct(
+        Context $context,
         Config $config,
         OrderAnalysis $orderAnalysisService,
         OrderRepositoryInterface $orderRepository,
-        Context $context,
         OrderUpdater $orderUpdater
     ) {
-        parent::__construct($context);
         $this->config = $config;
         $this->orderAnalysisService = $orderAnalysisService;
         $this->orderRepository = $orderRepository;
         $this->orderUpdater = $orderUpdater;
+
+        parent::__construct($context);
     }
 
     /**

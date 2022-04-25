@@ -5,7 +5,7 @@ in your shop system using the service of Deutsche Post Direkt.
 
 ## Requirements
 
-* PHP >= 7.1
+* PHP >= 7.2
 
 ## Compatibility
 
@@ -51,4 +51,4 @@ to <postdirekt.support@netresearch.de>.
 
 ## Copyright
 
-(c) 2021 Netresearch DTT GmbH
+(c) 2022 Netresearch DTT GmbH

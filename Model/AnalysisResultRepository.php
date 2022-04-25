@@ -1,7 +1,9 @@
 <?php
+
 /**
  * See LICENSE.md for license details.
  */
+
 declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Model;
@@ -14,9 +16,9 @@ use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterfaceFactory;
+use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult as AnalysisResultResource;
 use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult\SearchResult;
 use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult\SearchResultFactory;
-use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult as AnalysisResultResource;
 
 class AnalysisResultRepository
 {
@@ -83,7 +85,7 @@ class AnalysisResultRepository
     public function getListByAddressIds(array $addressIds): array
     {
         $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter(AnalysisResult::ORDER_ADDRESS_ID, $addressIds, 'in')
+            ->addFilter(AnalysisResultInterface::ORDER_ADDRESS_ID, $addressIds, 'in')
             ->create();
 
         return $this->getList($searchCriteria)->getItems();
@@ -141,7 +143,7 @@ class AnalysisResultRepository
      * @param AnalysisResultInterface $analysisResult
      * @throws CouldNotDeleteException
      */
-    public function delete(AnalysisResultInterface $analysisResult)
+    public function delete(AnalysisResultInterface $analysisResult): void
     {
         try {
             $this->resource->delete($analysisResult);

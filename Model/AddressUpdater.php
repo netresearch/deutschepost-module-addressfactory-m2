@@ -1,7 +1,9 @@
 <?php
+
 /**
  * See LICENSE.md for license details.
  */
+
 declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Model;
@@ -25,7 +27,7 @@ class AddressUpdater
     }
 
     /**
-     * Overwrite the given Order Address with data from an ADDRESSFACTORY DIRECT deliverability analyis.
+     * Overwrite the given Order Address with data from an ADDRESSFACTORY DIRECT deliverability analysis.
      *
      * The only address fields that will be modified are:
      * - first name
@@ -40,7 +42,7 @@ class AddressUpdater
      *
      * @param AnalysisResultInterface $analysisResult
      * @param OrderAddressInterface|null $address
-     * @return bool If the Address update was successfull
+     * @return bool If the address update was successful
      */
     public function update(AnalysisResultInterface $analysisResult, ?OrderAddressInterface $address = null): bool
     {

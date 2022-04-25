@@ -1,12 +1,15 @@
 <?php
+
 /**
  * See LICENSE.md for license details.
  */
+
 declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Controller\Adminhtml\Bulk;
 
 use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -52,19 +55,20 @@ class Check extends Action
     private $moduleConfig;
 
     public function __construct(
+        Context $context,
         Filter $filter,
         CollectionFactory $collectionFactory,
         OrderAnalysis $orderAnalysisService,
         Config $moduleConfig,
-        Action\Context $context,
         OrderUpdater $orderUpdater
     ) {
-        parent::__construct($context);
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         $this->orderAnalysisService = $orderAnalysisService;
         $this->moduleConfig = $moduleConfig;
         $this->orderUpdater = $orderUpdater;
+
+        parent::__construct($context);
     }
 
     public function execute(): ResultInterface

@@ -1,7 +1,9 @@
 <?php
+
 /**
  * See LICENSE.md for license details.
  */
+
 declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Observer;
@@ -28,10 +30,6 @@ class MoveAnalysisBox implements ObserverInterface
      */
     private $request;
 
-    /**
-     * AnalysisResultBlock constructor.
-     * @param RequestInterface $request
-     */
     public function __construct(RequestInterface $request)
     {
         $this->request = $request;

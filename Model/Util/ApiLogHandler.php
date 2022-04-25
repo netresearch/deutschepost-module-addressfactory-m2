@@ -1,7 +1,9 @@
 <?php
+
 /**
  * See LICENSE.md for license details.
  */
+
 declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Model\Util;
@@ -42,9 +44,6 @@ class ApiLogHandler extends Base
         $this->scopeConfig = $scopeConfig;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function isHandling(array $record): bool
     {
         $loggingEnabled = (bool) $this->scopeConfig->getValue($this->logEnabledConfigPath);

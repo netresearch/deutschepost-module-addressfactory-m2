@@ -1,7 +1,10 @@
 <?php
+
 /**
  * See LICENSE.md for license details.
  */
+
+declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Test\Integration\TestCase\Model;
 
@@ -69,7 +72,7 @@ class AddressUpdaterTest extends TestCase
         $addressUpdater = Bootstrap::getObjectManager()->create(AddressUpdater::class);
 
         foreach (self::$orders as $order) {
-            $analysisResult = $analysisResultRepo->getByAddressId($order->getShippingAddress()->getEntityId());
+            $analysisResult = $analysisResultRepo->getByAddressId((int) $order->getShippingAddress()->getEntityId());
             $result = $addressUpdater->update(
                 $analysisResult,
                 $order->getShippingAddress()

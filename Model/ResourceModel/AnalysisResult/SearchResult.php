@@ -1,7 +1,9 @@
 <?php
+
 /**
  * See LICENSE.md for license details.
  */
+
 declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult;
@@ -20,12 +22,6 @@ class SearchResult extends AbstractCollection implements SearchResultInterface
      */
     private $searchCriteria;
 
-    /**
-     * Constructor
-     *
-     * @codeCoverageIgnore
-     * @codingStandardsIgnoreLine
-     */
     protected function _construct()
     {
         $this->_init(AnalysisResult::class, AnalysisResultResource::class);
@@ -44,7 +40,7 @@ class SearchResult extends AbstractCollection implements SearchResultInterface
     /**
      * Set search criteria.
      *
-     * @param SearchCriteriaInterface $searchCriteria
+     * @param SearchCriteriaInterface|null $searchCriteria
      * @return $this
      */
     public function setSearchCriteria(SearchCriteriaInterface $searchCriteria = null): SearchResultInterface

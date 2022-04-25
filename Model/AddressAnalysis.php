@@ -1,23 +1,22 @@
 <?php
+
 /**
  * See LICENSE.md for license details.
  */
+
 declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\Model;
 
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderAddressInterface;
-use PostDirekt\Core\Model\Config as CoreConfig;
 use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
-use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterfaceFactory;
-use PostDirekt\Sdk\AddressfactoryDirect\Api\Data\RecordInterface;
+use PostDirekt\Addressfactory\Model\Analysis\ResponseMapper;
+use PostDirekt\Core\Model\Config as CoreConfig;
 use PostDirekt\Sdk\AddressfactoryDirect\Api\ServiceFactoryInterface;
 use PostDirekt\Sdk\AddressfactoryDirect\Exception\AuthenticationException;
 use PostDirekt\Sdk\AddressfactoryDirect\Exception\ServiceException;
-use PostDirekt\Addressfactory\Model\Analysis\ResponseMapper;
 use PostDirekt\Sdk\AddressfactoryDirect\Model\RequestType\InRecordWSType;
 use PostDirekt\Sdk\AddressfactoryDirect\RequestBuilder\RequestBuilder;
 use Psr\Log\LoggerInterface;
@@ -111,8 +110,7 @@ class AddressAnalysis
             $service = $this->serviceFactory->createAddressVerificationService(
                 $this->coreConfig->getApiUser(),
                 $this->coreConfig->getApiPassword(),
-                $this->logger,
-                false
+                $this->logger
             );
             $records = $service->getRecords(
                 $recordRequests,
@@ -131,9 +129,7 @@ class AddressAnalysis
         }
 
         // add new records to previously analysis results from db, do a union on purpose to keep keys
-        $analysisResults = $newAnalysisResults + $analysisResults;
-
-        return $analysisResults;
+        return $newAnalysisResults + $analysisResults;
     }
 
     private function buildRequest(OrderAddressInterface $address): InRecordWSType

@@ -1,7 +1,9 @@
 <?php
+
 /**
  * See LICENSE.md for license details.
  */
+
 declare(strict_types=1);
 
 namespace PostDirekt\Addressfactory\ViewModel\Adminhtml;
@@ -17,11 +19,10 @@ use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\OrderRepository;
 use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
+use PostDirekt\Addressfactory\Model\AddressUpdater;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
-use PostDirekt\Addressfactory\Model\AnalysisStatusRepository;
 use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 use PostDirekt\Addressfactory\Model\DeliverabilityCodes;
-use PostDirekt\Addressfactory\Model\AddressUpdater;
 
 class AnalysisData implements ArgumentInterface
 {
@@ -151,7 +152,7 @@ class AnalysisData implements ArgumentInterface
         $street = trim(implode(' ', [$analysisResult->getStreet(), $analysisResult->getStreetNumber()]));
         $orderStreet = trim(implode('', $orderAddress->getStreet()));
 
-        $street = ($street !== $orderStreet) ? "<b>{$street}</b>" : $street;
+        $street = ($street !== $orderStreet) ? "<b>$street</b>" : $street;
 
         $city = ($analysisResult->getCity() !== $orderAddress->getCity())
             ? "<b>{$analysisResult->getCity()}</b>" : $analysisResult->getCity();
@@ -159,9 +160,9 @@ class AnalysisData implements ArgumentInterface
         $postalCode = ($analysisResult->getPostalCode() !== $orderAddress->getPostcode())
             ? "<b>{$analysisResult->getPostalCode()}</b>" : $analysisResult->getPostalCode();
 
-        return "<dd><span>{$firstName} {$lastName}</span></dd>
-                <dd><span>{$street}</span></dd>
-                <dd><span>{$city} {$postalCode}</span></dd>";
+        return "<dd><span>$firstName $lastName</span></dd>
+                <dd><span>$street</span></dd>
+                <dd><span>$city $postalCode</span></dd>";
     }
 
     /**
@@ -184,9 +185,6 @@ class AnalysisData implements ArgumentInterface
     public function showCancelButton(): bool
     {
         $order = $this->getOrder();
-        if (!$order) {
-            return false;
-        }
         $status = $this->analysisStatus->getStatus((int) $order->getEntityId());
 
         return $status !== AnalysisStatusUpdater::DELIVERABLE && $order->canCancel();
