@@ -26,4 +26,7 @@ See LICENSE.md for license details.
     <span if="$row()[$col.index] === 'correction_required'"
           data-bind="i18n: 'Correction recommended'"
           class="undeliverable"></span>
+    <span if="$row()[$col.index] === 'manually_edited'"
+          data-bind="i18n: 'Manually edited'"
+          class="manually_edited"></span>
 </div>
