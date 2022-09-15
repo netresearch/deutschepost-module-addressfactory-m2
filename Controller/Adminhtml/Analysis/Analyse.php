@@ -88,18 +88,21 @@ class Analyse extends Action
             return $resultRedirect;
         }
 
-        if ($this->config->isHoldNonDeliverableOrders($order->getStoreId())) {
-            $isOnHold = $this->orderUpdater->holdIfNonDeliverable($order, $analysisResult);
-            if ($isOnHold) {
-                $this->messageManager->addSuccessMessage(__('Non-deliverable Order put on hold'));
-            }
-        }
+        $isCanceled = false;
         if ($this->config->isAutoCancelNonDeliverableOrders($order->getStoreId())) {
             $isCanceled = $this->orderUpdater->cancelIfUndeliverable($order, $analysisResult);
             if ($isCanceled) {
                 $this->messageManager->addSuccessMessage(__('Undeliverable Order canceled', $order->getIncrementId()));
             }
         }
+
+        if (!$isCanceled && $this->config->isHoldNonDeliverableOrders($order->getStoreId())) {
+            $isOnHold = $this->orderUpdater->holdIfNonDeliverable($order, $analysisResult);
+            if ($isOnHold) {
+                $this->messageManager->addSuccessMessage(__('Non-deliverable Order put on hold'));
+            }
+        }
+
         if ($this->config->isAutoUpdateShippingAddress($order->getStoreId())) {
             $isUpdated = $this->orderAnalysisService->updateShippingAddress($order, $analysisResult);
             if ($isUpdated) {

@@ -124,15 +124,7 @@ class AutoProcess
             sprintf('ADDRESSFACTORY DIRECT: Processing Order %s ...', $order->getIncrementId())
         );
 
-        if ($this->config->isHoldNonDeliverableOrders($order->getStoreId())) {
-            $isOnHold = $this->orderUpdater->holdIfNonDeliverable($order, $analysisResult);
-            if ($isOnHold) {
-                $this->logger->info(sprintf(
-                    'ADDRESSFACTORY DIRECT: Non-deliverable Order "%s" put on hold',
-                    $order->getIncrementId()
-                ));
-            }
-        }
+        $isCanceled = false;
         if ($this->config->isAutoCancelNonDeliverableOrders($order->getStoreId())) {
             $isCanceled = $this->orderUpdater->cancelIfUndeliverable($order, $analysisResult);
             if ($isCanceled) {
@@ -142,6 +134,17 @@ class AutoProcess
                 ));
             }
         }
+
+        if (!$isCanceled && $this->config->isHoldNonDeliverableOrders($order->getStoreId())) {
+            $isOnHold = $this->orderUpdater->holdIfNonDeliverable($order, $analysisResult);
+            if ($isOnHold) {
+                $this->logger->info(sprintf(
+                    'ADDRESSFACTORY DIRECT: Non-deliverable Order "%s" put on hold',
+                    $order->getIncrementId()
+                ));
+            }
+        }
+
         if ($this->config->isAutoUpdateShippingAddress($order->getStoreId())) {
             $isUpdated = $this->orderAnalysisService->updateShippingAddress($order, $analysisResult);
             if ($isUpdated) {

@@ -108,16 +108,19 @@ class Check extends Action
                 $failedOrderIds[] = $order->getIncrementId();
                 continue;
             }
-            if ($this->moduleConfig->isHoldNonDeliverableOrders()) {
-                $isOnHold = $this->orderUpdater->holdIfNonDeliverable($order, $analysisResult);
-                if ($isOnHold) {
-                    $heldOrderIds[] = $order->getIncrementId();
-                }
-            }
+
+            $isCanceled = false;
             if ($this->moduleConfig->isAutoCancelNonDeliverableOrders()) {
                 $isCanceled = $this->orderUpdater->cancelIfUndeliverable($order, $analysisResult);
                 if ($isCanceled) {
                     $canceledOrderIds[] = $order->getIncrementId();
+                }
+            }
+
+            if (!$isCanceled && $this->moduleConfig->isHoldNonDeliverableOrders()) {
+                $isOnHold = $this->orderUpdater->holdIfNonDeliverable($order, $analysisResult);
+                if ($isOnHold) {
+                    $heldOrderIds[] = $order->getIncrementId();
                 }
             }
         }

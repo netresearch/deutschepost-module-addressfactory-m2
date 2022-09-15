@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace PostDirekt\Addressfactory\Model;
 
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Model\Order;
 use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 
@@ -35,84 +34,18 @@ class OrderAnalysis
      */
     private $addressUpdater;
 
-    /**
-     * @var OrderManagementInterface
-     */
-    private $orderService;
-
     public function __construct(
         AddressAnalysis $addressAnalysisService,
         DeliverabilityCodes $deliverabilityScoreService,
         AnalysisStatusUpdater $deliverabilityStatus,
-        OrderManagementInterface $orderService,
         AddressUpdater $addressUpdater
     ) {
         $this->addressAnalysisService = $addressAnalysisService;
         $this->deliverabilityScoreService = $deliverabilityScoreService;
         $this->deliverabilityStatus = $deliverabilityStatus;
-        $this->orderService = $orderService;
         $this->addressUpdater = $addressUpdater;
     }
 
-    /**
-     * @param Order[] $orders
-     * @return Order[]  List of Orders that were put on hold
-     * @throws LocalizedException
-     *
-     * @deprecated Use \PostDirekt\Addressfactory\Model\OrderUpdater::holdIfNonDeliverable instead
-     */
-    public function holdNonDeliverable(array $orders): array
-    {
-        $heldOrders = [];
-
-        $analysisResults = $this->analyse($orders);
-        foreach ($orders as $order) {
-            if (!$order->canHold()) {
-                continue;
-            }
-            $analysisResult = $analysisResults[(int) $order->getId()] ?? null;
-            if (!$analysisResult) {
-                continue;
-            }
-            $score = $this->deliverabilityScoreService->computeScore($analysisResult->getStatusCodes());
-            if ($score !== DeliverabilityCodes::DELIVERABLE) {
-                $this->orderService->hold((int) $order->getId());
-                $heldOrders[] = $order;
-            }
-        }
-
-        return $heldOrders;
-    }
-
-    /**
-     * @param Order[] $orders
-     * @return Order[]  List of Orders that were cancelled
-     * @throws LocalizedException
-     *
-     * @deprecated Use \PostDirekt\Addressfactory\Model\OrderUpdater::cancelIfUndeliverable instead
-     */
-    public function cancelUndeliverable(array $orders): array
-    {
-        $cancelledOrders = [];
-
-        $analysisResults = $this->analyse($orders);
-        foreach ($orders as $order) {
-            if (!$order->canCancel()) {
-                continue;
-            }
-            $analysisResult = $analysisResults[(int) $order->getId()] ?? null;
-            if (!$analysisResult) {
-                continue;
-            }
-            $score = $this->deliverabilityScoreService->computeScore($analysisResult->getStatusCodes());
-            if ($score === DeliverabilityCodes::UNDELIVERABLE) {
-                $this->orderService->cancel((int) $order->getId());
-                $cancelledOrders[] = $order;
-            }
-        }
-
-        return $cancelledOrders;
-    }
 
     /**
      * Get ADDRESSFACTORY DIRECT Deliverability analysis objects

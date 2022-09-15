@@ -105,12 +105,16 @@ class SetNewOrderDeliverabilityStatus implements ObserverInterface
                 );
                 return;
             }
-            if ($this->config->isHoldNonDeliverableOrders($storeId)) {
+
+            $isCanceled = false;
+            if ($this->config->isAutoCancelNonDeliverableOrders($storeId)) {
+                $isCanceled = $this->orderUpdater->cancelIfUndeliverable($order, $analysisResult);
+            }
+
+            if (!$isCanceled && $this->config->isHoldNonDeliverableOrders($storeId)) {
                 $this->orderUpdater->holdIfNonDeliverable($order, $analysisResult);
             }
-            if ($this->config->isAutoCancelNonDeliverableOrders($storeId)) {
-                $this->orderUpdater->cancelIfUndeliverable($order, $analysisResult);
-            }
+
             if ($this->config->isAutoUpdateShippingAddress($storeId)) {
                 $this->analyseService->updateShippingAddress($order, $analysisResult);
             }
