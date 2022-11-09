@@ -11,8 +11,8 @@ namespace PostDirekt\Addressfactory\Observer;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order;
-use PostDirekt\Addressfactory\Model\Config;
 use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
+use PostDirekt\Addressfactory\Model\Config;
 use PostDirekt\Addressfactory\Model\OrderAnalysis;
 use PostDirekt\Addressfactory\Model\OrderUpdater;
 use Psr\Log\LoggerInterface;
@@ -77,14 +77,13 @@ class SetNewOrderDeliverabilityStatus implements ObserverInterface
             // Only process german shipping addresses
             return;
         }
-
+        $orderId = (int) $order->getEntityId();
         $storeId = (string) $order->getStoreId();
         if ($this->config->isManualAnalysisOnly($storeId)) {
-            // Manual analysis is not handled
+            $this->deliverabilityStatus->setStatusNotAnalyzed($orderId);
             return;
         }
 
-        $orderId = (int)$order->getEntityId();
         $status = $this->deliverabilityStatus->getStatus($orderId);
         if ($status !== AnalysisStatusUpdater::NOT_ANALYSED) {
             // The order already has been analysed

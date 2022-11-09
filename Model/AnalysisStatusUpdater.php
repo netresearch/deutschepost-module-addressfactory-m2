@@ -96,6 +96,15 @@ class AnalysisStatusUpdater
 
         return $this->updateStatus($analysisStatus);
     }
+    public function setStatusNotAnalyzed(int $orderId): bool
+    {
+        $analysisStatus = $this->statusFactory->create(['data' => [
+            AnalysisStatus::ORDER_ID => $orderId,
+            AnalysisStatus::STATUS => self::NOT_ANALYSED
+        ]]);
+
+        return $this->updateStatus($analysisStatus);
+    }
 
     public function setStatusUndeliverable(int $orderId): bool
     {
