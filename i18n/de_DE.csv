@@ -25,8 +25,6 @@
 "Bulk receiver name",Großempfängername
 "Bulk recipient address",Großempfänder-Adresse
 "Cancel Order","Bestellung stornieren"
-"Check Shipping Address","Versandaddresse prüfen"
-"Check and Autocorrect Shipping Address","Versandaddresse prüfen & autom. korrigieren"
 City,Ort
 "City addition",Ortszusatz
 "Configuration Name",Konfigurationsname
@@ -61,7 +59,6 @@ Logging,Logging
 "Only use the option ""Analysis on order placement"" if problems occur in connection with ""Analysis via Cron"".","Nutzen Sie die Option ""Analyse bei Bestellungsabschluss"" nur, falls im Zusammenhang mit ""Analyse via Cron"" Probleme auftreten."
 "Order address updated with ADDRESSFACTORY DIRECT suggestion","Bestelladdresse mit ADDRESSFACTORY DIRECT-Vorschlag aktualisiert"
 "Order(s) %1 could not be analysed with ADDRESSFACTORY DIRECT.","Bestellung(en) %1 konnten nicht mit ADDRESSFACTORY DIRECT analysiert werden"
-"Order(s) %1 could not be updated.","Bestellung(en) %1 konnten nicht aktualisiert werden"
 "Order(s) %1 were successfully updated.","Bestellung(en) %1 wurden erfolgreich aktualisiert"
 "Other Actions","Weitere Aktionen"
 Pending,Ausstehend

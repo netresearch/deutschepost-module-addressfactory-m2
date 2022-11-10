@@ -110,12 +110,12 @@ class SetNewOrderDeliverabilityStatus implements ObserverInterface
                 $isCanceled = $this->orderUpdater->cancelIfUndeliverable($order, $analysisResult);
             }
 
-            if (!$isCanceled && $this->config->isHoldNonDeliverableOrders($storeId)) {
-                $this->orderUpdater->holdIfNonDeliverable($order, $analysisResult);
-            }
-
             if ($this->config->isAutoUpdateShippingAddress($storeId)) {
                 $this->analyseService->updateShippingAddress($order, $analysisResult);
+            }
+
+            if (!$isCanceled && $this->config->isHoldNonDeliverableOrders($storeId)) {
+                $this->orderUpdater->holdIfNonDeliverable($order, $analysisResult);
             }
         }
     }

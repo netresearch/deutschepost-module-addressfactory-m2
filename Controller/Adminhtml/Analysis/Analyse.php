@@ -70,7 +70,7 @@ class Analyse extends Action
      */
     public function execute(): ResultInterface
     {
-        $orderId = (int)$this->getRequest()->getParam('order_id');
+        $orderId = (int) $this->getRequest()->getParam('order_id');
         /** @var Order $order */
         $order = $this->orderRepository->get($orderId);
 
@@ -83,31 +83,34 @@ class Analyse extends Action
             if (!$analysisResult) {
                 throw new LocalizedException(__('Could not perform ADDRESSFACTORY DIRECT analysis for Order'));
             }
+
+            $isCanceled = false;
+            if ($this->config->isAutoCancelNonDeliverableOrders($order->getStoreId())) {
+                $isCanceled = $this->orderUpdater->cancelIfUndeliverable($order, $analysisResult);
+                if ($isCanceled) {
+                    $this->messageManager->addSuccessMessage(
+                        __('Undeliverable Order canceled', $order->getIncrementId())
+                    );
+                }
+            }
+
+            if ($this->config->isAutoUpdateShippingAddress($order->getStoreId())) {
+                $isUpdated = $this->orderAnalysisService->updateShippingAddress($order, $analysisResult);
+                if ($isUpdated) {
+                    $this->messageManager->addSuccessMessage(
+                        __('Order address updated with ADDRESSFACTORY DIRECT suggestion')
+                    );
+                }
+            }
+
+            if (!$isCanceled && $this->config->isHoldNonDeliverableOrders($order->getStoreId())) {
+                $isOnHold = $this->orderUpdater->holdIfNonDeliverable($order, $analysisResult);
+                if ($isOnHold) {
+                    $this->messageManager->addSuccessMessage(__('Non-deliverable Order put on hold'));
+                }
+            }
         } catch (LocalizedException $exception) {
             $this->messageManager->addErrorMessage($exception->getMessage());
-            return $resultRedirect;
-        }
-
-        $isCanceled = false;
-        if ($this->config->isAutoCancelNonDeliverableOrders($order->getStoreId())) {
-            $isCanceled = $this->orderUpdater->cancelIfUndeliverable($order, $analysisResult);
-            if ($isCanceled) {
-                $this->messageManager->addSuccessMessage(__('Undeliverable Order canceled', $order->getIncrementId()));
-            }
-        }
-
-        if (!$isCanceled && $this->config->isHoldNonDeliverableOrders($order->getStoreId())) {
-            $isOnHold = $this->orderUpdater->holdIfNonDeliverable($order, $analysisResult);
-            if ($isOnHold) {
-                $this->messageManager->addSuccessMessage(__('Non-deliverable Order put on hold'));
-            }
-        }
-
-        if ($this->config->isAutoUpdateShippingAddress($order->getStoreId())) {
-            $isUpdated = $this->orderAnalysisService->updateShippingAddress($order, $analysisResult);
-            if ($isUpdated) {
-                $this->messageManager->addSuccessMessage(__('Order address updated with ADDRESSFACTORY DIRECT suggestion'));
-            }
         }
 
         return $resultRedirect;

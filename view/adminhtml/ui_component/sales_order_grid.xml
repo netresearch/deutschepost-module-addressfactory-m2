@@ -20,18 +20,8 @@ See LICENSE.md for license details.
                 <settings>
                     <type>autocreate</type>
                     <label translate="true">Shipping Address Validation (ADDRESSFACTORY)</label>
-                    <actions>
-                        <action name="0">
-                            <type>postdirekt_check</type>
-                            <label translate="true">Check Shipping Address</label>
-                            <url path="postdirekt/bulk/check"/>
-                        </action>
-                        <action name="1">
-                            <type>postdirekt_improve</type>
-                            <label translate="true">Check and Autocorrect Shipping Address</label>
-                            <url path="postdirekt/bulk/improve"/>
-                        </action>
-                    </actions>
+                    <type>postdirekt_analyse</type>
+                    <url path="postdirekt/bulk/analyse"/>
                 </settings>
             </action>
         </massaction>

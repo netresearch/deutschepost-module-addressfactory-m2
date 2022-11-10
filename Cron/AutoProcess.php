@@ -85,7 +85,7 @@ class AutoProcess
     }
 
     /**
-     * Executed via Cron to analyse and process all new Orders that have been put into analyisis status "pending" or
+     * Executed via Cron to analyse and process all new Orders that have been put into analysis status "pending" or
      * optional status "manually_edited"
      */
     public function execute(): void
@@ -93,11 +93,12 @@ class AutoProcess
         if (!$this->config->isAnalysisViaCron()) {
             return;
         }
+        /** @var Order[] $orders */
         $orders = $this->loadPendingOrManuallyEditedOrders();
         $analysisResults = $this->orderAnalysisService->analyse($orders);
 
         foreach ($orders as $order) {
-            $analysisResult = $analysisResults[(int)$order->getEntityId()];
+            $analysisResult = $analysisResults[(int) $order->getEntityId()];
             if ($analysisResult) {
                 $this->process($order, $analysisResult);
             } else {
@@ -128,30 +129,36 @@ class AutoProcess
         if ($this->config->isAutoCancelNonDeliverableOrders($order->getStoreId())) {
             $isCanceled = $this->orderUpdater->cancelIfUndeliverable($order, $analysisResult);
             if ($isCanceled) {
-                $this->logger->info(sprintf(
-                    'ADDRESSFACTORY DIRECT: Undeliverable Order "%s" cancelled',
-                    $order->getIncrementId()
-                ));
-            }
-        }
-
-        if (!$isCanceled && $this->config->isHoldNonDeliverableOrders($order->getStoreId())) {
-            $isOnHold = $this->orderUpdater->holdIfNonDeliverable($order, $analysisResult);
-            if ($isOnHold) {
-                $this->logger->info(sprintf(
-                    'ADDRESSFACTORY DIRECT: Non-deliverable Order "%s" put on hold',
-                    $order->getIncrementId()
-                ));
+                $this->logger->info(
+                    sprintf(
+                        'ADDRESSFACTORY DIRECT: Undeliverable Order "%s" cancelled',
+                        $order->getIncrementId()
+                    )
+                );
             }
         }
 
         if ($this->config->isAutoUpdateShippingAddress($order->getStoreId())) {
             $isUpdated = $this->orderAnalysisService->updateShippingAddress($order, $analysisResult);
             if ($isUpdated) {
-                $this->logger->info(sprintf(
-                    'ADDRESSFACTORY DIRECT: ADDRESSFACTORY DIRECT: Order "%s" address updated',
-                    $order->getIncrementId()
-                ));
+                $this->logger->info(
+                    sprintf(
+                        'ADDRESSFACTORY DIRECT: ADDRESSFACTORY DIRECT: Order "%s" address updated',
+                        $order->getIncrementId()
+                    )
+                );
+            }
+        }
+
+        if (!$isCanceled && $this->config->isHoldNonDeliverableOrders($order->getStoreId())) {
+            $isOnHold = $this->orderUpdater->holdIfNonDeliverable($order, $analysisResult);
+            if ($isOnHold) {
+                $this->logger->info(
+                    sprintf(
+                        'ADDRESSFACTORY DIRECT: Non-deliverable Order "%s" put on hold',
+                        $order->getIncrementId()
+                    )
+                );
             }
         }
     }
@@ -172,9 +179,9 @@ class AutoProcess
 
         if ($this->config->isAutoValidateManuallyEdited()) {
             $manuallyEditedFilter = $this->filterBuilder->setField('status_table.' . AnalysisStatus::STATUS)
-                 ->setValue(AnalysisStatusUpdater::MANUALLY_EDITED)
-                 ->setConditionType('eq')
-                 ->create();
+                ->setValue(AnalysisStatusUpdater::MANUALLY_EDITED)
+                ->setConditionType('eq')
+                ->create();
             $this->filterGroupBuilder->addFilter($manuallyEditedFilter);
         }
 
