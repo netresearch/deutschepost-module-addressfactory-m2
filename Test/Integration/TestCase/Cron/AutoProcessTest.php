@@ -342,7 +342,7 @@ class AutoProcessTest extends TestCase
      * @test
      * @dataProvider webserviceResponseProvider
      *
-     * @magentoConfigFixture default_store postdirekt/addressfactory/automatic_address_analysis 2
+     * @magentoConfigFixture default/postdirekt/addressfactory/automatic_address_analysis 2
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_update_shipping_address 0
      * @magentoDataFixture createPendingOrders
      * @magentoDataFixture createAnalyzedOrders

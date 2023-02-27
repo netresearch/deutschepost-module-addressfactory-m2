@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+
+- Consider website level configuration settings during cron analysis.
+- Change deliverability status from _Undeliverable_ to _Possibly deliverable_ if address
+  was (partially) corrected during address analysis.
+- Reduce redundant and confusing mass actions into one configurable mass action.
+- Initialize orders with _Not analysed_ status if _No Automatic Analysis_ is configured.
+- The configuration setting _automatically cancel_ now has higher priority than
+  _automatically put on hold_.
+- Display status value _Manually edited_ in admin panel orders grid.
+
 ## 1.4.0
 
 ### Added

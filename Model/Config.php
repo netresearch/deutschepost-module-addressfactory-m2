@@ -9,7 +9,9 @@ declare(strict_types=1);
 namespace PostDirekt\Addressfactory\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use PostDirekt\Addressfactory\Model\Config\Source\AutomaticOptions;
 
 class Config
@@ -32,9 +34,15 @@ class Config
      */
     private $scopeConfig;
 
-    public function __construct(ScopeConfigInterface $scopeConfig)
+    /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    public function __construct(ScopeConfigInterface $scopeConfig, StoreManagerInterface $storeManager)
     {
         $this->scopeConfig = $scopeConfig;
+        $this->storeManager = $storeManager;
     }
 
     public function getModuleVersion(): string
@@ -171,6 +179,21 @@ class Config
     public function isAnalysisOnOrderPlace($store = null): bool
     {
         return AutomaticOptions::ON_ORDER_PLACE === $this->getAutoAddressAnalysis($store);
+    }
+
+    public function getStoresWithCronAnalysisEnabled(): array
+    {
+        return array_reduce(
+            $this->storeManager->getStores(),
+            function (array $carry, StoreInterface $store) {
+                if ($this->isAnalysisViaCron($store)) {
+                    $carry[] = (int) $store->getId();
+                }
+
+                return $carry;
+            },
+            []
+        );
     }
 
     /**

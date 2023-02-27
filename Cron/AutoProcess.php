@@ -10,7 +10,7 @@ namespace PostDirekt\Addressfactory\Cron;
 
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\FilterGroupBuilder;
-use Magento\Framework\Api\SearchCriteriaBuilderFactory;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
@@ -35,19 +35,19 @@ class AutoProcess
     private $orderAnalysisService;
 
     /**
-     * @var SearchCriteriaBuilderFactory
+     * @var SearchCriteriaBuilder
      */
-    private $searchCriteriaBuilderFactory;
-
-    /**
-     * @var FilterBuilder
-     */
-    private $filterBuilder;
+    private $searchCriteriaBuilder;
 
     /**
      * @var FilterGroupBuilder
      */
     private $filterGroupBuilder;
+
+    /**
+     * @var FilterBuilder
+     */
+    private $filterBuilder;
 
     /**
      * @var OrderRepositoryInterface
@@ -67,18 +67,18 @@ class AutoProcess
     public function __construct(
         Config $config,
         OrderAnalysis $orderAnalysisService,
-        SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
-        FilterBuilder $filterBuilder,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
         FilterGroupBuilder $filterGroupBuilder,
+        FilterBuilder $filterBuilder,
         OrderRepositoryInterface $orderRepository,
         OrderUpdater $orderUpdater,
         LoggerInterface $logger
     ) {
         $this->config = $config;
         $this->orderAnalysisService = $orderAnalysisService;
-        $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
-        $this->filterBuilder = $filterBuilder;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterGroupBuilder = $filterGroupBuilder;
+        $this->filterBuilder = $filterBuilder;
         $this->orderRepository = $orderRepository;
         $this->orderUpdater = $orderUpdater;
         $this->logger = $logger;
@@ -90,11 +90,12 @@ class AutoProcess
      */
     public function execute(): void
     {
-        if (!$this->config->isAnalysisViaCron()) {
-            return;
-        }
         /** @var Order[] $orders */
         $orders = $this->loadPendingOrManuallyEditedOrders();
+        if (empty($orders)) {
+            return;
+        }
+
         $analysisResults = $this->orderAnalysisService->analyse($orders);
 
         foreach ($orders as $order) {
@@ -165,32 +166,96 @@ class AutoProcess
 
     /**
      * Fetch all orders with analysis status "pending" or
-     * "manually_edited" if config is set from the database.
+     * "manually_edited" and where config is enabled for website.
      *
      * @return OrderInterface[]
      */
     private function loadPendingOrManuallyEditedOrders(): array
     {
-        $pendingFilter = $this->filterBuilder->setField('status_table.' . AnalysisStatus::STATUS)
-            ->setValue(AnalysisStatusUpdater::PENDING)
-            ->setConditionType('eq')
-            ->create();
-        $this->filterGroupBuilder->addFilter($pendingFilter);
-
-        if ($this->config->isAutoValidateManuallyEdited()) {
-            $manuallyEditedFilter = $this->filterBuilder->setField('status_table.' . AnalysisStatus::STATUS)
-                ->setValue(AnalysisStatusUpdater::MANUALLY_EDITED)
-                ->setConditionType('eq')
-                ->create();
-            $this->filterGroupBuilder->addFilter($manuallyEditedFilter);
+        $autoProcessStores = $this->config->getStoresWithCronAnalysisEnabled();
+        if (empty($autoProcessStores)) {
+            return [];
         }
 
-        $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
-        $searchCriteriaBuilder->setFilterGroups([$this->filterGroupBuilder->create()]);
-        $searchCriteria = $searchCriteriaBuilder->create();
+        $inclManuallyEdited = array_filter(
+            $autoProcessStores,
+            function (int $storeId) {
+                return $this->config->isAutoValidateManuallyEdited($storeId);
+            }
+        );
 
-        $collection = $this->orderRepository->getList($searchCriteria);
+        $exclManuallyEdited = array_diff($autoProcessStores, $inclManuallyEdited);
 
-        return $collection->getItems();
+        if (empty($inclManuallyEdited)) {
+            // collect all pending orders from the stores with cron validation enabled
+            $this->searchCriteriaBuilder->addFilter('store_id', $autoProcessStores, 'in');
+            $this->searchCriteriaBuilder->addFilter(
+                'status_table.' . AnalysisStatus::STATUS,
+                AnalysisStatusUpdater::PENDING
+            );
+        } elseif (empty($exclManuallyEdited)) {
+            // collect all pending or manually edited orders from the stores with cron validation enabled
+            $this->searchCriteriaBuilder->addFilter('store_id', $autoProcessStores, 'in');
+            $this->searchCriteriaBuilder->addFilter(
+                'status_table.' . AnalysisStatus::STATUS,
+                [AnalysisStatusUpdater::PENDING, AnalysisStatusUpdater::MANUALLY_EDITED],
+                'in'
+            );
+        } else {
+            // collect all pending orders from the stores with cron validation enabled plus manually edited orders
+            // from stores with both, cron validation and re-validation of manually edited analysis results enabled.
+            $this->searchCriteriaBuilder->setFilterGroups(
+                [
+                    $this->filterGroupBuilder
+                        ->setFilters(
+                            [
+                                $this->filterBuilder
+                                    ->setField('store_id')
+                                    ->setValue($autoProcessStores)
+                                    ->setConditionType('in')
+                                    ->create(),
+                            ]
+                        )
+                        ->create(),
+                    $this->filterGroupBuilder
+                        ->setFilters(
+                            [
+                                $this->filterBuilder
+                                    ->setField('store_id')
+                                    ->setValue($exclManuallyEdited)
+                                    ->setConditionType('in')
+                                    ->create(),
+                                $this->filterBuilder
+                                    ->setField('status_table.' . AnalysisStatus::STATUS)
+                                    ->setValue([AnalysisStatusUpdater::PENDING, AnalysisStatusUpdater::MANUALLY_EDITED]
+                                    )
+                                    ->setConditionType('in')
+                                    ->create(),
+                            ]
+                        )
+                        ->create(),
+                    $this->filterGroupBuilder
+                        ->setFilters(
+                            [
+                                $this->filterBuilder
+                                    ->setField('store_id')
+                                    ->setValue($inclManuallyEdited)
+                                    ->setConditionType('in')
+                                    ->create(),
+                                $this->filterBuilder
+                                    ->setField('status_table.' . AnalysisStatus::STATUS)
+                                    ->setValue([AnalysisStatusUpdater::PENDING]
+                                    )
+                                    ->setConditionType('in')
+                                    ->create(),
+                            ]
+                        )
+                        ->create(),
+                ]
+            );
+        }
+
+        $searchResult = $this->orderRepository->getList($this->searchCriteriaBuilder->create());
+        return $searchResult->getItems();
     }
 }
