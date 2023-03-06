@@ -11,6 +11,7 @@ namespace PostDirekt\Addressfactory\Observer;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Address;
 use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 use PostDirekt\Addressfactory\Model\Config;
 use PostDirekt\Addressfactory\Model\OrderAnalysis;
@@ -65,18 +66,20 @@ class SetNewOrderDeliverabilityStatus implements ObserverInterface
 
     public function execute(Observer $observer): void
     {
-        /** @var Order $order */
-        $order = $observer->getData('order') ?? $observer->getData('address')->getOrder();
+        /** @var Address $address */
+        $address = $observer->getData('address');
 
-        if ($order->getShippingAddress() === null) {
-            // Order is virtual or broken
+        // only handle new addresses
+        if ((!$address || !$address->isObjectNew()) ) {
             return;
         }
 
-        if ($order->getShippingAddress()->getCountryId() !== 'DE') {
-            // Only process german shipping addresses
+        // only handle shipping address for german shipping addresses
+        if ($address->getAddressType() !== Address::TYPE_SHIPPING || $address->getCountryId() !== 'DE') {
             return;
         }
+
+        $order = $address->getOrder();
         $orderId = (int) $order->getEntityId();
         $storeId = (string) $order->getStoreId();
         if ($this->config->isManualAnalysisOnly($storeId)) {

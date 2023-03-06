@@ -18,7 +18,6 @@ See LICENSE.md for license details.
         <massaction name="listing_massaction">
             <action name="postdirekt_addressfactory_analyse">
                 <settings>
-                    <type>autocreate</type>
                     <label translate="true">Shipping Address Validation (ADDRESSFACTORY)</label>
                     <type>postdirekt_analyse</type>
                     <url path="postdirekt/bulk/analyse"/>

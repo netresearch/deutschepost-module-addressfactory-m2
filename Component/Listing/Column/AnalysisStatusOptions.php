@@ -47,7 +47,7 @@ class AnalysisStatusOptions implements OptionSourceInterface
             ],
             [
                 'value' => AnalysisStatusUpdater::ANALYSIS_FAILED,
-                'label' => __('Analysis failed')
+                'label' => __('Failed')
             ],
             [
                 'value' => AnalysisStatusUpdater::CORRECTION_REQUIRED,

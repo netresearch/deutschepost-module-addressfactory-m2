@@ -47,7 +47,7 @@
                     <label>Automatically Cancel</label>
                     <button_label>Automatically cancel undeliverable orders.</button_label>
                 </field>
-                <field id="auto_update_shipping_address" translate="label button_label" type="Netresearch\ConfigFields\Model\Type\Checkbox" sortOrder="80" showInDefault="1" showInWebsite="1"   showInStore="0">
+                <field id="auto_update_shipping_address" translate="label button_label" type="Netresearch\ConfigFields\Model\Type\Checkbox" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Automatically Update Shipping Address</label>
                     <button_label>Automatically update order shipping addresses with ADDRESSFACTORY suggestions.</button_label>
                 </field>

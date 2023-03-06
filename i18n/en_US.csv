@@ -4,7 +4,6 @@
 "Address not valid","Address not valid"
 "Address validation can be performed either manually or automatically after the order was placed.","Address validation can be performed either manually or automatically after the order was placed."
 "Addressfactory Direct Settings","Addressfactory Direct Settings"
-"Analysis failed","Analysis failed"
 "Analysis on Order placement","Analysis on Order placement"
 "Analysis result with order address id %1 does not exist.","Analysis result with order address id %1 does not exist."
 "Analysis status with order id %1 does not exist.","Analysis status with order id %1 does not exist."
@@ -13,13 +12,13 @@
 "Authentication error.","Authentication error."
 "Auto-Correct Address","Auto-Correct Address"
 "Automatic Address Analysis","Automatic Address Analysis"
+"Automatic validation","Automatic validation"
 "Automatically Cancel","Automatically Cancel"
 "Automatically Put on Hold","Automatically Put on Hold"
 "Automatically Update Shipping Address","Automatically Update Shipping Address"
 "Automatically cancel undeliverable orders.","Automatically cancel undeliverable orders."
 "Automatically put on hold orders that are undeliverable, possibly deliverable, or that failed analysis.","Automatically put on hold orders that are undeliverable, possibly deliverable, or that failed analysis."
 "Automatically update order shipping addresses with ADDRESSFACTORY suggestions.","Automatically update order shipping addresses with ADDRESSFACTORY suggestions."
-"Automatic validation","Automatic validation"
 "Automatically validate manually edited addresses","Automatically validate manually edited addresses"
 "Basis for this check is the postal reference file from Deutsche Post Direkt.","Basis for this check is the postal reference file from Deutsche Post Direkt."
 "Bulk receiver name","Bulk receiver name"
@@ -30,9 +29,9 @@ City,City
 "Configuration Name","Configuration Name"
 "Correction Recommended","Correction Recommended"
 "Correction recommended","Correction recommended"
+"Could not delete analysis result for order address id: %1","Could not delete analysis result for order address id: %1"
 "Could not perform ADDRESSFACTORY DIRECT analysis for Order","Could not perform ADDRESSFACTORY DIRECT analysis for Order"
 "Could not save analysis result.","Could not save analysis result."
-"Could not delete analysis result for order address id: %1","Could not delete analysis result for order address id: %1"
 "Could not update Order address with ADDRESSFACTORY DIRECT suggestion","Could not update Order address with ADDRESSFACTORY DIRECT suggestion"
 Country,Country
 Deliverable,Deliverable
@@ -40,6 +39,7 @@ Enabled,Enabled
 "Enter the name of the desired synchronization configuration that you have received from Deutsche Post Direkt.","Enter the name of the desired synchronization configuration that you have received from Deutsche Post Direkt."
 Errors,Errors
 Everything,Everything
+Failed,Failed
 "House address","House address"
 "House number","House number"
 Household,Household
