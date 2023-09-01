@@ -60,6 +60,10 @@ class MoveAnalysisBox implements ObserverInterface
         }
 
         $analysisResultBlock = $block->getChildBlock('addressfactory_analysis_data');
+        if (!$analysisResultBlock) {
+            return;
+        }
+
         $analysisResultBlock->setData('template_should_display', true);
 
         $transport = $observer->getData('transport');
