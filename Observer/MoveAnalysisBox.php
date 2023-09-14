@@ -13,6 +13,7 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\View\Element\AbstractBlock;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Block\Adminhtml\Order\View\Info;
 
@@ -60,6 +61,10 @@ class MoveAnalysisBox implements ObserverInterface
         }
 
         $analysisResultBlock = $block->getChildBlock('addressfactory_analysis_data');
+        if (!$analysisResultBlock instanceof AbstractBlock) {
+            return;
+        }
+
         $analysisResultBlock->setData('template_should_display', true);
 
         $transport = $observer->getData('transport');
