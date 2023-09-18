@@ -69,8 +69,7 @@ class SetNewOrderDeliverabilityStatus implements ObserverInterface
         /** @var Address $address */
         $address = $observer->getData('address');
 
-        // only handle new addresses
-        if ((!$address || !$address->isObjectNew()) ) {
+        if (!$address)  {
             return;
         }
 
