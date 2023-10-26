@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.4.2
+
+### Fixed
+
+- Prevent error on order details page in admin panel,
+  reported via [PR #5](https://github.com/netresearch/deutschepost-module-addressfactory-m2/pull/5).
+- Mark new orders as `pending` for automatic address analysis,
+  reported via [issue #6](https://github.com/netresearch/deutschepost-module-addressfactory-m2/issues/6).
+
 ## 1.4.1
 
 ### Fixed
