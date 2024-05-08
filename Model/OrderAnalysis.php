@@ -85,7 +85,7 @@ class OrderAnalysis
     {
         $wasUpdated = $this->addressUpdater->update($analysisResult, $order->getShippingAddress());
         if ($wasUpdated) {
-            if ($this->deliverabilityStatus->getStatus((int) $order->getEntityId()) === AnalysisStatusUpdater::UNDELIVERABLE){
+            if ($this->deliverabilityStatus->getStatus((int) $order->getEntityId()) === AnalysisStatusUpdater::UNDELIVERABLE) {
                 // if status has been undeliverable an address correction might not fix all issues with it
                 $this->deliverabilityStatus->setStatusPossiblyDeliverable((int) $order->getEntityId());
             } else {

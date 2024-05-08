@@ -227,8 +227,7 @@ class AutoProcess
                                     ->create(),
                                 $this->filterBuilder
                                     ->setField('status_table.' . AnalysisStatus::STATUS)
-                                    ->setValue([AnalysisStatusUpdater::PENDING, AnalysisStatusUpdater::MANUALLY_EDITED]
-                                    )
+                                    ->setValue([AnalysisStatusUpdater::PENDING, AnalysisStatusUpdater::MANUALLY_EDITED])
                                     ->setConditionType('in')
                                     ->create(),
                             ]
@@ -244,8 +243,7 @@ class AutoProcess
                                     ->create(),
                                 $this->filterBuilder
                                     ->setField('status_table.' . AnalysisStatus::STATUS)
-                                    ->setValue([AnalysisStatusUpdater::PENDING]
-                                    )
+                                    ->setValue([AnalysisStatusUpdater::PENDING])
                                     ->setConditionType('in')
                                     ->create(),
                             ]

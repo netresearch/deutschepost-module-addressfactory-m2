@@ -9,7 +9,7 @@ in your shop system using the service of Deutsche Post Direkt.
 
 ## Compatibility
 
-* Magento >= 2.4.7+
+* Magento >= 2.4.6
 
 ## Installation Instructions
 

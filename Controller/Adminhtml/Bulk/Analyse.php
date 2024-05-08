@@ -151,5 +151,4 @@ class Analyse extends Action
         $collection->addAttributeToFilter('sales_order_address.country_id', 'DE');
         return $this->filter->getCollection($collection)->getItems();
     }
-
 }

@@ -111,5 +111,4 @@ class ResponseMapper
 
         return $data;
     }
-
 }

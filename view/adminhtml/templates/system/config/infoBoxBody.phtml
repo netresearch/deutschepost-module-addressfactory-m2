@@ -6,30 +6,30 @@
 ?>
 <div class="col content">
     <p>
-        <?= $block->escapeHtml(__('ADDRESSFACTORY DIRECT is a service of Deutsche Post Direkt for validating address data.')) ?>
+        <?= $escaper->escapeHtml(__('ADDRESSFACTORY DIRECT is a service of Deutsche Post Direkt for validating address data.')) ?>
     </p>
     <p>
-        <?= $block->escapeHtml(__('This module integrates ADDRESSFACTORY DIRECT services into Magento so that you can check the customer’s shipping address before fulfilling the order.')) ?>
-        <?= $block->escapeHtml(__('Address validation can be performed either manually or automatically after the order was placed.')) ?>
-        <?= $block->escapeHtml(__('The address will be checked with regards to the format of the address (zipcode, street and city) as well as the probability of a successful delivery to the person at this address.')) ?>
+        <?= $escaper->escapeHtml(__('This module integrates ADDRESSFACTORY DIRECT services into Magento so that you can check the customer’s shipping address before fulfilling the order.')) ?>
+        <?= $escaper->escapeHtml(__('Address validation can be performed either manually or automatically after the order was placed.')) ?>
+        <?= $escaper->escapeHtml(__('The address will be checked with regards to the format of the address (zipcode, street and city) as well as the probability of a successful delivery to the person at this address.')) ?>
     </p>
     <p>
-        <?= $block->escapeHtml(__('Basis for this check is the postal reference file from Deutsche Post Direkt.')) ?>
-        <?= $block->escapeHtml(__('This database is unique in Germany with around 210 million current and former private addresses for validating purposes.')) ?>
+        <?= $escaper->escapeHtml(__('Basis for this check is the postal reference file from Deutsche Post Direkt.')) ?>
+        <?= $escaper->escapeHtml(__('This database is unique in Germany with around 210 million current and former private addresses for validating purposes.')) ?>
     </p>
 </div>
 <div class="col side">
     <aside>
         <div class="section">
-            <h3><?= $block->escapeHtml(__('To get started')) ?></h3>
+            <h3><?= $escaper->escapeHtml(__('To get started')) ?></h3>
             <p>
-                <?= $block->escapeHtml(__('You need a valid Deutsche Post Direkt account.')) ?>
+                <?= $escaper->escapeHtml(__('You need a valid Deutsche Post Direkt account.')) ?>
             </p>
             <p>
-                <?= $block->escapeHtml(
+                <?= $escaper->escapeHtml(
                     __(
                         'If you do not have an account yet or your account is not enabled for ADDRESSFACTORY DIRECT, please use the %1Deutsche Post Direkt website%2 to use our address solutions.',
-                        '<a href="' . $block->escapeUrl('https://www.postdirekt.de/addressfactory') . '" target="_blank" rel="noreferrer">',
+                        '<a href="' . $escaper->escapeUrl('https://www.postdirekt.de/addressfactory') . '" target="_blank" rel="noreferrer">',
                         '</a>'
                     ),
                     ['a']

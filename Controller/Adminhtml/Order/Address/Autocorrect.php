@@ -40,7 +40,6 @@ class Autocorrect extends Action
         Context $context,
         OrderAnalysis $orderAnalysis,
         OrderRepositoryInterface $orderRepository
-
     ) {
         $this->orderAnalysis = $orderAnalysis;
         $this->orderRepository = $orderRepository;

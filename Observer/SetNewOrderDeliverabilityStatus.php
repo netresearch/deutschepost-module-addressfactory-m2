@@ -18,11 +18,6 @@ use PostDirekt\Addressfactory\Model\OrderAnalysis;
 use PostDirekt\Addressfactory\Model\OrderUpdater;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class SetNewOrderDeliverabilityStatus
- *
- * @event sales_order_save_after
- */
 class SetNewOrderDeliverabilityStatus implements ObserverInterface
 {
     /**
@@ -69,7 +64,7 @@ class SetNewOrderDeliverabilityStatus implements ObserverInterface
         /** @var Address $address */
         $address = $observer->getData('address');
 
-        if (!$address)  {
+        if (!$address) {
             return;
         }
 

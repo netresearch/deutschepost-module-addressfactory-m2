@@ -17,26 +17,26 @@ $viewModel = $block->getData('viewModel');
 <div class="admin__page-section-item order-shipping-address pd_infox_box">
     <div class="admin__page-section-item-title">
         <img class="pd_logo" src='<?= $viewModel->getLogoUrl() ?>' alt="logo" width="150px">
-        <h2 class="title"><?= $block->escapeHtml(__('Shipping Address Check')) ?></h2>
+        <h2 class="title"><?= $escaper->escapeHtml(__('Shipping Address Check')) ?></h2>
     </div>
 
     <?php if ($viewModel->showAnalysisResults()): ?>
-        <span class="deliverability_score <?= $block->escapeHtmlAttr($viewModel->getScore()) ?>">
-            <?= $block->escapeHtml($viewModel->getHumanReadableScore()) ?>
+        <span class="deliverability_score <?= $escaper->escapeHtmlAttr($viewModel->getScore()) ?>">
+            <?= $escaper->escapeHtml($viewModel->getHumanReadableScore()) ?>
         </span>
         <div class="detected_issues_info">
             <?php if ($infos = $viewModel->getDetectedIssues()): ?>
-                <h4><?= $block->escapeHtml(__('Address Information'))?></h4>
+                <h4><?= $escaper->escapeHtml(__('Address Information'))?></h4>
                 <ul>
                 <?php foreach ($infos as $info): ?>
                     <li>
-                        <?php if ($info['icon'] !== '') : ?>
-                        <span class="icon <?= $block->escapeHtmlAttr($info['icon']) ?>"
-                              title="<?= $block->escapeHtmlAttr($info['code']) ?>">
+                        <?php if ($info['icon'] !== ''): ?>
+                        <span class="icon <?= $escaper->escapeHtmlAttr($info['icon']) ?>"
+                              title="<?= $escaper->escapeHtmlAttr($info['code']) ?>">
                         <?php else: ?>
-                        <span title="<?= $block->escapeHtmlAttr($info['code']) ?>">
+                        <span title="<?= $escaper->escapeHtmlAttr($info['code']) ?>">
                         <?php endif; ?>
-                            <?= $block->escapeHtml($info['label']) ?>
+                            <?= $escaper->escapeHtml($info['label']) ?>
                         </span>
                     </li>
                 <?php endforeach;?>
@@ -44,35 +44,35 @@ $viewModel = $block->getData('viewModel');
             <?php endif; ?>
         </div>
 
-        <?php if ($viewModel->showSuggestedAddress()) : ?>
+        <?php if ($viewModel->showSuggestedAddress()): ?>
             <div class="pd_address_sugestion">
-                <h3><?= $block->escapeHtml(__('Suggested Shipping Address')) ?></h3>
+                <h3><?= $escaper->escapeHtml(__('Suggested Shipping Address')) ?></h3>
                 <dl>
                     <?= /** @noEscape */ $viewModel->getFormattedAddress() ?>
                 </dl>
 
-                <?php if ($viewModel->allowAddressCorrect()) : ?>
+                <?php if ($viewModel->allowAddressCorrect()): ?>
                     <a class="button action-primary icon icon-import"
-                        href="<?= $block->escapeUrl($viewModel->getPerformAddressAutocorrectUrl())?>"
-                    ><?= $block->escapeHtml(__('Auto-Correct Address'))?></a>
+                        href="<?= $escaper->escapeUrl($viewModel->getPerformAddressAutocorrectUrl())?>"
+                    ><?= $escaper->escapeHtml(__('Auto-Correct Address'))?></a>
                 <?php endif; ?>
 
             </div>
         <?php endif; ?>
 
         <div class="pd_infox_box action-buttons">
-            <h3><?= $block->escapeHtml(__('Other Actions')) ?></h3>
+            <h3><?= $escaper->escapeHtml(__('Other Actions')) ?></h3>
             <p>
                 <a class="button action-default icon icon-edit"
-                   href="<?= $block->escapeUrl($viewModel->getManualEditUrl()) ?>"
-                ><?= $block->escapeHtml(__('Manually Edit Address')) ?></a>
+                   href="<?= $escaper->escapeUrl($viewModel->getManualEditUrl()) ?>"
+                ><?= $escaper->escapeHtml(__('Manually Edit Address')) ?></a>
             </p>
             <?php if ($viewModel->showUnholdButton()): ?>
                 <p>
                     <button id="order-view-addressfactory-unhold-button"
                        class="button action-default icon icon-success"
                        data-url="<?= $viewModel->getUnholdOrderUrl() ?>"
-                    ><?= $block->escapeHtml(__('Unhold Order'))?></button>
+                    ><?= $escaper->escapeHtml(__('Unhold Order'))?></button>
                 </p>
             <?php endif; ?>
 
@@ -81,7 +81,7 @@ $viewModel = $block->getData('viewModel');
                     <button id="order-view-addressfactory-cancel-button"
                             class="button action-secondary icon icon-cancel"
                             data-url="<?= $viewModel->getCancelOrderUrl()?>"
-                    ><?= $block->escapeHtml(__('Cancel Order'))?></button>
+                    ><?= $escaper->escapeHtml(__('Cancel Order'))?></button>
                 </p>
             <?php endif; ?>
         </div>
@@ -96,8 +96,8 @@ $viewModel = $block->getData('viewModel');
     <?php else: ?>
         <a
             class="button action-primary"
-            href="<?= $block->escapeUrl($viewModel->getPerformAnalysisUrl()) ?>">
-            <?= $block->escapeHtml(__('Perform Shipping Address Check')) ?>
+            href="<?= $escaper->escapeUrl($viewModel->getPerformAnalysisUrl()) ?>">
+            <?= $escaper->escapeHtml(__('Perform Shipping Address Check')) ?>
         </a>
     <?php endif; ?>
 </div>
