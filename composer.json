@@ -37,10 +37,5 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5.0"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-DHLGW-1389": "1.5.x-dev"
-        }
     }
 }
