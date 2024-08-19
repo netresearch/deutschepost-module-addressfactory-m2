@@ -129,9 +129,9 @@ class AnalysisResultRepository
     {
         $searchResult = $this->searchResultFactory->create();
         try {
-            // add new records to collection which will be persisted
-            $searchResult->setItems($analysisResults);
-            $searchResult->save();
+            foreach($analysisResults as $analysisResult) {
+                $this->save($analysisResult);
+            }
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(__('Unable to save analysis results'), $exception);
         }
