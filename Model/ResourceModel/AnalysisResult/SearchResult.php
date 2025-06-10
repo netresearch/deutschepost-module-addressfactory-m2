@@ -22,6 +22,7 @@ class SearchResult extends AbstractCollection implements SearchResultInterface
      */
     private $searchCriteria;
 
+    #[\Override]
     protected function _construct()
     {
         $this->_init(AnalysisResult::class, AnalysisResultResource::class);
@@ -32,6 +33,7 @@ class SearchResult extends AbstractCollection implements SearchResultInterface
      *
      * @return SearchCriteriaInterface|null
      */
+    #[\Override]
     public function getSearchCriteria(): ? SearchCriteriaInterface
     {
         return $this->searchCriteria;
@@ -43,7 +45,8 @@ class SearchResult extends AbstractCollection implements SearchResultInterface
      * @param SearchCriteriaInterface|null $searchCriteria
      * @return $this
      */
-    public function setSearchCriteria(SearchCriteriaInterface $searchCriteria = null): SearchResultInterface
+    #[\Override]
+    public function setSearchCriteria(?SearchCriteriaInterface $searchCriteria = null): SearchResultInterface
     {
         $this->searchCriteria = $searchCriteria;
         return $this;
@@ -54,6 +57,7 @@ class SearchResult extends AbstractCollection implements SearchResultInterface
      *
      * @return int
      */
+    #[\Override]
     public function getTotalCount(): int
     {
         return $this->getSize();
@@ -65,6 +69,7 @@ class SearchResult extends AbstractCollection implements SearchResultInterface
      * @param int $totalCount
      * @return $this
      */
+    #[\Override]
     public function setTotalCount($totalCount): SearchResultInterface
     {
         return $this;
@@ -77,7 +82,8 @@ class SearchResult extends AbstractCollection implements SearchResultInterface
      * @return $this
      * @throws \Exception
      */
-    public function setItems(array $items = null): SearchResultInterface
+    #[\Override]
+    public function setItems(?array $items = null): SearchResultInterface
     {
         if (!$items) {
             return $this;

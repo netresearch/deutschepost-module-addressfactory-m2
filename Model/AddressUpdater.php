@@ -49,7 +49,7 @@ class AddressUpdater
         if ($address === null) {
             try {
                 $address = $this->orderAddressRepository->get($analysisResult->getOrderAddressId());
-            } catch (NoSuchEntityException $exception) {
+            } catch (NoSuchEntityException) {
                 // The repository interface is missing the annotation,
                 // but its default implementation can throw NoSuchEntityException.
                 return false;
@@ -69,7 +69,7 @@ class AddressUpdater
 
         try {
             $this->orderAddressRepository->save($address);
-        } catch (CouldNotSaveException $exception) {
+        } catch (CouldNotSaveException) {
             // The repository interface is missing the annotation,
             // but its default implementation can throw CouldNotSaveException.
             return false;

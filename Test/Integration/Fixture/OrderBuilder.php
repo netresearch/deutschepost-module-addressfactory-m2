@@ -56,7 +56,7 @@ class OrderBuilder
         $this->status = '';
     }
 
-    public static function anOrder(ObjectManagerInterface $objectManager = null): OrderBuilder
+    public static function anOrder(?ObjectManagerInterface $objectManager = null): OrderBuilder
     {
         if ($objectManager === null) {
             $objectManager = Bootstrap::getObjectManager();

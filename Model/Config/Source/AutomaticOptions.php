@@ -16,6 +16,7 @@ class AutomaticOptions implements OptionSourceInterface
     public const ANALYSIS_VIA_CRON = '2';
     public const ON_ORDER_PLACE = '3';
 
+    #[\Override]
     public function toOptionArray(): array
     {
         return [

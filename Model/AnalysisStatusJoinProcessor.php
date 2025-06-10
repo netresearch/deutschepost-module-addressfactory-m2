@@ -32,6 +32,7 @@ class AnalysisStatusJoinProcessor implements CollectionProcessorInterface
      * @param SearchCriteriaInterface $searchCriteria
      * @param AbstractDb $collection
      */
+    #[\Override]
     public function process(SearchCriteriaInterface $searchCriteria, AbstractDb $collection): void
     {
         $tableName = $this->analysisStatusResource->getTable('postdirekt_addressfactory_analysis_status');

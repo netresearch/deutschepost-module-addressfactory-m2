@@ -60,9 +60,9 @@ class OrderUpdaterTest extends TestCase
      * - assert that order status is changed for undeliverable addresses
      * - assert that order status remains the same for deliverable addresses
      *
-     * @test
      * @magentoDataFixture createOrders
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function updateStatus(): void
     {
         /** @var OrderUpdater $orderUpdater */
@@ -93,9 +93,9 @@ class OrderUpdaterTest extends TestCase
      * - assert that order with undeliverable address is cancelled
      * - assert that order deliverable address remains open
      *
-     * @test
      * @magentoDataFixture createOrders
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function cancelOrder(): void
     {
         /** @var OrderUpdater $orderUpdater */

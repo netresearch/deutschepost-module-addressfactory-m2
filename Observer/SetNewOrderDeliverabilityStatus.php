@@ -59,6 +59,7 @@ class SetNewOrderDeliverabilityStatus implements ObserverInterface
         $this->orderUpdater = $orderUpdater;
     }
 
+    #[\Override]
     public function execute(Observer $observer): void
     {
         /** @var Address $address */

@@ -41,6 +41,7 @@ class MoveAnalysisBox implements ObserverInterface
      * @throws LocalizedException
      * @event view_block_abstract_to_html_after
      */
+    #[\Override]
     public function execute(Observer $observer): void
     {
         if ($this->request->getFullActionName() !== 'sales_order_view') {

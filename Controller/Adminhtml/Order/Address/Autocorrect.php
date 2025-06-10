@@ -47,6 +47,7 @@ class Autocorrect extends Action
         parent::__construct($context);
     }
 
+    #[\Override]
     public function execute(): ResultInterface
     {
         $orderId  = $this->getRequest()->getParam('order_id');

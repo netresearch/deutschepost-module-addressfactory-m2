@@ -35,12 +35,12 @@ class AnalysisResultRepositoryTest extends TestCase
     }
 
     /**
-     * @test
      * @magentoDataFixture createOrder
      *
      * @throws CouldNotSaveException
      * @throws NoSuchEntityException
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function saveAnalysisResultAndGetByAddressIdSuccess(): void
     {
         $data = [

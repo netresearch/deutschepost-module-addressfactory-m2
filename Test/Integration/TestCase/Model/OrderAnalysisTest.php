@@ -45,10 +45,10 @@ class OrderAnalysisTest extends TestCase
      * - Assert that shipping address fields are updated with analysis result.
      * - Assert that analysis status is updated.
      *
-     * @test
      * @magentoDataFixture createOrders
      * @throws NoSuchEntityException
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function updateShippingAddressSuccess(): void
     {
         /** @var OrderAnalysis $orderAnalysis */

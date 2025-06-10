@@ -50,10 +50,10 @@ class AddressUpdaterTest extends TestCase
      *
      * assert that order address is updated with data from analysis result and is saved.
      *
-     * @test
      * @magentoDataFixture createAnalysisResults
      * @throws LocalizedException
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function updateSuccess(): void
     {
         /** @var ServiceFactory|MockObject $mockServiceFactory */

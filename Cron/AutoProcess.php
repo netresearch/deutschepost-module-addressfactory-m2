@@ -179,9 +179,7 @@ class AutoProcess
 
         $inclManuallyEdited = array_filter(
             $autoProcessStores,
-            function (int $storeId) {
-                return $this->config->isAutoValidateManuallyEdited($storeId);
-            }
+            fn(int $storeId) => $this->config->isAutoValidateManuallyEdited($storeId)
         );
 
         $exclManuallyEdited = array_diff($autoProcessStores, $inclManuallyEdited);

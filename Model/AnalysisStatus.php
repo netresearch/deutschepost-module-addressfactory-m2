@@ -15,6 +15,7 @@ class AnalysisStatus extends AbstractModel
     public const ORDER_ID = 'order_id';
     public const STATUS = 'status';
 
+    #[\Override]
     protected function _construct()
     {
         $this->_init(ResourceModel\AnalysisStatus::class);

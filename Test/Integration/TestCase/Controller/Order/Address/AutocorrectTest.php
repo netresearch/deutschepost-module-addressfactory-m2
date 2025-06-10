@@ -58,13 +58,13 @@ class AutocorrectTest extends AbstractBackendController
     }
 
     /**
-     * @test
      * @magentoDataFixture createAnalysisResults
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_update_shipping_address 0
      *
      * @throws InputException
      * @throws NoSuchEntityException
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function autocorrectAddressSuccess(): void
     {
         /** @var ServiceFactory|MockObject $mockServiceFactory */

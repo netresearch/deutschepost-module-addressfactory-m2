@@ -40,9 +40,9 @@ class OrderRepositoryPluginTest extends TestCase
     }
 
     /**
-     * @test
      * @magentoDataFixture createOrders
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function extensionAttributesAreManifested(): void
     {
         /** @var ServiceFactory|MockObject $mockServiceFactory */

@@ -72,6 +72,7 @@ class UpdateOrderDeliverabilityStatus implements ObserverInterface
         $this->logger = $logger;
     }
 
+    #[\Override]
     public function execute(Observer $observer): void
     {
         $addressId = $this->request->getParam('address_id');

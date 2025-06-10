@@ -21,21 +21,21 @@
         ]
     },
     "require": {
-        "php": "^8.2.0",
+        "php": "^8.3.0 || ^8.4.0",
         "ext-intl": "*",
-        "deutschepost/module-core": "^1.3.0",
-        "deutschepost/sdk-api-addressfactory": "^2.1.0",
-        "magento/module-backend": "^102.0.6",
-        "magento/module-ui": "^101.2.6",
-        "magento/module-config": "^101.2.6",
-        "magento/module-cron": "^100.4.6",
-        "magento/framework": "^103.0.6",
-        "magento/module-sales": "^103.0.6",
-        "magento/module-store": "^101.1.6",
+        "deutschepost/module-core": "^1.4.0",
+        "deutschepost/sdk-api-addressfactory": "^2.2.0",
+        "magento/module-backend": "^102.0.8",
+        "magento/module-ui": "^101.2.8",
+        "magento/module-config": "^101.2.8",
+        "magento/module-cron": "^100.4.8",
+        "magento/framework": "^103.0.8",
+        "magento/module-sales": "^103.0.8",
+        "magento/module-store": "^101.1.8",
         "netresearch/config-fields-m2": "^1.3.0",
         "php-http/curl-client": "^2.3.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5.0"
+        "phpunit/phpunit": "^10.0.0"
     }
 }

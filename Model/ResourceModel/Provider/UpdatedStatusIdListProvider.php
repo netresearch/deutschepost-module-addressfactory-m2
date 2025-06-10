@@ -41,6 +41,7 @@ class UpdatedStatusIdListProvider implements NotSyncedDataProviderInterface
      * @param string $gridTableName Grid table name (sales_order_grid by default).
      * @return string[]
      */
+    #[\Override]
     public function getIds($mainTableName, $gridTableName): array
     {
         try {

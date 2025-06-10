@@ -16,6 +16,7 @@ class AnalysisResult extends AbstractModel implements AnalysisResultInterface
     /**
      * Initialize AnalysisResult resource model.
      */
+    #[\Override]
     protected function _construct(): void
     {
         $this->_init(ResourceModel\AnalysisResult::class);
@@ -26,6 +27,7 @@ class AnalysisResult extends AbstractModel implements AnalysisResultInterface
     /**
      * @return int
      */
+    #[\Override]
     public function getOrderAddressId(): int
     {
         return (int) $this->getData(self::ORDER_ADDRESS_ID);
@@ -34,11 +36,12 @@ class AnalysisResult extends AbstractModel implements AnalysisResultInterface
     /**
      * @return string[]
      */
+    #[\Override]
     public function getStatusCodes(): array
     {
         $result = [];
         if ($this->getData(self::STATUS_CODE)) {
-            $result = explode(',', $this->getData(self::STATUS_CODE));
+            $result = explode(',', (string) $this->getData(self::STATUS_CODE));
         }
 
         return $result;
@@ -47,6 +50,7 @@ class AnalysisResult extends AbstractModel implements AnalysisResultInterface
     /**
      * @return string
      */
+    #[\Override]
     public function getFirstName(): string
     {
         return $this->getData(self::FIRST_NAME);
@@ -55,6 +59,7 @@ class AnalysisResult extends AbstractModel implements AnalysisResultInterface
     /**
      * @return string
      */
+    #[\Override]
     public function getLastName(): string
     {
         return $this->getData(self::LAST_NAME);
@@ -63,6 +68,7 @@ class AnalysisResult extends AbstractModel implements AnalysisResultInterface
     /**
      * @return string
      */
+    #[\Override]
     public function getCity(): string
     {
         return $this->getData(self::CITY);
@@ -71,6 +77,7 @@ class AnalysisResult extends AbstractModel implements AnalysisResultInterface
     /**
      * @return string
      */
+    #[\Override]
     public function getPostalCode(): string
     {
         return $this->getData(self::POSTAL_CODE);
@@ -79,6 +86,7 @@ class AnalysisResult extends AbstractModel implements AnalysisResultInterface
     /**
      * @return string
      */
+    #[\Override]
     public function getStreet(): string
     {
         return $this->getData(self::STREET);
@@ -87,6 +95,7 @@ class AnalysisResult extends AbstractModel implements AnalysisResultInterface
     /**
      * @return string
      */
+    #[\Override]
     public function getStreetNumber(): string
     {
         return (string) $this->getData(self::STREET_NUMBER);

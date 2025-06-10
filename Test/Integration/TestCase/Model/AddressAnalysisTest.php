@@ -68,19 +68,17 @@ class AddressAnalysisTest extends TestCase
      * assert that returned analysisResults match fixtures.
      * assert that webservice is not invoked.
      *
-     * @test
      * @magentoDataFixture createOrders
      * @throws LocalizedException
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function analysisResultFromDb(): void
     {
         $orders = [self::$deliverableOrder, self::$undeliverableOrder];
 
         /** @var OrderAddressInterface[] $addresses */
         $addresses = array_map(
-            function (Order $order) {
-                return $order->getShippingAddress();
-            },
+            fn(Order $order) => $order->getShippingAddress(),
             $orders
         );
 
@@ -112,11 +110,10 @@ class AddressAnalysisTest extends TestCase
      * - Assert that returned analysis result includes fixture from db.
      * - Assert that returned analysis result includes record response from web service.
      *
-     * @test
      * @magentoDataFixture createOrders
-     *
      * @throws LocalizedException
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function analysisResultFromDbAndWs(): void
     {
         $orders = [self::$deliverableOrder, self::$orderWithFailedAnalysis];
@@ -155,9 +152,7 @@ class AddressAnalysisTest extends TestCase
 
         /** @var OrderAddressInterface[] $addresses */
         $addresses = array_map(
-            function (Order $order) {
-                return $order->getShippingAddress();
-            },
+            fn(Order $order) => $order->getShippingAddress(),
             $orders
         );
 
@@ -207,9 +202,9 @@ class AddressAnalysisTest extends TestCase
      * and some need be analyzed from webservice, but webservice
      * returns an error response.
      *
-     * @test
      * @magentoDataFixture createOrders
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function analyzeRequestFails(): void
     {
         $this->expectException(LocalizedException::class);
@@ -219,9 +214,7 @@ class AddressAnalysisTest extends TestCase
 
         /** @var OrderAddressInterface[] $addresses */
         $addresses = array_map(
-            function (Order $order) {
-                return $order->getShippingAddress();
-            },
+            fn(Order $order) => $order->getShippingAddress(),
             $orders
         );
 

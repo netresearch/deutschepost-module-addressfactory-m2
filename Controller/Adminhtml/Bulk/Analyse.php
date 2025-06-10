@@ -64,6 +64,7 @@ class Analyse extends Action
         parent::__construct($context);
     }
 
+    #[\Override]
     public function execute()
     {
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);

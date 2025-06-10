@@ -24,6 +24,7 @@ class AddressVerificationServiceFactory implements ServiceFactoryInterface
      * @param bool $sandboxMode
      * @return AddressVerificationServiceInterface
      */
+    #[\Override]
     public function createAddressVerificationService(
         string $username,
         string $password,

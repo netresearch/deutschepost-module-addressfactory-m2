@@ -37,6 +37,7 @@ class AnalysisResult extends AbstractDb
      * Init main table and primary key.
      *
      */
+    #[\Override]
     protected function _construct(): void
     {
         $this->_init('postdirekt_addressfactory_analysis', 'order_address_id');
@@ -51,6 +52,7 @@ class AnalysisResult extends AbstractDb
      *
      * @return AbstractDb
      */
+    #[\Override]
     protected function _beforeSave(AbstractModel $object): AbstractDb
     {
         $select = $this->_getLoadSelect($object->getIdFieldName(), $object->getId(), $object);

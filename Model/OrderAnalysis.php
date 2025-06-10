@@ -63,7 +63,7 @@ class OrderAnalysis
 
         try {
             $analysisResults = $this->addressAnalysisService->analyse($addresses);
-        } catch (LocalizedException $exception) {
+        } catch (LocalizedException) {
             $analysisResults = [];
         }
         $result = [];

@@ -253,7 +253,7 @@ class AnalysisData implements ArgumentInterface
         $orderId = (int) $this->request->getParam('order_id');
         try {
             $order = $this->orderRepository->get($orderId);
-        } catch (InputException | NoSuchEntityException $e) {
+        } catch (InputException | NoSuchEntityException) {
             throw new \RuntimeException('Could not load order. Was the order id added correctly?');
         }
 
@@ -273,7 +273,7 @@ class AnalysisData implements ArgumentInterface
 
         try {
             $this->analysisResult = $this->analysisResultRepository->getByAddressId((int) $orderAddress->getEntityId());
-        } catch (NoSuchEntityException $exception) {
+        } catch (NoSuchEntityException) {
             return null;
         }
 

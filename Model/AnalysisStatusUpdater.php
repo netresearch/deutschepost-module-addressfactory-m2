@@ -180,7 +180,7 @@ class AnalysisStatusUpdater
     {
         try {
             $deliverabilityStatus = $this->repository->getByOrderId($orderId);
-        } catch (NoSuchEntityException $exception) {
+        } catch (NoSuchEntityException) {
             return self::NOT_ANALYSED;
         }
 

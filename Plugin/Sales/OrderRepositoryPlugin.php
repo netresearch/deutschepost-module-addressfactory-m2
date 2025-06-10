@@ -43,7 +43,7 @@ class OrderRepositoryPlugin
         try {
             $analysisStatus = $this->analysisStatusRepo->getByOrderId((int) $order->getEntityId());
             $extensionAttributes->setPostdirektAddressfactoryAnalysisStatus($analysisStatus->getStatus());
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $extensionAttributes->setPostdirektAddressfactoryAnalysisStatus(null);
         }
 

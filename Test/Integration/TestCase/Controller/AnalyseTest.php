@@ -80,12 +80,11 @@ class AnalyseTest extends AbstractBackendController
      *
      * - Assert that order is put on hold.
      *
-     * @test
      * @magentoDataFixture createOrders
      * @magentoConfigFixture default_store postdirekt/addressfactory/hold_non_deliverable_orders 1
-     *
      * @throws LocalizedException
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function holdNonDeliverableOrderSuccess(): void
     {
         /** @var ServiceFactory|MockObject $mockServiceFactory */
@@ -122,12 +121,11 @@ class AnalyseTest extends AbstractBackendController
      *
      * - Assert that order is not on hold.
      *
-     * @test
      * @magentoDataFixture createOrders
      * @magentoConfigFixture default_store postdirekt/addressfactory/hold_non_deliverable_orders 0
-     *
      * @throws LocalizedException
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function holdNonDeliverableOrderWithDisabledConfig(): void
     {
         /** @var ServiceFactory|MockObject $mockServiceFactory */
@@ -162,12 +160,11 @@ class AnalyseTest extends AbstractBackendController
     /**
      * Test covers case where all orders that are undeliverable are cancelled (according to configuration).
      *
-     * @test
      * @magentoDataFixture createOrders
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_cancel_orders 1
-     *
      * @throws LocalizedException
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function autoCancelNonDeliverableOrdersSuccess(): void
     {
         /** @var ServiceFactory|MockObject $mockServiceFactory */
@@ -202,12 +199,11 @@ class AnalyseTest extends AbstractBackendController
     /**
      * Test covers case where all orders that are undeliverable are not cancelled (according to configuration).
      *
-     * @test
      * @magentoDataFixture createOrders
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_cancel_orders 0
-     *
      * @throws LocalizedException
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function autoCancelNonDeliverableOrdersWithDisabledConfig(): void
     {
         /** @var ServiceFactory|MockObject $mockServiceFactory */
@@ -244,12 +240,11 @@ class AnalyseTest extends AbstractBackendController
      *
      * - Assert that order address is updated with analysis result address data.
      *
-     * @test
      * @magentoDataFixture createOrders
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_update_shipping_address 1
-     *
      * @throws LocalizedException
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function autoUpdateShippingAddressSuccess(): void
     {
         /** @var ServiceFactory|MockObject $mockServiceFactory */
@@ -292,12 +287,11 @@ class AnalyseTest extends AbstractBackendController
      *
      * - Assert that order address is not updated with analysis result address data.
      *
-     * @test
      * @magentoDataFixture createOrders
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_update_shipping_address 0
-     *
      * @throws LocalizedException
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function autoUpdateShippingAddressWithDisabledConfig(): void
     {
         /** @var ServiceFactory|MockObject $mockServiceFactory */

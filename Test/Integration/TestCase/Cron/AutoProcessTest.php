@@ -50,6 +50,7 @@ class AutoProcessTest extends TestCase
     /**
      * Replace SDK service by stub implementation
      */
+    #[\Override]
     protected function setUp(): void
     {
         Bootstrap::getObjectManager()->configure(
@@ -105,7 +106,7 @@ class AutoProcessTest extends TestCase
      *
      * @return RecordInterface[][][]
      */
-    public function webserviceResponseProvider(): array
+    public static function webserviceResponseProvider(): array
     {
         return [
             'mixed_response' => [
@@ -166,9 +167,9 @@ class AutoProcessTest extends TestCase
      *
      * - Assert that cron analysis does not get started.
      *
-     * @test
      * @magentoConfigFixture default_store postdirekt/addressfactory/automatic_address_analysis 1
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function cronDisabled(): void
     {
         $repositoryMock = $this->getMockBuilder(OrderRepository::class)
@@ -193,16 +194,15 @@ class AutoProcessTest extends TestCase
      * - Assert that analysis result is persisted according to web service response.
      * - Assert that shipping addresses remain unaltered.
      *
-     * @test
-     * @dataProvider webserviceResponseProvider
      *
      * @magentoConfigFixture default_store postdirekt/addressfactory/automatic_address_analysis 2
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_update_shipping_address 0
      * @magentoDataFixture createPendingOrders
-     *
      * @param callable $getRecords
      * @throws LocalizedException
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('webserviceResponseProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function pendingAddressesAreAnalyzed(callable $getRecords): void
     {
         $orders = array_merge(self::$pendingOrders, self::$analyzedOrders);
@@ -269,16 +269,15 @@ class AutoProcessTest extends TestCase
      *
      * - Assert that shipping addresses are updated according to web service response.
      *
-     * @test
-     * @dataProvider webserviceResponseProvider
      *
      * @magentoConfigFixture default_store postdirekt/addressfactory/automatic_address_analysis 2
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_update_shipping_address 1
      * @magentoDataFixture createPendingOrders
-     *
      * @param callable $getRecords
      * @throws LocalizedException
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('webserviceResponseProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function pendingAddressesAreUpdated(callable $getRecords): void
     {
         $orders = array_merge(self::$pendingOrders, self::$analyzedOrders);
@@ -339,8 +338,6 @@ class AutoProcessTest extends TestCase
      *
      * - Assert that only addresses with "pending" status are sent to the web service.
      *
-     * @test
-     * @dataProvider webserviceResponseProvider
      *
      * @magentoConfigFixture default/postdirekt/addressfactory/automatic_address_analysis 2
      * @magentoConfigFixture default_store postdirekt/addressfactory/auto_update_shipping_address 0
@@ -349,6 +346,8 @@ class AutoProcessTest extends TestCase
      *
      * @param callable $getRecords
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('webserviceResponseProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function analyzedAddressesAreSkipped(callable $getRecords): void
     {
         /** @var AddressVerificationServiceStub $service */

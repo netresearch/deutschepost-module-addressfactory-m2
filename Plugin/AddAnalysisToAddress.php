@@ -78,7 +78,7 @@ class AddAnalysisToAddress
         try {
             $analysisResults = $this->analysisRepository->getByAddressId((int) $address->getEntityId());
             $addressExtensionAttributes->setPostdirektAddressfactoryAnalysisResult($analysisResults);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return $order;
         }
 

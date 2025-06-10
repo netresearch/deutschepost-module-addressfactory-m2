@@ -68,6 +68,7 @@ class Analyse extends Action
      *
      * @return ResultInterface
      */
+    #[\Override]
     public function execute(): ResultInterface
     {
         $orderId = (int) $this->getRequest()->getParam('order_id');

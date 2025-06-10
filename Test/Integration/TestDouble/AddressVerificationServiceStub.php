@@ -24,15 +24,18 @@ class AddressVerificationServiceStub implements AddressVerificationServiceInterf
 
     private $requestedRecordsCount = 0;
 
-    public function openSession(string $configName, string $clientId = null): string
+    #[\Override]
+    public function openSession(string $configName, ?string $clientId = null): string
     {
         return "test";
     }
 
+    #[\Override]
     public function closeSession(string $sessionId): void
     {
     }
 
+    #[\Override]
     public function getRecordByAddress(
         string $postalCode = '',
         string $city = '',
@@ -40,9 +43,9 @@ class AddressVerificationServiceStub implements AddressVerificationServiceInterf
         string $houseNumber = '',
         string $lastName = '',
         string $firstName = '',
-        string $sessionId = null,
-        string $configName = null,
-        string $clientId = null
+        ?string $sessionId = null,
+        ?string $configName = null,
+        ?string $clientId = null
     ): RecordInterface {
         $this->requestCount++;
 
@@ -53,11 +56,12 @@ class AddressVerificationServiceStub implements AddressVerificationServiceInterf
         return $this->records[0];
     }
 
+    #[\Override]
     public function getRecords(
         array $records,
-        string $sessionId = null,
-        string $configName = null,
-        string $clientId = null
+        ?string $sessionId = null,
+        ?string $configName = null,
+        ?string $clientId = null
     ): array {
         $this->requestedRecordsCount += count($records);
 

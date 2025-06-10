@@ -250,9 +250,7 @@ class DeliverabilityCodes
             /**
              * If BAC000111 (not correctable) is set, all other analysis modules become irrelevant
              */
-            $codes = array_filter($codes, static function ($key) {
-                return strpos($key, 'BAC') !== false;
-            });
+            $codes = array_filter($codes, static fn($key) => str_contains((string) $key, 'BAC'));
         }
 
         return $codes;

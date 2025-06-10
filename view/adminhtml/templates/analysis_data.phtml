@@ -16,7 +16,7 @@ $viewModel = $block->getData('viewModel');
 ?>
 <div class="admin__page-section-item order-shipping-address pd_infox_box">
     <div class="admin__page-section-item-title">
-        <img class="pd_logo" src='<?= $viewModel->getLogoUrl() ?>' alt="logo" width="150px">
+        <img class="pd_logo" src="<?= $escaper->escapeUrl($viewModel->getLogoUrl()) ?>" alt="logo" width="150px">
         <h2 class="title"><?= $escaper->escapeHtml(__('Shipping Address Check')) ?></h2>
     </div>
 
@@ -71,7 +71,7 @@ $viewModel = $block->getData('viewModel');
                 <p>
                     <button id="order-view-addressfactory-unhold-button"
                        class="button action-default icon icon-success"
-                       data-url="<?= $viewModel->getUnholdOrderUrl() ?>"
+                       data-url="<?=  $escaper->escapeUrl($viewModel->getUnholdOrderUrl()) ?>"
                     ><?= $escaper->escapeHtml(__('Unhold Order'))?></button>
                 </p>
             <?php endif; ?>
@@ -80,7 +80,7 @@ $viewModel = $block->getData('viewModel');
                 <p>
                     <button id="order-view-addressfactory-cancel-button"
                             class="button action-secondary icon icon-cancel"
-                            data-url="<?= $viewModel->getCancelOrderUrl()?>"
+                            data-url="<?= $escaper->escapeUrl($viewModel->getCancelOrderUrl()) ?>"
                     ><?= $escaper->escapeHtml(__('Cancel Order'))?></button>
                 </p>
             <?php endif; ?>
