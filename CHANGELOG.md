@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.6.0
+
+### Added
+
+- Support for PHP 8.4.
+- Compatibility with Magento 2.4.8.
+
+### Changed
+
+- Updated dependency `deutschepost/module-core` to version 1.4.0.
+- Improved code quality with static analysis tools.
+
+### Removed
+
+- PHP 8.2 support to align with Magento 2.4.8 requirements.
+
 ## 1.5.0
 
 ### Added
