@@ -13,19 +13,8 @@ use Magento\Framework\View\Element\Block\ArgumentInterface;
 
 class InfoBox implements ArgumentInterface
 {
-    /**
-     * @var Config
-     */
-    private $config;
-
-    /**
-     * InfoBox constructor.
-     *
-     * @param Config $coreConfig
-     */
-    public function __construct(Config $coreConfig)
+    public function __construct(private Config $config)
     {
-        $this->config = $coreConfig;
     }
 
     /**

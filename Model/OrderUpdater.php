@@ -14,20 +14,10 @@ use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 
 class OrderUpdater
 {
-    /**
-     * @var DeliverabilityCodes
-     */
-    private $deliverabilityCodes;
-
-    /**
-     * @var OrderManagementInterface
-     */
-    private $orderService;
-
-    public function __construct(DeliverabilityCodes $deliverabilityCodes, OrderManagementInterface $orderService)
-    {
-        $this->deliverabilityCodes = $deliverabilityCodes;
-        $this->orderService = $orderService;
+    public function __construct(
+        private DeliverabilityCodes $deliverabilityCodes,
+        private OrderManagementInterface $orderService,
+    ) {
     }
 
     /**

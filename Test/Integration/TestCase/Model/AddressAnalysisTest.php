@@ -24,6 +24,9 @@ use PostDirekt\Sdk\AddressfactoryDirect\Service\AddressVerificationService\Perso
 use PostDirekt\Sdk\AddressfactoryDirect\Service\AddressVerificationService\Record;
 use PostDirekt\Sdk\AddressfactoryDirect\Service\ServiceFactory;
 
+/**
+ * @magentoDbIsolation enabled
+ */
 class AddressAnalysisTest extends TestCase
 {
     /**
@@ -78,7 +81,7 @@ class AddressAnalysisTest extends TestCase
 
         /** @var OrderAddressInterface[] $addresses */
         $addresses = array_map(
-            fn(Order $order) => $order->getShippingAddress(),
+            fn (Order $order) => $order->getShippingAddress(),
             $orders
         );
 
@@ -152,7 +155,7 @@ class AddressAnalysisTest extends TestCase
 
         /** @var OrderAddressInterface[] $addresses */
         $addresses = array_map(
-            fn(Order $order) => $order->getShippingAddress(),
+            fn (Order $order) => $order->getShippingAddress(),
             $orders
         );
 
@@ -214,7 +217,7 @@ class AddressAnalysisTest extends TestCase
 
         /** @var OrderAddressInterface[] $addresses */
         $addresses = array_map(
-            fn(Order $order) => $order->getShippingAddress(),
+            fn (Order $order) => $order->getShippingAddress(),
             $orders
         );
 

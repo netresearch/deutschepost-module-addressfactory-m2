@@ -17,6 +17,9 @@ use PostDirekt\Addressfactory\Model\AnalysisStatus;
 use PostDirekt\Addressfactory\Model\AnalysisStatusRepository;
 use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderBuilder;
 
+/**
+ * @magentoDbIsolation enabled
+ */
 class AnalysisStatusRepositoryTest extends TestCase
 {
     /**

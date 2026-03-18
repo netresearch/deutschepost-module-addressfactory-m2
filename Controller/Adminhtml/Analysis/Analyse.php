@@ -26,40 +26,15 @@ class Analyse extends Action
      *
      * @see _isAllowed()
      */
-    public const ADMIN_RESOURCE = 'Magento_Sales::actions_edit';
-
-    /**
-     * @var Config
-     */
-    private $config;
-
-    /**
-     * @var OrderAnalysis
-     */
-    private $orderAnalysisService;
-
-    /**
-     * @var OrderRepositoryInterface
-     */
-    private $orderRepository;
-
-    /**
-     * @var OrderUpdater
-     */
-    private $orderUpdater;
+    public const string ADMIN_RESOURCE = 'Magento_Sales::actions_edit';
 
     public function __construct(
         Context $context,
-        Config $config,
-        OrderAnalysis $orderAnalysisService,
-        OrderRepositoryInterface $orderRepository,
-        OrderUpdater $orderUpdater
+        private Config $config,
+        private OrderAnalysis $orderAnalysisService,
+        private OrderRepositoryInterface $orderRepository,
+        private OrderUpdater $orderUpdater
     ) {
-        $this->config = $config;
-        $this->orderAnalysisService = $orderAnalysisService;
-        $this->orderRepository = $orderRepository;
-        $this->orderUpdater = $orderUpdater;
-
         parent::__construct($context);
     }
 
@@ -75,6 +50,7 @@ class Analyse extends Action
         /** @var Order $order */
         $order = $this->orderRepository->get($orderId);
 
+        /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $resultRedirect->setUrl($this->_redirect->getRefererUrl());
 

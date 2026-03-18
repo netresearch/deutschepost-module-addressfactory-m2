@@ -16,14 +16,8 @@ use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisStatus as AnalysisStat
 
 class AnalysisStatusJoinProcessor implements CollectionProcessorInterface
 {
-    /**
-     * @var AnalysisStatusResource
-     */
-    private $analysisStatusResource;
-
-    public function __construct(AnalysisStatusResource $analysisStatusResource)
+    public function __construct(private AnalysisStatusResource $analysisStatusResource)
     {
-        $this->analysisStatusResource = $analysisStatusResource;
     }
 
     /**

@@ -15,22 +15,10 @@ use PostDirekt\Addressfactory\Model\AnalysisStatusRepository;
 
 class OrderRepositoryPlugin
 {
-    /**
-     * @var OrderExtensionFactory
-     */
-    private $orderExtensionFactory;
-
-    /**
-     * @var AnalysisStatusRepository
-     */
-    private $analysisStatusRepo;
-
     public function __construct(
-        OrderExtensionFactory $orderExtensionFactory,
-        AnalysisStatusRepository $analysisStatusRepo
+        private OrderExtensionFactory $orderExtensionFactory,
+        private AnalysisStatusRepository $analysisStatusRepo,
     ) {
-        $this->orderExtensionFactory = $orderExtensionFactory;
-        $this->analysisStatusRepo = $analysisStatusRepo;
     }
 
     public function afterGet(OrderRepositoryInterface $subject, OrderInterface $order): OrderInterface

@@ -13,21 +13,21 @@ namespace PostDirekt\Addressfactory\Api\Data;
  */
 interface AnalysisResultInterface
 {
-    public const ORDER_ADDRESS_ID = 'order_address_id';
+    public const string ORDER_ADDRESS_ID = 'order_address_id';
 
-    public const STATUS_CODE = 'status_codes';
+    public const string STATUS_CODE = 'status_codes';
 
-    public const FIRST_NAME = 'first_name';
+    public const string FIRST_NAME = 'first_name';
 
-    public const LAST_NAME = 'last_name';
+    public const string LAST_NAME = 'last_name';
 
-    public const CITY = 'city';
+    public const string CITY = 'city';
 
-    public const POSTAL_CODE = 'postal_code';
+    public const string POSTAL_CODE = 'postal_code';
 
-    public const STREET = 'street';
+    public const string STREET = 'street';
 
-    public const STREET_NUMBER = 'street_number';
+    public const string STREET_NUMBER = 'street_number';
 
     /**
      * @return int

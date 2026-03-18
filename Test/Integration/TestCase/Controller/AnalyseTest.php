@@ -22,6 +22,7 @@ use PostDirekt\Sdk\AddressfactoryDirect\Service\ServiceFactory;
 
 /**
  * @magentoAppArea adminhtml
+ * @magentoDbIsolation enabled
  */
 class AnalyseTest extends AbstractBackendController
 {

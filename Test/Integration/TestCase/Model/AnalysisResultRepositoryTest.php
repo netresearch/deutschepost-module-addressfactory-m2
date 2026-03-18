@@ -17,6 +17,9 @@ use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
 use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderBuilder;
 
+/**
+ * @magentoDbIsolation enabled
+ */
 class AnalysisResultRepositoryTest extends TestCase
 {
     /**

@@ -10,13 +10,14 @@ namespace PostDirekt\Addressfactory\ViewModel\Adminhtml;
 
 use Magento\Backend\Model\Url;
 use Magento\Framework\App\Request\Http as Request;
+use Magento\Framework\Escaper;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Phrase;
 use Magento\Framework\View\Asset\Repository as AssetRepository;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Sales\Api\Data\OrderAddressInterface;
-use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 use PostDirekt\Addressfactory\Model\AddressUpdater;
@@ -27,68 +28,21 @@ use PostDirekt\Addressfactory\Model\DeliverabilityCodes;
 class AnalysisData implements ArgumentInterface
 {
     /**
-     * @var AnalysisResultRepository
-     */
-    private $analysisResultRepository;
-
-    /**
-     * @var AssetRepository
-     */
-    private $assetRepository;
-
-    /**
-     * @var Request
-     */
-    private $request;
-
-    /**
-     * @var OrderRepository
-     */
-    private $orderRepository;
-
-    /**
-     * @var DeliverabilityCodes
-     */
-    private $deliverablility;
-
-    /**
-     * @var AnalysisStatusUpdater
-     */
-    private $analysisStatus;
-
-    /**
-     * @var AddressUpdater
-     */
-    private $addressUpdater;
-
-    /**
-     * @var Url
-     */
-    private $urlBuilder;
-
-    /**
      * @var AnalysisResultInterface|null
      */
     private $analysisResult;
 
     public function __construct(
-        Request $request,
-        DeliverabilityCodes $deliverablility,
-        AnalysisStatusUpdater $analysisStatus,
-        Url $urlBuilder,
-        AssetRepository $assetRepository,
-        OrderRepository $orderRepository,
-        AnalysisResultRepository $analysisResultRepository,
-        AddressUpdater $addressUpdater
+        private Request $request,
+        private DeliverabilityCodes $deliverablility,
+        private AnalysisStatusUpdater $analysisStatus,
+        private Url $urlBuilder,
+        private AssetRepository $assetRepository,
+        private OrderRepository $orderRepository,
+        private AnalysisResultRepository $analysisResultRepository,
+        private AddressUpdater $addressUpdater,
+        private Escaper $escaper,
     ) {
-        $this->request = $request;
-        $this->deliverablility = $deliverablility;
-        $this->analysisStatus = $analysisStatus;
-        $this->urlBuilder = $urlBuilder;
-        $this->assetRepository = $assetRepository;
-        $this->orderRepository = $orderRepository;
-        $this->analysisResultRepository = $analysisResultRepository;
-        $this->addressUpdater = $addressUpdater;
     }
 
     public function getLogoUrl(): string
@@ -102,9 +56,6 @@ class AnalysisData implements ArgumentInterface
         return $this->urlBuilder->getUrl('postdirekt/analysis/analyse', ['order_id' => $orderId]);
     }
 
-    /**
-     * @return Phrase
-     */
     public function getHumanReadableScore(): string
     {
         /** @var Phrase[] $scores */
@@ -143,31 +94,43 @@ class AnalysisData implements ArgumentInterface
             return null;
         }
 
-        $firstName = ($orderAddress->getFirstname() !== $analysisResult->getFirstName())
-            ? "<b>{$analysisResult->getFirstName()}</b>" : $analysisResult->getFirstName();
+        /** @var string $firstName */
+        $firstName = $this->escaper->escapeHtml($analysisResult->getFirstName());
+        if ($orderAddress->getFirstname() !== $analysisResult->getFirstName()) {
+            $firstName = "<b>$firstName</b>";
+        }
 
-        $lastName = ($orderAddress->getLastname() !== $analysisResult->getLastName())
-            ? "<b>{$analysisResult->getLastName()}</b>" : $analysisResult->getLastName();
+        /** @var string $lastName */
+        $lastName = $this->escaper->escapeHtml($analysisResult->getLastName());
+        if ($orderAddress->getLastname() !== $analysisResult->getLastName()) {
+            $lastName = "<b>$lastName</b>";
+        }
 
         $street = trim(implode(' ', [$analysisResult->getStreet(), $analysisResult->getStreetNumber()]));
-        $orderStreet = trim(implode('', $orderAddress->getStreet()));
+        $orderStreet = trim(implode(' ', $orderAddress->getStreet()));
+        /** @var string $escapedStreet */
+        $escapedStreet = $this->escaper->escapeHtml($street);
+        if ($street !== $orderStreet) {
+            $escapedStreet = "<b>$escapedStreet</b>";
+        }
 
-        $street = ($street !== $orderStreet) ? "<b>$street</b>" : $street;
+        /** @var string $city */
+        $city = $this->escaper->escapeHtml($analysisResult->getCity());
+        if ($analysisResult->getCity() !== $orderAddress->getCity()) {
+            $city = "<b>$city</b>";
+        }
 
-        $city = ($analysisResult->getCity() !== $orderAddress->getCity())
-            ? "<b>{$analysisResult->getCity()}</b>" : $analysisResult->getCity();
-
-        $postalCode = ($analysisResult->getPostalCode() !== $orderAddress->getPostcode())
-            ? "<b>{$analysisResult->getPostalCode()}</b>" : $analysisResult->getPostalCode();
+        /** @var string $postalCode */
+        $postalCode = $this->escaper->escapeHtml($analysisResult->getPostalCode());
+        if ($analysisResult->getPostalCode() !== $orderAddress->getPostcode()) {
+            $postalCode = "<b>$postalCode</b>";
+        }
 
         return "<dd><span>$firstName $lastName</span></dd>
-                <dd><span>$street</span></dd>
+                <dd><span>$escapedStreet</span></dd>
                 <dd><span>$city $postalCode</span></dd>";
     }
 
-    /**
-     * @return string[][]
-     */
     public function getDetectedIssues(): array
     {
         $analysisResult = $this->getAnalysisResult();
@@ -203,7 +166,7 @@ class AnalysisData implements ArgumentInterface
             return false;
         }
 
-        return $this->addressUpdater->addressesAreDifferent($analysisResult, $this->getOrderAddress());
+        return $this->addressUpdater->addressesAreDifferent($analysisResult, $orderAddress);
     }
 
     public function allowAddressCorrect(): bool
@@ -248,10 +211,11 @@ class AnalysisData implements ArgumentInterface
         return $order->getShippingAddress();
     }
 
-    private function getOrder(): OrderInterface
+    private function getOrder(): Order
     {
         $orderId = (int) $this->request->getParam('order_id');
         try {
+            /** @var Order $order */
             $order = $this->orderRepository->get($orderId);
         } catch (InputException | NoSuchEntityException) {
             throw new \RuntimeException('Could not load order. Was the order id added correctly?');

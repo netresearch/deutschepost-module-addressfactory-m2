@@ -18,11 +18,8 @@ class OrderCollectionPlugin
      * When the order collection is loaded, then the POSTDIREKT Addressfactory module adds some extension attributes.
      * The database table that holds the additional attributes also has a field `status`.
      * This leads to an integrity constraint/ambiguous column error. To fix this, we add the filter mapping.
-     *
-     * @param Collection $orderCollection
-     * @return null
      */
-    public function beforeAddFieldToFilter(Collection $orderCollection)
+    public function beforeAddFieldToFilter(Collection $orderCollection): null
     {
         $orderCollection->addFilterToMap('status', 'main_table.status');
         return null;

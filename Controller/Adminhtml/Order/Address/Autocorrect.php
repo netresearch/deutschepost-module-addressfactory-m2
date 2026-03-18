@@ -24,33 +24,20 @@ class Autocorrect extends Action
      *
      * @see _isAllowed()
      */
-    public const ADMIN_RESOURCE = 'Magento_Sales::actions_edit';
-
-    /**
-     * @var OrderAnalysis
-     */
-    private $orderAnalysis;
-
-    /**
-     * @var OrderRepositoryInterface
-     */
-    private $orderRepository;
+    public const string ADMIN_RESOURCE = 'Magento_Sales::actions_edit';
 
     public function __construct(
         Context $context,
-        OrderAnalysis $orderAnalysis,
-        OrderRepositoryInterface $orderRepository
+        private OrderAnalysis $orderAnalysis,
+        private OrderRepositoryInterface $orderRepository
     ) {
-        $this->orderAnalysis = $orderAnalysis;
-        $this->orderRepository = $orderRepository;
-
         parent::__construct($context);
     }
 
     #[\Override]
     public function execute(): ResultInterface
     {
-        $orderId  = $this->getRequest()->getParam('order_id');
+        $orderId = (int) $this->getRequest()->getParam('order_id');
         /** @var Order $order */
         $order = $this->orderRepository->get($orderId);
 
@@ -70,6 +57,7 @@ class Autocorrect extends Action
             $this->messageManager->addErrorMessage($exception->getMessage());
         }
 
+        /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $resultRedirect->setUrl($this->_redirect->getRefererUrl());
 

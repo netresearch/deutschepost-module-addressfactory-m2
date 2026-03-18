@@ -16,6 +16,7 @@ use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
 use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 use TddWizard\Fixtures\Catalog\ProductBuilder;
 use TddWizard\Fixtures\Checkout\CartBuilder;
+use TddWizard\Fixtures\Customer\AddressBuilder;
 use TddWizard\Fixtures\Customer\CustomerBuilder;
 use TddWizard\Fixtures\Sales\OrderBuilder as TddWizard;
 
@@ -25,34 +26,15 @@ use TddWizard\Fixtures\Sales\OrderBuilder as TddWizard;
 class OrderBuilder
 {
     /**
-     * @var TddWizard
-     */
-    private $builder;
-
-    /**
-     * @var AnalysisResultRepository
-     */
-    private $resultRepository;
-
-    /**
-     * @var AnalysisStatusUpdater
-     */
-    private $statusUpdater;
-
-    /**
      * @var string
      */
     private $status;
 
     public function __construct(
-        TddWizard $builder,
-        AnalysisResultRepository $resultRepository,
-        AnalysisStatusUpdater $statusUpdater
+        private TddWizard $builder,
+        private AnalysisResultRepository $resultRepository,
+        private AnalysisStatusUpdater $statusUpdater
     ) {
-        $this->builder = $builder;
-        $this->resultRepository = $resultRepository;
-        $this->statusUpdater = $statusUpdater;
-
         $this->status = '';
     }
 
@@ -62,8 +44,16 @@ class OrderBuilder
             $objectManager = Bootstrap::getObjectManager();
         }
 
+        $address = AddressBuilder::anAddress()
+            ->withCity('Berlin')
+            ->withPostcode('10115')
+            ->withStreet('Friedrichstrasse 1')
+            ->withTelephone('+49 30 1234567')
+            ->asDefaultBilling()
+            ->asDefaultShipping();
+
         return new self(
-            TddWizard::anOrder(),
+            TddWizard::anOrder()->withCustomer(CustomerBuilder::aCustomer()->withAddresses($address)),
             $objectManager->create(AnalysisResultRepository::class),
             $objectManager->create(AnalysisStatusUpdater::class)
         );

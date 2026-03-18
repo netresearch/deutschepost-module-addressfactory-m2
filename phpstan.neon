@@ -1,7 +1,36 @@
 parameters:
-    level: 1
+    level: 8
     treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: false
     paths:
-        - .
+        - Api
+        - Component
+        - Controller
+        - Cron
+        - Model
+        - Observer
+        - Plugin
+        - ViewModel
     excludePaths:
         - Test/*
+    ignoreErrors:
+        -
+            identifier: missingType.iterableValue
+        # Magento MessageManager accepts Phrase via __toString() but interface declares string
+        -
+            message: '#expects string, Magento\\Framework\\Phrase given#'
+        # Magento DI pattern: interfaces used in DI but concrete AbstractModel expected by resource model
+        -
+            message: '#expects Magento\\Framework\\Model\\AbstractModel, PostDirekt\\Addressfactory\\Api\\Data\\AnalysisResultInterface given#'
+        # Magento Data Collection accepts DataObject descendants via interface
+        -
+            message: '#expects Magento\\Framework\\DataObject, PostDirekt\\Addressfactory\\Api\\Data\\AnalysisResultInterface given#'
+        # SearchCriteriaBuilder::setFilterGroups type mismatch in Magento framework
+        -
+            message: '#expects array<Magento\\Framework\\Api\\Search\\FilterGroup>#'
+        # Extension attributes generated interface allows null
+        -
+            message: '#PostdirektAddressfactoryAnalysisStatus\(\) expects string, null given#'
+        # getConnection() technically returns AdapterInterface|false but never false in resource models
+        -
+            message: '#Cannot call method .+ on Magento\\Framework\\DB\\Adapter\\AdapterInterface\|false#'

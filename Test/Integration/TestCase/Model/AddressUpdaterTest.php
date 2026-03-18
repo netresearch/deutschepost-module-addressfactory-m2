@@ -20,6 +20,9 @@ use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderBuilder;
 use PostDirekt\Sdk\AddressfactoryDirect\Service\ServiceFactory;
 
+/**
+ * @magentoDbIsolation enabled
+ */
 class AddressUpdaterTest extends TestCase
 {
     /**

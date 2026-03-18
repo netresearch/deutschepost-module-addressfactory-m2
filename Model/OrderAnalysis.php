@@ -14,36 +14,12 @@ use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 
 class OrderAnalysis
 {
-    /**
-     * @var AddressAnalysis
-     */
-    private $addressAnalysisService;
-
-    /**
-     * @var DeliverabilityCodes
-     */
-    private $deliverabilityScoreService;
-
-    /**
-     * @var AnalysisStatusUpdater
-     */
-    private $deliverabilityStatus;
-
-    /**
-     * @var AddressUpdater
-     */
-    private $addressUpdater;
-
     public function __construct(
-        AddressAnalysis $addressAnalysisService,
-        DeliverabilityCodes $deliverabilityScoreService,
-        AnalysisStatusUpdater $deliverabilityStatus,
-        AddressUpdater $addressUpdater
+        private AddressAnalysis $addressAnalysisService,
+        private DeliverabilityCodes $deliverabilityScoreService,
+        private AnalysisStatusUpdater $deliverabilityStatus,
+        private AddressUpdater $addressUpdater,
     ) {
-        $this->addressAnalysisService = $addressAnalysisService;
-        $this->deliverabilityScoreService = $deliverabilityScoreService;
-        $this->deliverabilityStatus = $deliverabilityStatus;
-        $this->addressUpdater = $addressUpdater;
     }
 
 
@@ -52,13 +28,16 @@ class OrderAnalysis
      * for the Shipping Address of every given Order.
      *
      * @param Order[] $orders
-     * @return AnalysisResultInterface[] Dictionary: [(int) $order->getEntityId() => AnalysisResult]
+     * @return array<int, AnalysisResultInterface|null> Dictionary: [(int) $order->getEntityId() => AnalysisResult|null]
      */
     public function analyse(array $orders): array
     {
         $addresses = [];
         foreach ($orders as $order) {
-            $addresses[] = $order->getShippingAddress();
+            $shippingAddress = $order->getShippingAddress();
+            if ($shippingAddress !== null) {
+                $addresses[] = $shippingAddress;
+            }
         }
 
         try {
@@ -68,9 +47,12 @@ class OrderAnalysis
         }
         $result = [];
         foreach ($orders as $order) {
-            $analysisResult = $analysisResults[(int) $order->getShippingAddress()->getEntityId()] ?? null;
+            $shippingAddress = $order->getShippingAddress();
+            $analysisResult = $shippingAddress !== null
+                ? ($analysisResults[(int) $shippingAddress->getEntityId()] ?? null)
+                : null;
             $this->updateDeliverabilityStatus((int) $order->getId(), $analysisResult);
-            $result[$order->getEntityId()] = $analysisResult;
+            $result[(int) $order->getEntityId()] = $analysisResult;
         }
 
         return $result;

@@ -16,14 +16,8 @@ use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 
 class AddressUpdater
 {
-    /**
-     * @var OrderAddressRepositoryInterface
-     */
-    private $orderAddressRepository;
-
-    public function __construct(OrderAddressRepositoryInterface $orderAddressRepository)
+    public function __construct(private OrderAddressRepositoryInterface $orderAddressRepository)
     {
-        $this->orderAddressRepository = $orderAddressRepository;
     }
 
     /**
@@ -83,7 +77,7 @@ class AddressUpdater
         OrderAddressInterface $orderAddress
     ): bool {
         $street = trim(implode(' ', [$analysisResult->getStreet(), $analysisResult->getStreetNumber()]));
-        $orderStreet = trim(implode('', $orderAddress->getStreet()));
+        $orderStreet = trim(implode(' ', $orderAddress->getStreet()));
 
         return ($orderAddress->getFirstname() !== $analysisResult->getFirstName() ||
             $orderAddress->getLastname() !== $analysisResult->getLastName() ||

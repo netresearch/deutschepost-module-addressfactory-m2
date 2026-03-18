@@ -26,50 +26,14 @@ use Psr\Log\LoggerInterface;
  */
 class UpdateOrderDeliverabilityStatus implements ObserverInterface
 {
-    /**
-     * @var RequestInterface
-     */
-    private $request;
-
-    /**
-     * @var OrderAddressRepositoryInterface
-     */
-    private $orderAddressRepository;
-
-    /**
-     * @var AnalysisStatusUpdater
-     */
-    private $statusUpdater;
-
-    /**
-     * @var AnalysisStatusRepository
-     */
-    private $statusRepository;
-
-    /**
-     * @var AnalysisResultRepository
-     */
-    private $resultRepository;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        RequestInterface $request,
-        OrderAddressRepositoryInterface $orderAddressRepository,
-        AnalysisStatusUpdater $deliverableStatus,
-        AnalysisStatusRepository $statusRepository,
-        AnalysisResultRepository $resultRepository,
-        LoggerInterface $logger
+        private RequestInterface $request,
+        private OrderAddressRepositoryInterface $orderAddressRepository,
+        private AnalysisStatusUpdater $statusUpdater,
+        private AnalysisStatusRepository $statusRepository,
+        private AnalysisResultRepository $resultRepository,
+        private LoggerInterface $logger,
     ) {
-        $this->request = $request;
-        $this->orderAddressRepository = $orderAddressRepository;
-        $this->statusUpdater = $deliverableStatus;
-        $this->statusRepository = $statusRepository;
-        $this->resultRepository = $resultRepository;
-        $this->logger = $logger;
     }
 
     #[\Override]
@@ -87,12 +51,13 @@ class UpdateOrderDeliverabilityStatus implements ObserverInterface
         }
 
         try {
+            /** @var \Magento\Sales\Model\Order\Address $address */
             $order = $address->getOrder();
             $previousResult = $this->statusRepository->getByOrderId((int) $order->getId());
             if ($previousResult->getStatus()) {
                 $isManuallyEdited = $this->statusUpdater->setStatusManuallyEdited((int) $order->getId());
                 if ($isManuallyEdited) {
-                    $analysisResult = $this->resultRepository->getByAddressId((int) $address->getId());
+                    $analysisResult = $this->resultRepository->getByAddressId((int) $address->getEntityId());
                     $this->resultRepository->delete($analysisResult);
                 }
             }

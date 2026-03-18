@@ -10,23 +10,23 @@ namespace PostDirekt\Addressfactory\Model;
 
 class DeliverabilityCodes
 {
-    public const DELIVERABLE = 'deliverable';
-    public const UNDELIVERABLE = 'undeliverable';
-    public const POSSIBLY_DELIVERABLE = 'possibly_deliverable';
-    public const CORRECTION_REQUIRED = 'correction_required';
+    public const string DELIVERABLE = 'deliverable';
+    public const string UNDELIVERABLE = 'undeliverable';
+    public const string POSSIBLY_DELIVERABLE = 'possibly_deliverable';
+    public const string CORRECTION_REQUIRED = 'correction_required';
 
-    private const PERSON_DELIVERABLE = 'PDC050105';
-    private const PERSON_NOT_DELIVERABLE = 'PDC050106';
-    private const HOUSEHOLD_DELIVERABLE = 'PDC040105';
-    private const HOUSEHOLD_UNDELIVERABLE = 'PDC040106';
-    private const BUILDING_DELIVERABLE = 'PDC030105';
-    private const PERSON_NOT_MATCHED = 'PDC050500';
-    private const HOUSEHOLD_NOT_MATCHED = 'PDC040500';
-    private const BUILDING_UNDELIVERABLE = 'PDC030106';
-    private const NOT_CORRECTABLE = 'BAC000111';
-    private const HOUSE_NUMBER_NOT_FILLED = 'FNC030501';
+    private const string PERSON_DELIVERABLE = 'PDC050105';
+    private const string PERSON_NOT_DELIVERABLE = 'PDC050106';
+    private const string HOUSEHOLD_DELIVERABLE = 'PDC040105';
+    private const string HOUSEHOLD_UNDELIVERABLE = 'PDC040106';
+    private const string BUILDING_DELIVERABLE = 'PDC030105';
+    private const string PERSON_NOT_MATCHED = 'PDC050500';
+    private const string HOUSEHOLD_NOT_MATCHED = 'PDC040500';
+    private const string BUILDING_UNDELIVERABLE = 'PDC030106';
+    private const string NOT_CORRECTABLE = 'BAC000111';
+    private const string HOUSE_NUMBER_NOT_FILLED = 'FNC030501';
 
-    private const STATUS_CODES_SIGNIFICANTLY_CORRECTED = ['103', '108'];
+    private const array STATUS_CODES_SIGNIFICANTLY_CORRECTED = ['103', '108'];
 
     /**
      * @param string[] $codes
@@ -69,6 +69,12 @@ class DeliverabilityCodes
             return self::UNDELIVERABLE;
         }
 
+        if (\in_array(self::PERSON_NOT_DELIVERABLE, $codes, true) &&
+            \in_array(self::HOUSEHOLD_UNDELIVERABLE, $codes, true) &&
+            \in_array(self::BUILDING_DELIVERABLE, $codes, true)) {
+            return self::POSSIBLY_DELIVERABLE;
+        }
+
         if (\in_array(self::PERSON_NOT_MATCHED, $codes, true) &&
             \in_array(self::HOUSEHOLD_DELIVERABLE, $codes, true)) {
             return self::DELIVERABLE;
@@ -92,6 +98,11 @@ class DeliverabilityCodes
             return self::UNDELIVERABLE;
         }
 
+        if (\in_array(self::PERSON_NOT_DELIVERABLE, $codes, true) &&
+            \in_array(self::BUILDING_DELIVERABLE, $codes, true)) {
+            return self::POSSIBLY_DELIVERABLE;
+        }
+
         if (\in_array(self::PERSON_NOT_DELIVERABLE, $codes, true)) {
             return self::UNDELIVERABLE;
         }
@@ -101,7 +112,6 @@ class DeliverabilityCodes
 
     /**
      * @param string[] $codes
-     * @return string[][]
      */
     public function getLabels(array $codes): array
     {
@@ -250,7 +260,7 @@ class DeliverabilityCodes
             /**
              * If BAC000111 (not correctable) is set, all other analysis modules become irrelevant
              */
-            $codes = array_filter($codes, static fn($key) => str_contains((string) $key, 'BAC'));
+            $codes = array_filter($codes, static fn ($key) => str_contains((string) $key, 'BAC'));
         }
 
         return $codes;
@@ -258,24 +268,15 @@ class DeliverabilityCodes
 
     private function mapToIcon(string $fieldCode): string
     {
-        $inHouse = ['010','012', '030'];
-
-        switch ($fieldCode) {
-            case '000':
-                $iconCode = 'icon-alert';
-                break;
-            case in_array($fieldCode, $inHouse, true):
-                $iconCode = 'icon-house';
-                break;
-            case '050':
-                $iconCode = 'icon-user-account';
-                break;
-            case '040':
-                $iconCode = 'icon-user-group';
-                break;
-            default:
-                $iconCode = 'icon-info';
+        if (in_array($fieldCode, ['010', '012', '030'], true)) {
+            return 'icon-house';
         }
-        return $iconCode;
+
+        return match ($fieldCode) {
+            '000' => 'icon-alert',
+            '050' => 'icon-user-account',
+            '040' => 'icon-user-group',
+            default => 'icon-info',
+        };
     }
 }

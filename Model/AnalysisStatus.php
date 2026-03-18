@@ -12,11 +12,11 @@ use Magento\Framework\Model\AbstractModel;
 
 class AnalysisStatus extends AbstractModel
 {
-    public const ORDER_ID = 'order_id';
-    public const STATUS = 'status';
+    public const string ORDER_ID = 'order_id';
+    public const string STATUS = 'status';
 
     #[\Override]
-    protected function _construct()
+    protected function _construct(): void
     {
         $this->_init(ResourceModel\AnalysisStatus::class);
         parent::_construct();

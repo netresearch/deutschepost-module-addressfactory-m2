@@ -19,6 +19,9 @@ use PostDirekt\Addressfactory\Model\OrderAnalysis;
 use PostDirekt\Addressfactory\Test\Integration\Fixture\OrderBuilder;
 use PostDirekt\Sdk\AddressfactoryDirect\Service\ServiceFactory;
 
+/**
+ * @magentoDbIsolation enabled
+ */
 class OrderRepositoryPluginTest extends TestCase
 {
     /**

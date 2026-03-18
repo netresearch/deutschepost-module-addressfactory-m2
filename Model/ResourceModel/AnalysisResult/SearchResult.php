@@ -17,13 +17,10 @@ use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult as AnalysisResu
 
 class SearchResult extends AbstractCollection implements SearchResultInterface
 {
-    /**
-     * @var SearchCriteriaInterface
-     */
-    private $searchCriteria;
+    private ?SearchCriteriaInterface $searchCriteria = null;
 
     #[\Override]
-    protected function _construct()
+    protected function _construct(): void
     {
         $this->_init(AnalysisResult::class, AnalysisResultResource::class);
     }
@@ -34,7 +31,7 @@ class SearchResult extends AbstractCollection implements SearchResultInterface
      * @return SearchCriteriaInterface|null
      */
     #[\Override]
-    public function getSearchCriteria(): ? SearchCriteriaInterface
+    public function getSearchCriteria(): ?SearchCriteriaInterface
     {
         return $this->searchCriteria;
     }

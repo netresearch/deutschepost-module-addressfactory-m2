@@ -24,7 +24,7 @@ class AddAnalysisToAddressCollection
         $this->extensionAttributesJoinProcessor = $extensionAttributesJoinProcessor;
     }
 
-    public function beforeLoadWithFilter(Collection $addressCollection)
+    public function beforeLoadWithFilter(Collection $addressCollection): null
     {
         $this->extensionAttributesJoinProcessor->process($addressCollection, Address::class);
         return null;

@@ -16,53 +16,23 @@ use Psr\Log\LoggerInterface;
 
 class AnalysisStatusUpdater
 {
-    public const NOT_ANALYSED = 'not_analysed';
-    public const PENDING = 'pending';
-    public const UNDELIVERABLE = 'undeliverable';
-    public const CORRECTION_REQUIRED = 'correction_required';
-    public const POSSIBLY_DELIVERABLE = 'possibly_deliverable';
-    public const DELIVERABLE = 'deliverable';
-    public const ADDRESS_CORRECTED = 'address_corrected';
-    public const ANALYSIS_FAILED = 'analysis_failed';
-    public const MANUALLY_EDITED = 'manually_edited';
-
-    /**
-     * @var AnalysisStatusRepository
-     */
-    private $repository;
-
-    /**
-     * @var AnalysisStatusFactory
-     */
-    private $statusFactory;
-
-    /**
-     * @var GridInterface
-     */
-    private $orderGrid;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var ScopeConfigInterface
-     */
-    private $scopeConfig;
+    public const string NOT_ANALYSED = 'not_analysed';
+    public const string PENDING = 'pending';
+    public const string UNDELIVERABLE = 'undeliverable';
+    public const string CORRECTION_REQUIRED = 'correction_required';
+    public const string POSSIBLY_DELIVERABLE = 'possibly_deliverable';
+    public const string DELIVERABLE = 'deliverable';
+    public const string ADDRESS_CORRECTED = 'address_corrected';
+    public const string ANALYSIS_FAILED = 'analysis_failed';
+    public const string MANUALLY_EDITED = 'manually_edited';
 
     public function __construct(
-        AnalysisStatusRepository $repository,
-        AnalysisStatusFactory $analysisStatusFactory,
-        GridInterface $orderGrid,
-        LoggerInterface $logger,
-        ScopeConfigInterface $scopeConfig
+        private AnalysisStatusRepository $repository,
+        private AnalysisStatusFactory $statusFactory,
+        private GridInterface $orderGrid,
+        private LoggerInterface $logger,
+        private ScopeConfigInterface $scopeConfig,
     ) {
-        $this->repository = $repository;
-        $this->statusFactory = $analysisStatusFactory;
-        $this->orderGrid = $orderGrid;
-        $this->logger = $logger;
-        $this->scopeConfig = $scopeConfig;
     }
 
     /**

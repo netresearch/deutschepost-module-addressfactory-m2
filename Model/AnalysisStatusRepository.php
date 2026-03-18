@@ -14,22 +14,10 @@ use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisStatus as AnalysisStat
 
 class AnalysisStatusRepository
 {
-    /**
-     * @var AnalysisStatusResource
-     */
-    private $resource;
-
-    /**
-     * @var AnalysisStatusFactory
-     */
-    private $analysisStatusFactory;
-
     public function __construct(
-        AnalysisStatusResource $resource,
-        AnalysisStatusFactory $analysisStatusFactory
+        private AnalysisStatusResource $resource,
+        private AnalysisStatusFactory $analysisStatusFactory,
     ) {
-        $this->resource = $resource;
-        $this->analysisStatusFactory = $analysisStatusFactory;
     }
 
     /**

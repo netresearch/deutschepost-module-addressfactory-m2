@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace PostDirekt\Addressfactory\Observer;
 
 use Magento\Framework\App\Request\Http;
-use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -26,14 +25,8 @@ use Magento\Sales\Block\Adminhtml\Order\View\Info;
  */
 class MoveAnalysisBox implements ObserverInterface
 {
-    /**
-     * @var RequestInterface|Http
-     */
-    private $request;
-
-    public function __construct(RequestInterface $request)
+    public function __construct(private Http $request)
     {
-        $this->request = $request;
     }
 
     /**

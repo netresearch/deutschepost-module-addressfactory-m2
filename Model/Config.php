@@ -16,33 +16,23 @@ use PostDirekt\Addressfactory\Model\Config\Source\AutomaticOptions;
 
 class Config
 {
-    private const CONFIG_PATH_VERSION = 'postdirekt/addressfactory/version';
-    private const CONFIG_PATH_MANDATENAME = 'postdirekt/addressfactory/mandate_name';
-    private const CONFIG_PATH_CONFIGURATIONNAME = 'postdirekt/addressfactory/configuration_name';
+    private const string CONFIG_PATH_VERSION = 'postdirekt/addressfactory/version';
+    private const string CONFIG_PATH_MANDATENAME = 'postdirekt/addressfactory/mandate_name';
+    private const string CONFIG_PATH_CONFIGURATIONNAME = 'postdirekt/addressfactory/configuration_name';
 
-    private const CONFIG_PATH_HOLD_NON_DELIVERABLE_ORDERS = 'postdirekt/addressfactory/hold_non_deliverable_orders';
-    private const CONFIG_PATH_HOLD_AUTO_CANCEL_ORDERS = 'postdirekt/addressfactory/auto_cancel_orders';
-    private const CONFIG_PATH_HOLD_AUTO_UPDATE_SHIPPING_ADDRESS = 'postdirekt/addressfactory/auto_update_shipping_address';
-    private const CONFIG_PATH_AUTOMATIC_ADDRESS_ANALYSE = 'postdirekt/addressfactory/automatic_address_analysis';
+    private const string CONFIG_PATH_HOLD_NON_DELIVERABLE_ORDERS = 'postdirekt/addressfactory/hold_non_deliverable_orders';
+    private const string CONFIG_PATH_HOLD_AUTO_CANCEL_ORDERS = 'postdirekt/addressfactory/auto_cancel_orders';
+    private const string CONFIG_PATH_HOLD_AUTO_UPDATE_SHIPPING_ADDRESS = 'postdirekt/addressfactory/auto_update_shipping_address';
+    private const string CONFIG_PATH_AUTOMATIC_ADDRESS_ANALYSE = 'postdirekt/addressfactory/automatic_address_analysis';
 
-    public const CONFIG_PATH_LOGGING = 'postdirekt/addressfactory/logging';
-    public const CONFIG_PATH_LOGLEVEL = 'postdirekt/addressfactory/log_level';
-    public const CONFIG_PATH_AUTO_VALIDATE_MANUALLY_EDITED = 'postdirekt/addressfactory/auto_validate_manual_edited';
+    public const string CONFIG_PATH_LOGGING = 'postdirekt/addressfactory/logging';
+    public const string CONFIG_PATH_LOGLEVEL = 'postdirekt/addressfactory/log_level';
+    public const string CONFIG_PATH_AUTO_VALIDATE_MANUALLY_EDITED = 'postdirekt/addressfactory/auto_validate_manual_edited';
 
-    /**
-     * @var ScopeConfigInterface
-     */
-    private $scopeConfig;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    public function __construct(ScopeConfigInterface $scopeConfig, StoreManagerInterface $storeManager)
-    {
-        $this->scopeConfig = $scopeConfig;
-        $this->storeManager = $storeManager;
+    public function __construct(
+        private ScopeConfigInterface $scopeConfig,
+        private StoreManagerInterface $storeManager,
+    ) {
     }
 
     public function getModuleVersion(): string
@@ -186,7 +176,7 @@ class Config
         return array_reduce(
             $this->storeManager->getStores(),
             function (array $carry, StoreInterface $store) {
-                if ($this->isAnalysisViaCron($store)) {
+                if ($this->isAnalysisViaCron((int) $store->getId())) {
                     $carry[] = (int) $store->getId();
                 }
 

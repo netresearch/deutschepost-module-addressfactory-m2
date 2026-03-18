@@ -14,7 +14,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
-use PostDirekt\Addressfactory\Model\AnalysisResult;
+use PostDirekt\Addressfactory\Api\Data\AnalysisResultInterface;
 use PostDirekt\Addressfactory\Model\AnalysisStatus;
 use PostDirekt\Addressfactory\Model\AnalysisStatusUpdater;
 use PostDirekt\Addressfactory\Model\Config;
@@ -24,64 +24,16 @@ use Psr\Log\LoggerInterface;
 
 class AutoProcess
 {
-    /**
-     * @var Config
-     */
-    private $config;
-
-    /**
-     * @var OrderAnalysis
-     */
-    private $orderAnalysisService;
-
-    /**
-     * @var SearchCriteriaBuilder
-     */
-    private $searchCriteriaBuilder;
-
-    /**
-     * @var FilterGroupBuilder
-     */
-    private $filterGroupBuilder;
-
-    /**
-     * @var FilterBuilder
-     */
-    private $filterBuilder;
-
-    /**
-     * @var OrderRepositoryInterface
-     */
-    private $orderRepository;
-
-    /**
-     * @var OrderUpdater
-     */
-    private $orderUpdater;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        Config $config,
-        OrderAnalysis $orderAnalysisService,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        FilterGroupBuilder $filterGroupBuilder,
-        FilterBuilder $filterBuilder,
-        OrderRepositoryInterface $orderRepository,
-        OrderUpdater $orderUpdater,
-        LoggerInterface $logger
+        private Config $config,
+        private OrderAnalysis $orderAnalysisService,
+        private SearchCriteriaBuilder $searchCriteriaBuilder,
+        private FilterGroupBuilder $filterGroupBuilder,
+        private FilterBuilder $filterBuilder,
+        private OrderRepositoryInterface $orderRepository,
+        private OrderUpdater $orderUpdater,
+        private LoggerInterface $logger,
     ) {
-        $this->config = $config;
-        $this->orderAnalysisService = $orderAnalysisService;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->filterGroupBuilder = $filterGroupBuilder;
-        $this->filterBuilder = $filterBuilder;
-        $this->orderRepository = $orderRepository;
-        $this->orderUpdater = $orderUpdater;
-        $this->logger = $logger;
     }
 
     /**
@@ -116,11 +68,8 @@ class AutoProcess
      * - put it on hold,
      * - cancel it or
      * - update the shipping address
-     *
-     * @param Order $order
-     * @param AnalysisResult $analysisResult
      */
-    private function process(Order $order, AnalysisResult $analysisResult): void
+    private function process(Order $order, AnalysisResultInterface $analysisResult): void
     {
         $this->logger->info(
             sprintf('ADDRESSFACTORY DIRECT: Processing Order %s ...', $order->getIncrementId())
@@ -144,7 +93,7 @@ class AutoProcess
             if ($isUpdated) {
                 $this->logger->info(
                     sprintf(
-                        'ADDRESSFACTORY DIRECT: ADDRESSFACTORY DIRECT: Order "%s" address updated',
+                        'ADDRESSFACTORY DIRECT: Order "%s" address updated',
                         $order->getIncrementId()
                     )
                 );
@@ -179,7 +128,7 @@ class AutoProcess
 
         $inclManuallyEdited = array_filter(
             $autoProcessStores,
-            fn(int $storeId) => $this->config->isAutoValidateManuallyEdited($storeId)
+            fn (int $storeId) => $this->config->isAutoValidateManuallyEdited($storeId)
         );
 
         $exclManuallyEdited = array_diff($autoProcessStores, $inclManuallyEdited);

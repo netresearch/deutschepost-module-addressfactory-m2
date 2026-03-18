@@ -14,22 +14,10 @@ use Psr\Log\LoggerInterface;
 
 class UpdatedStatusIdListProvider implements NotSyncedDataProviderInterface
 {
-    /**
-     * @var AnalysisStatus
-     */
-    private $resource;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        AnalysisStatus $resource,
-        LoggerInterface $logger
+        private AnalysisStatus $resource,
+        private LoggerInterface $logger,
     ) {
-        $this->resource = $resource;
-        $this->logger = $logger;
     }
 
     /**

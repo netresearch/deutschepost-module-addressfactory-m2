@@ -14,30 +14,14 @@ use PostDirekt\Sdk\AddressfactoryDirect\Api\Data\RecordInterface;
 
 class ResponseMapper
 {
-    public const PARCELSTATION = 'Packstation';
-    public const POSTSTATION = 'Postfiliale';
-    public const POSTFACH = 'Postfach';
+    public const string PARCELSTATION = 'Packstation';
+    public const string POSTSTATION = 'Postfiliale';
+    public const string POSTFACH = 'Postfach';
 
-    /**
-     * @var AnalysisResultInterfaceFactory
-     */
-    private $analysisResultFactory;
-
-    /**
-     * @var AddressTypeCodeFilter
-     */
-    private $addressTypeCodeFilter;
-
-    /**
-     * @param AnalysisResultInterfaceFactory $analysisResultFactory
-     * @param AddressTypeCodeFilter $addressTypeCodeFilter
-     */
     public function __construct(
-        AnalysisResultInterfaceFactory $analysisResultFactory,
-        AddressTypeCodeFilter $addressTypeCodeFilter
+        private AnalysisResultInterfaceFactory $analysisResultFactory,
+        private AddressTypeCodeFilter $addressTypeCodeFilter,
     ) {
-        $this->analysisResultFactory = $analysisResultFactory;
-        $this->addressTypeCodeFilter = $addressTypeCodeFilter;
     }
 
 

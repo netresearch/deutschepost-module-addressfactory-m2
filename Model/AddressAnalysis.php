@@ -23,57 +23,15 @@ use Psr\Log\LoggerInterface;
 
 class AddressAnalysis
 {
-    /**
-     * @var AnalysisResultRepository
-     */
-    private $analysisResultRepository;
-
-    /**
-     * @var ServiceFactoryInterface
-     */
-    private $serviceFactory;
-
-    /**
-     * @var RequestBuilder
-     */
-    private $requestBuilder;
-
-    /**
-     * @var CoreConfig
-     */
-    private $coreConfig;
-
-    /**
-     * @var Config
-     */
-    private $moduleConfig;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var ResponseMapper
-     */
-    private $recordResponseMapper;
-
     public function __construct(
-        AnalysisResultRepository $analysisResultRepository,
-        ServiceFactoryInterface $serviceFactory,
-        RequestBuilder $requestBuilder,
-        CoreConfig $coreConfig,
-        Config $moduleConfig,
-        LoggerInterface $logger,
-        ResponseMapper $recordResponseMapper
+        private AnalysisResultRepository $analysisResultRepository,
+        private ServiceFactoryInterface $serviceFactory,
+        private RequestBuilder $requestBuilder,
+        private CoreConfig $coreConfig,
+        private Config $moduleConfig,
+        private LoggerInterface $logger,
+        private ResponseMapper $recordResponseMapper,
     ) {
-        $this->analysisResultRepository = $analysisResultRepository;
-        $this->serviceFactory = $serviceFactory;
-        $this->requestBuilder = $requestBuilder;
-        $this->coreConfig = $coreConfig;
-        $this->moduleConfig = $moduleConfig;
-        $this->logger = $logger;
-        $this->recordResponseMapper = $recordResponseMapper;
     }
 
     /**
@@ -85,7 +43,7 @@ class AddressAnalysis
     {
         $addressIds = [];
         foreach ($addresses as $address) {
-            $addressIds[] = $address->getEntityId();
+            $addressIds[] = (int) $address->getEntityId();
         }
 
         $analysisResults = $this->analysisResultRepository->getListByAddressIds($addressIds);
@@ -93,7 +51,7 @@ class AddressAnalysis
         $recordRequests = array_reduce(
             $addresses,
             function (array $recordRequests, OrderAddressInterface $orderAddress) use ($analysisResults) {
-                if (!array_key_exists($orderAddress->getEntityId(), $analysisResults)) {
+                if (!array_key_exists((int) $orderAddress->getEntityId(), $analysisResults)) {
                     $recordRequests[] = $this->buildRequest($orderAddress);
                 }
 

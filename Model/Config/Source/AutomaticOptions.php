@@ -12,9 +12,9 @@ use Magento\Framework\Data\OptionSourceInterface;
 
 class AutomaticOptions implements OptionSourceInterface
 {
-    public const NO_AUTOMATIC_ANALYSIS = '1';
-    public const ANALYSIS_VIA_CRON = '2';
-    public const ON_ORDER_PLACE = '3';
+    public const string NO_AUTOMATIC_ANALYSIS = '1';
+    public const string ANALYSIS_VIA_CRON = '2';
+    public const string ON_ORDER_PLACE = '3';
 
     #[\Override]
     public function toOptionArray(): array

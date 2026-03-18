@@ -15,34 +15,15 @@ use Monolog\LogRecord;
 
 class ApiLogHandler extends Base
 {
-    /**
-     * @var string
-     */
-    private $logEnabledConfigPath;
-
-    /**
-     * @var string
-     */
-    private $logLevelConfigPath;
-
-    /**
-     * @var ScopeConfigInterface
-     */
-    private $scopeConfig;
-
     public function __construct(
         DriverInterface $filesystem,
-        string $logEnabledConfigPath,
-        string $logLevelConfigPath,
-        ScopeConfigInterface $scopeConfig,
+        private string $logEnabledConfigPath,
+        private string $logLevelConfigPath,
+        private ScopeConfigInterface $scopeConfig,
         ?string $filePath = null,
         ?string $fileName = null
     ) {
         parent::__construct($filesystem, $filePath, $fileName);
-
-        $this->logEnabledConfigPath = $logEnabledConfigPath;
-        $this->logLevelConfigPath = $logLevelConfigPath;
-        $this->scopeConfig = $scopeConfig;
     }
 
     #[\Override]

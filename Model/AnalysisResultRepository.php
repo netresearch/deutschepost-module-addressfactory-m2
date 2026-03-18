@@ -22,43 +22,13 @@ use PostDirekt\Addressfactory\Model\ResourceModel\AnalysisResult\SearchResultFac
 
 class AnalysisResultRepository
 {
-    /**
-     * @var AnalysisResultResource
-     */
-    private $resource;
-
-    /**
-     * @var AnalysisResultInterfaceFactory
-     */
-    private $analysisResultFactory;
-
-    /**
-     * @var SearchResultFactory
-     */
-    private $searchResultFactory;
-
-    /**
-     * @var CollectionProcessorInterface
-     */
-    private $collectionProcessor;
-
-    /**
-     * @var SearchCriteriaBuilder
-     */
-    private $searchCriteriaBuilder;
-
     public function __construct(
-        AnalysisResultResource $resource,
-        AnalysisResultInterfaceFactory $analysisResultFactory,
-        SearchResultFactory $searchResultFactory,
-        CollectionProcessorInterface $collectionProcessor,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        private AnalysisResultResource $resource,
+        private AnalysisResultInterfaceFactory $analysisResultFactory,
+        private SearchResultFactory $searchResultFactory,
+        private CollectionProcessorInterface $collectionProcessor,
+        private SearchCriteriaBuilder $searchCriteriaBuilder,
     ) {
-        $this->resource = $resource;
-        $this->analysisResultFactory = $analysisResultFactory;
-        $this->searchResultFactory = $searchResultFactory;
-        $this->collectionProcessor = $collectionProcessor;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
     /**
@@ -80,7 +50,6 @@ class AnalysisResultRepository
 
     /**
      * @param int[] $addressIds
-     * @return AnalysisResultInterface[]
      */
     public function getListByAddressIds(array $addressIds): array
     {

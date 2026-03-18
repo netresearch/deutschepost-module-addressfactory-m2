@@ -1,10 +1,17 @@
 <?php
 
+/**
+ * See LICENSE.md for license details.
+ */
+
+declare(strict_types=1);
+
 namespace PostDirekt\Addressfactory\Controller\Adminhtml\Bulk;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
@@ -20,53 +27,23 @@ class Analyse extends Action
      *
      * @see _isAllowed()
      */
-    public const ADMIN_RESOURCE = 'Magento_Sales::actions_edit';
-
-    /**
-     * @var Filter
-     */
-    private $filter;
-
-    /**
-     * @var CollectionFactory
-     */
-    private $collectionFactory;
-
-    /**
-     * @var OrderAnalysis
-     */
-    private $orderAnalysisService;
-
-    /**
-     * @var OrderUpdater
-     */
-    private $orderUpdater;
-
-    /**
-     * @var Config
-     */
-    private $moduleConfig;
+    public const string ADMIN_RESOURCE = 'Magento_Sales::actions_edit';
 
     public function __construct(
         Context $context,
-        Filter $filter,
-        CollectionFactory $collectionFactory,
-        OrderAnalysis $orderAnalysisService,
-        Config $moduleConfig,
-        OrderUpdater $orderUpdater
+        private Filter $filter,
+        private CollectionFactory $collectionFactory,
+        private OrderAnalysis $orderAnalysisService,
+        private Config $moduleConfig,
+        private OrderUpdater $orderUpdater
     ) {
-        $this->filter = $filter;
-        $this->collectionFactory = $collectionFactory;
-        $this->orderAnalysisService = $orderAnalysisService;
-        $this->moduleConfig = $moduleConfig;
-        $this->orderUpdater = $orderUpdater;
-
         parent::__construct($context);
     }
 
     #[\Override]
-    public function execute()
+    public function execute(): ResultInterface
     {
+        /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $resultRedirect->setUrl($this->_redirect->getRefererUrl());
 
@@ -137,7 +114,6 @@ class Analyse extends Action
     }
 
     /**
-     * @return Order[]
      * @throws LocalizedException
      */
     private function getOrders(): array

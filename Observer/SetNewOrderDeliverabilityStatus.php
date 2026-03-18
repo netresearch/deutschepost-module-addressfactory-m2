@@ -20,43 +20,13 @@ use Psr\Log\LoggerInterface;
 
 class SetNewOrderDeliverabilityStatus implements ObserverInterface
 {
-    /**
-     * @var Config
-     */
-    private $config;
-
-    /**
-     * @var OrderAnalysis
-     */
-    private $analyseService;
-
-    /**
-     * @var AnalysisStatusUpdater
-     */
-    private $deliverabilityStatus;
-
-    /**
-     * @var OrderUpdater
-     */
-    private $orderUpdater;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        Config $config,
-        OrderAnalysis $analyseService,
-        AnalysisStatusUpdater $deliverabilityStatus,
-        LoggerInterface $logger,
-        OrderUpdater $orderUpdater
+        private Config $config,
+        private OrderAnalysis $analyseService,
+        private AnalysisStatusUpdater $deliverabilityStatus,
+        private LoggerInterface $logger,
+        private OrderUpdater $orderUpdater,
     ) {
-        $this->config = $config;
-        $this->analyseService = $analyseService;
-        $this->deliverabilityStatus = $deliverabilityStatus;
-        $this->logger = $logger;
-        $this->orderUpdater = $orderUpdater;
     }
 
     #[\Override]

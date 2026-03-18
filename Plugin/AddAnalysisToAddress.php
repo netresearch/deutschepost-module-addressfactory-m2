@@ -19,34 +19,16 @@ use PostDirekt\Addressfactory\Model\AnalysisResultRepository;
 class AddAnalysisToAddress
 {
     /**
-     * @var AnalysisResultRepository
-     */
-    private $analysisRepository;
-
-    /**
-     * @var OrderExtensionFactory
-     */
-    private $orderExtensionFactory;
-
-    /**
-     * @var OrderAddressExtensionFactory
-     */
-    private $orderAddressExtensionFactory;
-
-    /**
      * @var JoinProcessorInterface
      */
     protected $extensionAttributesJoinProcessor;
 
     public function __construct(
-        AnalysisResultRepository $analysisRepository,
-        OrderExtensionFactory $orderExtensionFactory,
-        OrderAddressExtensionFactory $orderAddressExtensionFactory,
+        private AnalysisResultRepository $analysisRepository,
+        private OrderExtensionFactory $orderExtensionFactory,
+        private OrderAddressExtensionFactory $orderAddressExtensionFactory,
         JoinProcessorInterface $extensionAttributesJoinProcessor
     ) {
-        $this->analysisRepository = $analysisRepository;
-        $this->orderExtensionFactory = $orderExtensionFactory;
-        $this->orderAddressExtensionFactory = $orderAddressExtensionFactory;
         $this->extensionAttributesJoinProcessor = $extensionAttributesJoinProcessor;
     }
 

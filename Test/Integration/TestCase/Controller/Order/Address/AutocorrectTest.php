@@ -24,6 +24,7 @@ use PostDirekt\Sdk\AddressfactoryDirect\Service\ServiceFactory;
 
 /**
  * @magentoAppArea adminhtml
+ * @magentoDbIsolation enabled
  */
 class AutocorrectTest extends AbstractBackendController
 {

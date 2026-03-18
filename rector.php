@@ -3,10 +3,9 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
-use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
+use Rector\Php81\Rector\ClassMethod\NewInInitializerRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
-use Rector\Php83\Rector\ClassConst\AddTypeToConstRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\SetList;
 use Rector\ValueObject\PhpVersion;
@@ -26,6 +25,7 @@ return RectorConfig::configure()
     ])
     ->withPhpVersion(PhpVersion::PHP_84)
     ->withSets([
+        SetList::PHP_80,
         SetList::PHP_81,
         SetList::PHP_82,
         SetList::PHP_83,
@@ -34,9 +34,10 @@ return RectorConfig::configure()
     ])
     ->withPHPStanConfigs(phpstanConfigs: [__DIR__ . '/phpstan.neon'])
     ->withSkip([
-        // Skip specific rules if needed
-        ReadOnlyPropertyRector::class,
+        // Interceptors can't extend readonly classes — di:compile fatal error
         ReadOnlyClassRector::class,
-        AddTypeToConstRector::class,
-        ClassPropertyAssignToConstructorPromotionRector::class,
+        // Proxy/serialization risks + known Rector bugs
+        ReadOnlyPropertyRector::class,
+        // Known parameter ordering bugs
+        NewInInitializerRector::class,
     ]);
