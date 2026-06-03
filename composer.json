@@ -1,7 +1,7 @@
 {
     "name": "deutschepost/module-addressfactory-m2",
     "description": "Deutsche Post Direkt Addressfactory for Magento2",
-    "version": "1.6.2",
+    "version": "1.7.0",
     "type": "magento2-module",
     "license": "OSL-3.0",
     "authors": [
@@ -21,9 +21,9 @@
         ]
     },
     "require": {
-        "php": "^8.3.0 || ^8.4.0",
+        "php": "~8.3.0||~8.4.0||~8.5.0",
         "ext-intl": "*",
-        "deutschepost/module-core": "^1.4.0",
+        "deutschepost/module-core": "^1.5.0",
         "deutschepost/sdk-api-addressfactory": "^2.2.0",
         "magento/module-backend": "^102.0.8",
         "magento/module-ui": "^101.2.8",
@@ -32,6 +32,6 @@
         "magento/framework": "^103.0.8",
         "magento/module-sales": "^103.0.8",
         "magento/module-store": "^101.1.8",
-        "netresearch/config-fields-m2": "^1.3.0"
+        "netresearch/config-fields-m2": "^1.4.0"
     }
 }
